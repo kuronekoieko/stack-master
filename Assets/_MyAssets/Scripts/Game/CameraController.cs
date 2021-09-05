@@ -10,10 +10,22 @@ using DG.Tweening;
 public class CameraController : MonoBehaviour
 {
     public static CameraController i;
+    [SerializeField] Transform startTarget;
+    public Transform Target { get; set; }
+    Vector3 offset;
 
     private void Awake()
     {
         i = this;
     }
 
+    void Start()
+    {
+        offset = transform.position - startTarget.position;
+    }
+
+    void LateUpdate()
+    {
+        transform.position = Vector3.Lerp(transform.position, Target.position + offset, 0.3f);
+    }
 }
