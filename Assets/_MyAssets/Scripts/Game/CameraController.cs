@@ -20,6 +20,8 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.position = Vector3.Lerp(transform.position, Target.position + offset, 0.3f);
+        Vector3 targetPos = Target.position;
+        targetPos.x = 0;
+        transform.position = Vector3.Lerp(transform.position, targetPos + offset, 0.5f);
     }
 }
