@@ -9,15 +9,9 @@ using DG.Tweening;
 /// </summary>
 public class CameraController : MonoBehaviour
 {
-    public static CameraController i;
     [SerializeField] Transform startTarget;
     public Transform Target { get; set; }
     Vector3 offset;
-
-    private void Awake()
-    {
-        i = this;
-    }
 
     void Start()
     {
