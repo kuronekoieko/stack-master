@@ -9,14 +9,17 @@ public class Character : MonoBehaviour
     float speedX = 20f;
     Vector3 vel;
     float currentVelocity;
+
+    CharacterManager characterManager;
     void Start()
     {
 
     }
 
-    public void OnInstantiate()
+    public void OnInstantiate(CharacterManager characterManager)
     {
         gameObject.SetActive(false);
+        this.characterManager = characterManager;
     }
 
     public void Appear(Vector3 pos)
@@ -64,5 +67,6 @@ public class Character : MonoBehaviour
         var gate = other.gameObject.GetComponent<GateController>();
         if (gate == null) return;
         gate.OnHitCharacter();
+        characterManager.AppearToStack(gate.Count);
     }
 }

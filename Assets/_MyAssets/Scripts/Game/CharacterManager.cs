@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -12,14 +13,17 @@ public class CharacterManager : MonoBehaviour
     void Awake()
     {
         dummyGo.SetActive(false);
+        InstantiateCharacters(100);
+    }
 
-        for (int i = 0; i < 100; i++)
+    void InstantiateCharacters(int count)
+    {
+        for (int i = 0; i < count; i++)
         {
             var character = Instantiate(characterPrefab);
             Characters.Add(character);
-            character.OnInstantiate();
+            character.OnInstantiate(this);
         }
-
     }
 
     void Start()
@@ -40,6 +44,29 @@ public class CharacterManager : MonoBehaviour
         {
             deltaX = 0;
         }
-        if (Characters.Count > 0) Characters[0].VelocityControl(deltaX);
+        // if (Characters.Count > 0) Characters[0].VelocityControl(deltaX);
+
+        for (int i = 0; i < Characters.Count; i++)
+        {
+            Characters[i].VelocityControl(deltaX);
+        }
+    }
+
+    public void AppearToStack(int addCount)
+    {
+        int lackCount = addCount - Characters.Count(_ => !_.gameObject.activeSelf);
+        if (lackCount > 0)
+        {
+            InstantiateCharacters(lackCount);
+        }
+        var additionalCharacters = Characters.Where(_ => !_.gameObject.activeSelf).Take(addCount).ToArray();
+        Character topCharacter = Characters.Where(_ => _.gameObject.activeSelf).LastOrDefault();
+
+        Vector3 pos = topCharacter.transform.position;
+        for (int i = 0; i < additionalCharacters.Length; i++)
+        {
+            pos.y += 2f;
+            additionalCharacters[i].Appear(pos);
+        }
     }
 }
