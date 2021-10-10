@@ -56,6 +56,7 @@ public class Character : MonoBehaviour
         var pos = bottomPos;
         pos.y = rb.position.y;
         rb.position = pos;
+        animator.SetBool("IsFall", true);
     }
 
 
