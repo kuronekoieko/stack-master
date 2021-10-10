@@ -11,7 +11,7 @@ public class Character : MonoBehaviour
     [SerializeField] SpriteRenderer inkSr;
     [SerializeField] Animator animator;
     float speedZ = 10f;
-    float speedX = 20f;
+    float speedX = 30f;
     Vector3 vel;
     float currentVelocity;
     CharacterManager characterManager;
@@ -33,6 +33,7 @@ public class Character : MonoBehaviour
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration)
     {
+        rb.mass = 1f;
         gameObject.SetActive(true);
         transform.position = bottomPos;
         transform.DOMoveY(targetPos.y, duration)
@@ -49,6 +50,7 @@ public class Character : MonoBehaviour
         vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * speedX, ref currentVelocity, 0.1f);
         rb.velocity = vel;
         animator.SetBool("IsRun", rb.velocity.z > 0.1f);
+        rb.mass = 1000f;
     }
 
     public void Follow(Vector3 bottomPos)
