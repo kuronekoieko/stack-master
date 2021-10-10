@@ -31,7 +31,7 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
-        Characters[0].Appear(transform.position);
+        Characters[0].Appear(transform.position, transform.position, 0f);
 
         this.ObserveEveryValueChanged(_ => Characters.Count(_ => _.gameObject.activeSelf))
             .Subscribe(_ => activeCount = _)
@@ -74,10 +74,12 @@ public class CharacterManager : MonoBehaviour
         Character topCharacter = Characters.Where(_ => _.gameObject.activeSelf).LastOrDefault();
 
         Vector3 pos = topCharacter.transform.position;
+        float delay = 0f;
         for (int i = 0; i < additionalCharacters.Length; i++)
         {
             pos.y += topCharacter.Height;
-            additionalCharacters[i].Appear(pos);
+            additionalCharacters[i].Appear(Characters[0].transform.position, pos, delay);
+            delay += 0.05f;
         }
     }
 }

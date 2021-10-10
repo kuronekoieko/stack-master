@@ -27,20 +27,19 @@ public class Character : MonoBehaviour
     {
         gameObject.SetActive(false);
         this.characterManager = characterManager;
+        col.enabled = false;
     }
 
-    public void Appear(Vector3 pos)
+    public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration)
     {
         gameObject.SetActive(true);
-        transform.position = pos;
+        transform.position = bottomPos;
+        transform.DOMoveY(targetPos.y, duration)
+        .OnComplete(() =>
+        {
+            col.enabled = true;
+        });
     }
-
-
-    void Update()
-    {
-
-    }
-
 
     public void VelocityControl(float deltax)
     {
