@@ -6,6 +6,7 @@ public class Character : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
     [SerializeField] CapsuleCollider col;
+    [SerializeField] ParticleSystem bloodPs;
     float speedZ = 10f;
     float speedX = 20f;
     Vector3 vel;
@@ -74,5 +75,10 @@ public class Character : MonoBehaviour
     {
         gameObject.SetActive(false);
         characterManager.Characters.Remove(this);
+        bloodPs.transform.parent = null;
+        var pos = transform.position;
+        pos.y += Height / 2f;
+        bloodPs.transform.position = pos;
+        bloodPs.Play();
     }
 }
