@@ -96,7 +96,11 @@ public class Character : MonoBehaviour
 
     public void Dead(Vector3 hitPos, bool isHitGate)
     {
-        if (!SoundManager.i.IsPlaying(2)) SoundManager.i?.PlayOneShot(2);
+        if (SoundManager.i)
+        {
+            if (!SoundManager.i.IsPlaying) SoundManager.i.PlayOneShot(2);
+        }
+
         gameObject.SetActive(false);
         characterManager.Characters.Remove(this);
 
