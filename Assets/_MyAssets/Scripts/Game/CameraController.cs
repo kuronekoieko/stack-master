@@ -21,6 +21,7 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
+        if (characterManager.ActiveCount == 0) return;
         float distance = Vector3.Distance(offset, Vector3.zero);
         if (characterManager.ActiveCount > 6)
         {
