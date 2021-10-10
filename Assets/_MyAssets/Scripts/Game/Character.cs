@@ -110,6 +110,7 @@ public class Character : MonoBehaviour
         inkSr.transform.parent = null;
         inkSr.transform.localScale = Vector3.zero;
         hitPos.z -= 0.1f;
+        hitPos.y += Height / 2f;
         inkSr.transform.position = hitPos;
         inkSr.transform.DOScale(inkScale, 0.5f);
     }

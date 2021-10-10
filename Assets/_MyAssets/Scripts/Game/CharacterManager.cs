@@ -36,7 +36,13 @@ public class CharacterManager : MonoBehaviour
         Characters[0].Appear(transform.position, transform.position, 0f);
 
         this.ObserveEveryValueChanged(_ => Characters.Count(_ => _.gameObject.activeSelf))
-            .Subscribe(_ => activeCount = _)
+            .Subscribe(_ =>
+            {
+                activeCount = _;
+                if (_ > 0) return;
+                if (Variables.screenState != ScreenState.Game) return;
+                Variables.screenState = ScreenState.Failed;
+            })
             .AddTo(this.gameObject);
     }
 
