@@ -9,6 +9,7 @@ public class Character : MonoBehaviour
     [SerializeField] CapsuleCollider col;
     [SerializeField] ParticleSystem bloodPs;
     [SerializeField] SpriteRenderer inkSr;
+    [SerializeField] Animator animator;
     float speedZ = 10f;
     float speedX = 20f;
     Vector3 vel;
@@ -47,6 +48,7 @@ public class Character : MonoBehaviour
         vel.z = speedZ;
         vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * speedX, ref currentVelocity, 0.1f);
         rb.velocity = vel;
+        animator.SetBool("IsRun", rb.velocity.z > 0.1f);
     }
 
     public void Follow(Vector3 bottomPos)
