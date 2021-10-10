@@ -90,4 +90,19 @@ public class CharacterManager : MonoBehaviour
             delay += 0.05f;
         }
     }
+
+    public void Dead(int deadCount)
+    {
+        var activeCharacters = Characters.Where(_ => _.gameObject.activeSelf).ToArray();
+        int lackCount = deadCount - activeCount;
+        if (lackCount > 0)
+        {
+            deadCount = activeCount;
+        }
+
+        for (int i = 0; i < deadCount; i++)
+        {
+            activeCharacters[i].Dead(Vector3.zero, true);
+        }
+    }
 }

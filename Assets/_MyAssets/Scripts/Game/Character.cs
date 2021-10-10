@@ -68,7 +68,7 @@ public class Character : MonoBehaviour
 
         if (other.CompareTag("Obstacle"))
         {
-            Dead(other.ClosestPoint(transform.position));
+            Dead(other.ClosestPoint(transform.position), false);
         }
     }
 
@@ -77,11 +77,22 @@ public class Character : MonoBehaviour
         var gate = other.gameObject.GetComponent<GateController>();
         if (gate == null) return;
         gate.OnHitCharacter();
-        int addCount = gate.ArithmeticOperator == ArithmeticOperator.Plus ? gate.Count : characterManager.ActiveCount * (gate.Count - 1);
-        characterManager.AppearToStack(addCount);
+
+        bool isIncrease = gate.ArithmeticOperator == ArithmeticOperator.Plus || gate.ArithmeticOperator == ArithmeticOperator.Multiplied;
+        if (isIncrease)
+        {
+            int addCount = gate.ArithmeticOperator == ArithmeticOperator.Plus ? gate.Count : characterManager.ActiveCount * (gate.Count - 1);
+            characterManager.AppearToStack(addCount);
+        }
+        else
+        {
+            int deadCount = gate.ArithmeticOperator == ArithmeticOperator.Minus ? gate.Count : (int)(1f - (float)characterManager.ActiveCount / (float)gate.Count);
+            characterManager.Dead(deadCount);
+        }
+
     }
 
-    void Dead(Vector3 hitPos)
+    public void Dead(Vector3 hitPos, bool isHitGate)
     {
         gameObject.SetActive(false);
         characterManager.Characters.Remove(this);
@@ -91,6 +102,8 @@ public class Character : MonoBehaviour
         pos.y += Height / 2f;
         bloodPs.transform.position = pos;
         bloodPs.Play();
+
+        if (isHitGate) return;
 
         inkSr.gameObject.SetActive(true);
         inkSr.transform.parent = null;

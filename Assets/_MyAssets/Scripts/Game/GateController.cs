@@ -17,6 +17,9 @@ public class GateController : MonoBehaviour
     [SerializeField] int count;
     [SerializeField] TextMeshPro textMeshPro;
     [SerializeField] Collider col;
+
+    [SerializeField] ParticleSystem wallPs_Red;
+    [SerializeField] ParticleSystem wallPs_Blue;
     GateManager gateManager;
     Dictionary<ArithmeticOperator, string> arithmeticOperatorStrings = new Dictionary<ArithmeticOperator, string>
     {
@@ -33,6 +36,8 @@ public class GateController : MonoBehaviour
     void OnValidate()
     {
         textMeshPro.text = arithmeticOperatorStrings[arithmeticOperator] + count;
+        wallPs_Blue.gameObject.SetActive(arithmeticOperator == ArithmeticOperator.Plus || arithmeticOperator == ArithmeticOperator.Multiplied);
+        wallPs_Red.gameObject.SetActive(arithmeticOperator == ArithmeticOperator.Minus || arithmeticOperator == ArithmeticOperator.Divided);
     }
 
     void Awake()
