@@ -86,7 +86,8 @@ public class Character : MonoBehaviour
         }
         else
         {
-            int deadCount = gate.ArithmeticOperator == ArithmeticOperator.Minus ? gate.Count : (int)(1f - (float)characterManager.ActiveCount / (float)gate.Count);
+            int deadCount = gate.Count;
+            if (gate.ArithmeticOperator == ArithmeticOperator.Divided) deadCount = (int)((float)characterManager.ActiveCount - (float)characterManager.ActiveCount / (float)gate.Count);
             characterManager.Dead(deadCount);
         }
 
