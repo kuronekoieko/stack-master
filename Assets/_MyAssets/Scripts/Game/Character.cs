@@ -77,7 +77,8 @@ public class Character : MonoBehaviour
         var gate = other.gameObject.GetComponent<GateController>();
         if (gate == null) return;
         gate.OnHitCharacter();
-        characterManager.AppearToStack(gate.Count);
+        int addCount = gate.ArithmeticOperator == ArithmeticOperator.Plus ? gate.Count : characterManager.ActiveCount * (gate.Count - 1);
+        characterManager.AppearToStack(addCount);
     }
 
     void Dead(Vector3 hitPos)
