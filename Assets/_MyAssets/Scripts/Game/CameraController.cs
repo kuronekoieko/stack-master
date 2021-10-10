@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] Transform startTarget;
     [Inject] CharacterManager characterManager;
     Vector3 offset;
-
+    Vector3 currentVelocity;
     void Start()
     {
         offset = transform.position - characterManager.BottomCharacterPos;
@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
     {
         Vector3 targetPos = characterManager.BottomCharacterPos;
         targetPos.x = 0;
-        // transform.position = Vector3.Lerp(transform.position, targetPos + offset, 0.5f);
-        transform.position = targetPos + offset;
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos + offset, ref currentVelocity, 0.1f);
+        // transform.position = targetPos + offset;
     }
 }

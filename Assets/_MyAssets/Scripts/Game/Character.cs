@@ -32,25 +32,7 @@ public class Character : MonoBehaviour
 
     void Update()
     {
-        vel = rb.velocity;
-        vel.z = speedZ;
 
-        if (Input.GetMouseButtonDown(0))
-        {
-
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            var deltaX = Input.GetAxis("Mouse X") * 5f;
-            vel.x = deltaX * speedX;
-        }
-        else
-        {
-            vel.x = 0;
-        }
-        vel.x = Mathf.SmoothDamp(rb.velocity.x, vel.x, ref currentVelocity, 0.1f);
-        rb.velocity = vel;
     }
 
 
@@ -72,9 +54,25 @@ public class Character : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        OnTriggerEnterGate(other);
+
+        if (other.CompareTag("Obstacle"))
+        {
+            Dead();
+        }
+    }
+
+    void OnTriggerEnterGate(Collider other)
+    {
         var gate = other.gameObject.GetComponent<GateController>();
         if (gate == null) return;
         gate.OnHitCharacter();
         characterManager.AppearToStack(gate.Count);
+    }
+
+    void Dead()
+    {
+        gameObject.SetActive(false);
+        characterManager.Characters.Remove(this);
     }
 }
