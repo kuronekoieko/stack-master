@@ -11,6 +11,7 @@ public class Character : MonoBehaviour
     float speedX = 15f;
     // Vector3 preMousePosition;
     Vector3 vel;
+    float currentVelocity;
     void Start()
     {
         cameraController.Target = transform;
@@ -40,6 +41,7 @@ public class Character : MonoBehaviour
         {
             vel.x = 0;
         }
+        vel.x = Mathf.SmoothDamp(rb.velocity.x, vel.x, ref currentVelocity, 0.1f);
         rb.velocity = vel;
     }
 }

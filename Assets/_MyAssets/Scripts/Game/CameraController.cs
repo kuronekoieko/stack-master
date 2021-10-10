@@ -22,6 +22,7 @@ public class CameraController : MonoBehaviour
     {
         Vector3 targetPos = Target.position;
         targetPos.x = 0;
-        transform.position = Vector3.Lerp(transform.position, targetPos + offset, 0.5f);
+        // transform.position = Vector3.Lerp(transform.position, targetPos + offset, 0.5f);
+        transform.position = targetPos + offset;
     }
 }
