@@ -17,7 +17,7 @@ public class GateController : MonoBehaviour
     [SerializeField] int count;
     [SerializeField] TextMeshPro textMeshPro;
     [SerializeField] Collider col;
-    [SerializeField] GateManager gateManager;
+    GateManager gateManager;
     Dictionary<ArithmeticOperator, string> arithmeticOperatorStrings = new Dictionary<ArithmeticOperator, string>
     {
         {ArithmeticOperator.Plus,"+"},
@@ -33,6 +33,11 @@ public class GateController : MonoBehaviour
     void OnValidate()
     {
         textMeshPro.text = arithmeticOperatorStrings[arithmeticOperator] + count;
+    }
+
+    void Awake()
+    {
+        gateManager = GetComponentInParent<GateManager>();
     }
 
     public void OnHitCharacter()

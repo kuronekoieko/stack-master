@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Zenject;
 
 /// <summary>
 /// Unityで解像度に合わせて画面のサイズを自動調整する
@@ -10,17 +11,17 @@ using DG.Tweening;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] Transform startTarget;
-    public Transform Target { get; set; }
+    [Inject] CharacterManager characterManager;
     Vector3 offset;
 
     void Start()
     {
-        offset = transform.position - startTarget.position;
+        offset = transform.position - characterManager.BottomCharacterPos;
     }
 
     void LateUpdate()
     {
-        Vector3 targetPos = Target.position;
+        Vector3 targetPos = characterManager.BottomCharacterPos;
         targetPos.x = 0;
         // transform.position = Vector3.Lerp(transform.position, targetPos + offset, 0.5f);
         transform.position = targetPos + offset;

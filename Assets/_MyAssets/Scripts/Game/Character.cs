@@ -1,19 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 public class Character : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
-    [Inject] CameraController cameraController;
     float speedZ = 10f;
-    float speedX = 15f;
+    float speedX = 20f;
     Vector3 vel;
     float currentVelocity;
     void Start()
     {
-        cameraController.Target = transform;
+
+    }
+
+    public void OnInstantiate()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void Appear(Vector3 pos)
+    {
+        gameObject.SetActive(true);
+        transform.position = pos;
     }
 
 
@@ -37,6 +46,15 @@ public class Character : MonoBehaviour
             vel.x = 0;
         }
         vel.x = Mathf.SmoothDamp(rb.velocity.x, vel.x, ref currentVelocity, 0.1f);
+        rb.velocity = vel;
+    }
+
+
+    public void VelocityControl(float deltax)
+    {
+        vel = rb.velocity;
+        vel.z = speedZ;
+        vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * speedX, ref currentVelocity, 0.1f);
         rb.velocity = vel;
     }
 
