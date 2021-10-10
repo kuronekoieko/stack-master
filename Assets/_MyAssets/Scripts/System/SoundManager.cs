@@ -25,4 +25,9 @@ public class SoundManager : MonoBehaviour
         if (clip == null) { return; }
         audioSource.PlayOneShot(clip);
     }
+
+    public bool IsPlaying(int resourceIndex)
+    {
+        return audioSource.isPlaying;
+    }
 }

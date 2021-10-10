@@ -40,6 +40,7 @@ public class Character : MonoBehaviour
         .OnComplete(() =>
         {
             col.enabled = true;
+            SoundManager.i?.PlayOneShot(0);
         });
     }
 
@@ -95,6 +96,7 @@ public class Character : MonoBehaviour
 
     public void Dead(Vector3 hitPos, bool isHitGate)
     {
+        if (!SoundManager.i.IsPlaying(2)) SoundManager.i?.PlayOneShot(2);
         gameObject.SetActive(false);
         characterManager.Characters.Remove(this);
 
