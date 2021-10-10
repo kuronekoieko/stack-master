@@ -18,6 +18,7 @@ public class CharacterManager : MonoBehaviour
     {
         dummyGo.SetActive(false);
         InstantiateCharacters(100);
+        // Application.targetFrameRate = 300;
     }
 
     void InstantiateCharacters(int count)
@@ -42,7 +43,7 @@ public class CharacterManager : MonoBehaviour
 
     void Update()
     {
-        float deltaX = Input.GetAxis("Mouse X") * 5f;
+        float deltaX = Input.GetAxis("Mouse X") * Time.fixedDeltaTime / Time.deltaTime;
 
         if (Input.GetMouseButtonDown(0))
         {
