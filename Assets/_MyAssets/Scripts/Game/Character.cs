@@ -5,12 +5,13 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
+    [SerializeField] CapsuleCollider col;
     float speedZ = 10f;
     float speedX = 20f;
     Vector3 vel;
     float currentVelocity;
-
     CharacterManager characterManager;
+    public float Height => col.height;
     void Start()
     {
 
@@ -59,6 +60,13 @@ public class Character : MonoBehaviour
         vel.z = speedZ;
         vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * speedX, ref currentVelocity, 0.1f);
         rb.velocity = vel;
+    }
+
+    public void Follow(Vector3 bottomPos)
+    {
+        var pos = bottomPos;
+        pos.y = rb.position.y;
+        rb.position = pos;
     }
 
 

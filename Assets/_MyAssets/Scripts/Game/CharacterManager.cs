@@ -44,11 +44,15 @@ public class CharacterManager : MonoBehaviour
         {
             deltaX = 0;
         }
-        // if (Characters.Count > 0) Characters[0].VelocityControl(deltaX);
+        if (Characters.Count == 0) return;
+        Characters[0].VelocityControl(deltaX);
+    }
 
-        for (int i = 0; i < Characters.Count; i++)
+    void FixedUpdate()
+    {
+        for (int i = 1; i < Characters.Count; i++)
         {
-            Characters[i].VelocityControl(deltaX);
+            Characters[i].Follow(Characters[0].transform.position);
         }
     }
 
@@ -65,7 +69,7 @@ public class CharacterManager : MonoBehaviour
         Vector3 pos = topCharacter.transform.position;
         for (int i = 0; i < additionalCharacters.Length; i++)
         {
-            pos.y += 2f;
+            pos.y += topCharacter.Height;
             additionalCharacters[i].Appear(pos);
         }
     }
