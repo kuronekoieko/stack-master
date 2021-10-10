@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UniRx;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] GameObject dummyGo;
     public List<Character> Characters { get; set; } = new List<Character>();
     public Vector3 BottomCharacterPos => Characters[0].transform.position;
+    public int ActiveCount => activeCount;
+    int activeCount;
 
     void Awake()
     {
@@ -29,6 +32,10 @@ public class CharacterManager : MonoBehaviour
     void Start()
     {
         Characters[0].Appear(transform.position);
+
+        this.ObserveEveryValueChanged(_ => Characters.Count(_ => _.gameObject.activeSelf))
+            .Subscribe(_ => activeCount = _)
+            .AddTo(this.gameObject);
     }
 
 

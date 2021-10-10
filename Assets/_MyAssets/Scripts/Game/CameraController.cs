@@ -21,8 +21,10 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
+        float distance = Vector3.Distance(offset, Vector3.zero);
+        if (characterManager.ActiveCount > 6) distance = distance * (float)characterManager.ActiveCount / 6f;
         Vector3 targetPos = characterManager.BottomCharacterPos;
         targetPos.x = 0;
-        transform.position = Vector3.SmoothDamp(transform.position, targetPos + offset, ref currentVelocity, 0.1f);
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos + offset.normalized * distance, ref currentVelocity, 0.2f);
     }
 }
