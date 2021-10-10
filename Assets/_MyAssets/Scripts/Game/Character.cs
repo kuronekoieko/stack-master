@@ -1,21 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Character : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
     [SerializeField] CapsuleCollider col;
     [SerializeField] ParticleSystem bloodPs;
+    [SerializeField] SpriteRenderer inkSr;
     float speedZ = 10f;
     float speedX = 20f;
     Vector3 vel;
     float currentVelocity;
     CharacterManager characterManager;
     public float Height => col.height;
+    Vector3 inkScale;
+
     void Start()
     {
-
+        inkScale = inkSr.transform.lossyScale;
+        inkSr.gameObject.SetActive(false);
     }
 
     public void OnInstantiate(CharacterManager characterManager)
@@ -59,7 +64,7 @@ public class Character : MonoBehaviour
 
         if (other.CompareTag("Obstacle"))
         {
-            Dead();
+            Dead(other.ClosestPoint(transform.position));
         }
     }
 
@@ -71,14 +76,22 @@ public class Character : MonoBehaviour
         characterManager.AppearToStack(gate.Count);
     }
 
-    void Dead()
+    void Dead(Vector3 hitPos)
     {
         gameObject.SetActive(false);
         characterManager.Characters.Remove(this);
+
         bloodPs.transform.parent = null;
         var pos = transform.position;
         pos.y += Height / 2f;
         bloodPs.transform.position = pos;
         bloodPs.Play();
+
+        inkSr.gameObject.SetActive(true);
+        inkSr.transform.parent = null;
+        inkSr.transform.localScale = Vector3.zero;
+        hitPos.z -= 0.1f;
+        inkSr.transform.position = hitPos;
+        inkSr.transform.DOScale(inkScale, 0.5f);
     }
 }
