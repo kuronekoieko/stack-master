@@ -9,7 +9,6 @@ public class Character : MonoBehaviour
     [Inject] CameraController cameraController;
     float speedZ = 10f;
     float speedX = 15f;
-    // Vector3 preMousePosition;
     Vector3 vel;
     float currentVelocity;
     void Start()
@@ -25,16 +24,12 @@ public class Character : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            // preMousePosition = Input.mousePosition;
+
         }
 
         if (Input.GetMouseButton(0))
         {
-            //  var deltaX = Input.mousePosition.x - preMousePosition.x;
-            //  preMousePosition = Input.mousePosition;
-
             var deltaX = Input.GetAxis("Mouse X") * 5f;
-            //  Debug.Log(deltaX);
             vel.x = deltaX * speedX;
         }
         else
@@ -43,5 +38,13 @@ public class Character : MonoBehaviour
         }
         vel.x = Mathf.SmoothDamp(rb.velocity.x, vel.x, ref currentVelocity, 0.1f);
         rb.velocity = vel;
+    }
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        var gate = other.gameObject.GetComponent<GateController>();
+        if (gate == null) return;
+        gate.OnHitCharacter();
     }
 }

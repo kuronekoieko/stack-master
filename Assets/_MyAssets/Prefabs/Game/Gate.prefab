@@ -98,7 +98,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: x10
+  m_text: +10
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8fdf977a3ae79254cbe0608de98afdba, type: 2}
   m_sharedMaterial: {fileID: 8848327804954456330, guid: 8fdf977a3ae79254cbe0608de98afdba, type: 2}
@@ -180,6 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4589101211857680883}
   - component: {fileID: 4589101211857680882}
+  - component: {fileID: 786476133687870051}
   m_Layer: 0
   m_Name: Gate
   m_TagString: Untagged
@@ -217,6 +218,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.3, y: 2.5, z: 0.32}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &786476133687870051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4589101211857680884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9b62dae89816d7418771f41ebe65011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arithmeticOperator: 0
+  count: 10
+  textMeshPro: {fileID: 4589101211741279111}
+  col: {fileID: 4589101211857680882}
 --- !u!1001 &4589101210151819320
 PrefabInstance:
   m_ObjectHideFlags: 0

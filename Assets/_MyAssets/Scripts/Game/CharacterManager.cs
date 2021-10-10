@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public List<Character> Characters { get; set; }
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        
+
     }
 }
