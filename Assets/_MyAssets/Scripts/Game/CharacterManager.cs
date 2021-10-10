@@ -12,6 +12,7 @@ public class CharacterManager : MonoBehaviour
     public Vector3 BottomCharacterPos => Characters[0].transform.position;
     public int ActiveCount => activeCount;
     int activeCount;
+    bool isStart;
 
     void Awake()
     {
@@ -41,11 +42,17 @@ public class CharacterManager : MonoBehaviour
 
     void Update()
     {
-        float deltaX;
+        float deltaX = Input.GetAxis("Mouse X") * 5f;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            isStart = true;
+        }
+
+        if (!isStart) return;
 
         if (Input.GetMouseButton(0))
         {
-            deltaX = Input.GetAxis("Mouse X") * 5f;
         }
         else
         {
