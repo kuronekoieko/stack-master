@@ -10,7 +10,7 @@ public class Character : MonoBehaviour
     [SerializeField] ParticleSystem bloodPs;
     [SerializeField] SpriteRenderer inkSr;
     [SerializeField] Animator animator;
-    float speedZ = 10f;
+    float speedZ = 15f;
     float speedX = 30f;
     Vector3 vel;
     float currentVelocity;
