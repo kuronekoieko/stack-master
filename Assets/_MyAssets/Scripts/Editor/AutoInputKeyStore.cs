@@ -23,7 +23,7 @@ public class AutoInputKeyStore
     static void InputKeystore()
     {
         //エイリアス名
-        PlayerSettings.Android.keyaliasName = "AndroidZZZ";
+        PlayerSettings.Android.keyaliasName = "key";
         // パスワードの再設定
         PlayerSettings.Android.keystorePass = "AndroidZZZ";
         // パスワードの再設定
