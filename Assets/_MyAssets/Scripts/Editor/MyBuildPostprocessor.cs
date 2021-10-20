@@ -35,6 +35,7 @@ public class MyBuildPostprocessor : IPreprocessBuildWithReport
             PlayerSettings.productName = debugBundleDisplayName;
             // PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, debugBundleIdentifier);
             PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, debugBundleIdentifier);
+            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel29;
         }
     }
 
@@ -47,6 +48,7 @@ public class MyBuildPostprocessor : IPreprocessBuildWithReport
             PlayerSettings.productName = releaseBundleDisplayName;
             // PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, releaseBundleIdentifier);
             PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, releaseBundleIdentifier);
+            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel30;
         }
         // PostProcessBuild後の保存が自動でされず、gitの変更にPreprocessBuildの変更が出てしまうため
         AssetDatabase.SaveAssets();
