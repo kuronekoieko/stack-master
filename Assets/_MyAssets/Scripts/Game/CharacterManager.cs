@@ -61,13 +61,16 @@ public class CharacterManager : MonoBehaviour
 
         if (!isStart) return;
 
-        if (Input.GetMouseButton(0))
-        {
-        }
-        else
+        if (!Input.GetMouseButton(0))
         {
             deltaX = 0;
         }
+
+        if (Variables.screenState != ScreenState.Game)
+        {
+            deltaX = 0;
+        }
+
         if (Characters.Count == 0) return;
         Characters[0].VelocityControl(deltaX);
     }

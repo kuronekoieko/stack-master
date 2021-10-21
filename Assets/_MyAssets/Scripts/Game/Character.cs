@@ -66,7 +66,7 @@ public class Character : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         OnTriggerEnterGate(other);
-
+        OnTriggerEnterGoal(other);
         if (other.CompareTag("Obstacle"))
         {
             Dead(other.ClosestPoint(transform.position), false);
@@ -92,6 +92,16 @@ public class Character : MonoBehaviour
             characterManager.Dead(deadCount);
         }
 
+    }
+
+    void OnTriggerEnterGoal(Collider other)
+    {
+        var goal = other.gameObject.GetComponent<GoalController>();
+        if (goal == null) return;
+        if (Variables.screenState != ScreenState.Game) return;
+        Variables.screenState = ScreenState.Clear;
+        goal.OnGoaled();
+        speedZ = 0;
     }
 
     public void Dead(Vector3 hitPos, bool isHitGate)
