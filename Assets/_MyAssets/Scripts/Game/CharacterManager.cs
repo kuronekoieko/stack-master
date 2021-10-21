@@ -13,12 +13,13 @@ public class CharacterManager : MonoBehaviour
     public int ActiveCount => activeCount;
     int activeCount;
     bool isStart;
+    float deltaX;
 
     void Awake()
     {
         dummyGo.SetActive(false);
         InstantiateCharacters(100);
-        // Application.targetFrameRate = 300;
+        Application.targetFrameRate = 300;
     }
 
     void InstantiateCharacters(int count)
@@ -44,12 +45,14 @@ public class CharacterManager : MonoBehaviour
                 Variables.screenState = ScreenState.Failed;
             })
             .AddTo(this.gameObject);
+
+        deltaX = Input.GetAxis("Mouse X") * Time.fixedDeltaTime / Time.deltaTime;
     }
 
 
     void Update()
     {
-        float deltaX = Input.GetAxis("Mouse X") * Time.fixedDeltaTime / Time.deltaTime;
+        deltaX = Input.GetAxis("Mouse X") * Time.fixedDeltaTime / Time.deltaTime * (float)Screen.width / 750f;
 
         if (Input.GetMouseButtonDown(0))
         {

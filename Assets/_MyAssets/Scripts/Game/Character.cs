@@ -11,7 +11,6 @@ public class Character : MonoBehaviour
     [SerializeField] SpriteRenderer inkSr;
     [SerializeField] Animator animator;
     float speedZ = 13f;
-    float speedX = 30f;
     Vector3 vel;
     float currentVelocity;
     CharacterManager characterManager;
@@ -48,7 +47,8 @@ public class Character : MonoBehaviour
     {
         vel = rb.velocity;
         vel.z = speedZ;
-        vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * speedX, ref currentVelocity, 0.1f);
+        vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX);
+        if (float.IsNaN(vel.x)) vel.x = 0;
         rb.velocity = vel;
         animator.SetBool("IsRun", rb.velocity.z > 0.1f);
         rb.mass = 1000f;

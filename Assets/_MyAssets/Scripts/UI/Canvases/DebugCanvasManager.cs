@@ -17,6 +17,8 @@ public class DebugCanvasManager : BaseCanvasManager
     [SerializeField] Image debugPanel;
     [SerializeField] Button applyButton;
     [SerializeField] Button cancelButton;
+    [SerializeField] InputField speedXIF;
+    [SerializeField] InputField smoothTimeXIF;
 
     public override void OnStart()
     {
@@ -41,7 +43,7 @@ public class DebugCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
-        gameObject.SetActive(true);
+
     }
 
     protected override void OnClose()
@@ -57,12 +59,25 @@ public class DebugCanvasManager : BaseCanvasManager
     void OnClickDebugButton()
     {
         debugPanel.gameObject.SetActive(true);
+        Time.timeScale = 0;
+        speedXIF.text = Variables.speedX.ToString();
+        smoothTimeXIF.text = Variables.smoothTimeX.ToString();
     }
 
     void OnClickApplyButton()
     {
+        if (float.TryParse(speedXIF.text, out float speedX))
+        {
+            Variables.speedX = speedX;
+        }
+
+        if (float.TryParse(smoothTimeXIF.text, out float smoothTimeX))
+        {
+            Variables.smoothTimeX = smoothTimeX;
+        }
 
         Close();
+        base.ReLoadScene();
     }
 
     void OnClickCancelButton()
@@ -72,6 +87,7 @@ public class DebugCanvasManager : BaseCanvasManager
 
     void Close()
     {
+        Time.timeScale = 1f;
         debugPanel.gameObject.SetActive(false);
     }
 }

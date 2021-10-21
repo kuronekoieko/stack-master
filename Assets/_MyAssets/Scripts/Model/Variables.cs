@@ -13,4 +13,6 @@ public class Variables : MonoBehaviour
     }
     private static int _currentSceneBuildIndex;
     public static int lastSceneBuildIndex => SceneManager.sceneCountInBuildSettings - 1;
+    public static float speedX = 10f;
+    public static float smoothTimeX = 0.1f;
 }
