@@ -83,6 +83,14 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
+    public void Dance()
+    {
+        for (int i = 0; i < Characters.Count; i++)
+        {
+            Characters[i].Dance();
+        }
+    }
+
     public void AppearToStack(int addCount)
     {
         int lackCount = addCount - Characters.Count(_ => !_.gameObject.activeSelf);

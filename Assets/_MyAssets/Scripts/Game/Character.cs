@@ -62,6 +62,10 @@ public class Character : MonoBehaviour
         animator.SetBool("IsFall", true);
     }
 
+    public void Dance()
+    {
+        animator.SetBool("IsDance", true);
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -102,6 +106,7 @@ public class Character : MonoBehaviour
         Variables.screenState = ScreenState.Clear;
         goal.OnGoaled();
         speedZ = 0;
+        characterManager.Dance();
     }
 
     public void Dead(Vector3 hitPos, bool isHitGate)
