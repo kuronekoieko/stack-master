@@ -6,6 +6,6 @@ using UnityEngine.SceneManagement;
 public class Variables : MonoBehaviour
 {
     public static ScreenState screenState = ScreenState.Game;
-    public static float speedX = 10f;
-    public static float smoothTimeX = 0.1f;
+    public static float speedX = 6f;
+    public static float smoothTimeX = 0.05f;
 }
