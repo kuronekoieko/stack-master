@@ -18,16 +18,15 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         QualitySettings.vSyncCount = 0;
-        // Application.targetFrameRate = 300;
+        Application.targetFrameRate = 60;
         DontDestroyOnLoad(gameObject);
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
     }
 
     void Start()
     {
-        StageTransManager.i.LoadStageOnAppLaunch(
-            startStageNum: 1,
-            isMultiScene: true);
+        SaveDataManager.i.LoadSaveData();
+        StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
         SetCanvases();
         // イベントにイベントハンドラーを追加
         SceneManager.sceneLoaded += SceneLoaded;

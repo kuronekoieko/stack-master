@@ -36,6 +36,8 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         UICameraController.i.PlayConfetti();
+        SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
+        SaveDataManager.i.Save();
 
         DOVirtual.DelayedCall(1.0f, () =>
         {

@@ -19,7 +19,7 @@ public class GameCanvasManager : BaseCanvasManager
     {
         base.SetScreenAction(thisScreen: ScreenState.Game);
 
-        this.ObserveEveryValueChanged(currentSceneBuildIndex => StageTransManager.i.CurrentStageNum)
+        this.ObserveEveryValueChanged(currentSceneBuildIndex => StageTransManager.i.CurrentDisplayStageNum)
             .Subscribe(currentSceneBuildIndex => { ShowStageNumText(levelNum: currentSceneBuildIndex); })
             .AddTo(this.gameObject);
         retryButton.onClick.AddListener(OnClickRetryButton);

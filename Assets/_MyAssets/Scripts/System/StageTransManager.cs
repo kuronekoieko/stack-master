@@ -8,15 +8,17 @@ public class StageTransManager
 {
     public static StageTransManager i { get { return _i; } }
     private static StageTransManager _i = new StageTransManager();
-
-    public int CurrentStageNum
+    public int CurrentDisplayStageNum { get; private set; }
+    int CurrentStageNum
     {
-        set { currentStageNum = Mathf.Clamp(value, 1, lastStageNum); }
-        get { return currentStageNum; }
+        get
+        {
+            int tmp = CurrentDisplayStageNum % stageLength;
+            if (tmp == 0) tmp = stageLength;
+            return tmp;
+        }
     }
-    private int currentStageNum = 1;
-    private int lastStageNum;
-    private bool isMultiScene;//シーン毎にステージを管理している場合true
+    private int stageLength;
 
     /// <summary>
     /// ステージ番号の初期化と、最初のロード
@@ -24,11 +26,10 @@ public class StageTransManager
     /// <param name="isMultiScene"></param>
     /// <param name="startStageNum">アプリ起動時にどのステージから始めるか</param>
     /// <param name="lastStageNum">最後のステージ番号</param>
-    public void LoadStageOnAppLaunch(bool isMultiScene, int startStageNum, int lastStageNum = 1)
+    public void LoadStageOnAppLaunch(int startDisplayStageNum)
     {
-        this.isMultiScene = isMultiScene;
-        this.lastStageNum = isMultiScene ? SceneManager.sceneCountInBuildSettings - 1 : lastStageNum;
-        CurrentStageNum = startStageNum;
+        CurrentDisplayStageNum = startDisplayStageNum;
+        stageLength = SceneManager.sceneCountInBuildSettings - 1;
     }
 
     /// <summary>
@@ -36,7 +37,7 @@ public class StageTransManager
     /// </summary>
     public void LoadNextStage()
     {
-        CurrentStageNum++;
+        CurrentDisplayStageNum++;
         ReLoadStage();
     }
 
@@ -45,7 +46,7 @@ public class StageTransManager
     /// </summary>
     public void ReLoadStage()
     {
-        int sceneBuildIndex = isMultiScene ? CurrentStageNum : 1;
+        int sceneBuildIndex = CurrentStageNum;
         SceneManager.LoadScene(sceneBuildIndex);
     }
 
@@ -58,9 +59,9 @@ public class StageTransManager
         get
         {
             List<string> numStrings = new List<string>();
-            for (int i = 1; i < lastStageNum + 1; i++)
+            for (int i = 1; i < stageLength + 1; i++)
             {
-                string name = isMultiScene ? Path.GetFileName(SceneUtility.GetScenePathByBuildIndex(i)) : "";
+                string name = Path.GetFileName(SceneUtility.GetScenePathByBuildIndex(i));
                 numStrings.Add((i) + "  " + name);
             }
             return numStrings;
