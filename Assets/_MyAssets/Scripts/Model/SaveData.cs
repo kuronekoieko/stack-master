@@ -9,7 +9,7 @@ public class SaveData
     public bool isOffSE;
     public int coinCount;
     public UserDateTime receivedLoginBonusUserDateTime;
-    public int lastClearedDisplayStageNum = 1;
+    public int lastClearedDisplayStageNum = 0;
 }
 
 /// <summary>
