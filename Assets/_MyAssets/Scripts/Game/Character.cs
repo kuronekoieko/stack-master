@@ -42,7 +42,7 @@ public class Character : MonoBehaviour
         .OnComplete(() =>
         {
             col.enabled = true;
-            SoundManager.i?.PlayOneShot(0);
+            if (characterManager.Characters[0] != this) SoundManager.i?.PlayOneShot(0);
         });
     }
 
