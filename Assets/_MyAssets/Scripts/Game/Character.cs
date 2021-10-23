@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Zenject;
 
 public class Character : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Character : MonoBehaviour
     [SerializeField] ParticleSystem bloodPs;
     [SerializeField] SpriteRenderer inkSr;
     [SerializeField] Animator animator;
+    [Inject] CameraController cameraController;
     float speedZ = 13f;
     Vector3 vel;
     float currentVelocity;
@@ -21,6 +23,7 @@ public class Character : MonoBehaviour
     {
         inkScale = inkSr.transform.lossyScale;
         inkSr.gameObject.SetActive(false);
+        gameObject.AddComponent<ZenAutoInjecter>();
     }
 
     public void OnInstantiate(CharacterManager characterManager)
@@ -64,6 +67,7 @@ public class Character : MonoBehaviour
 
     public void Dance()
     {
+        transform.forward = -transform.forward;
         animator.SetBool("IsDance", true);
     }
 
@@ -107,6 +111,7 @@ public class Character : MonoBehaviour
         goal.OnGoaled();
         speedZ = 0;
         characterManager.Dance();
+        cameraController.IsFollow = false;
     }
 
     public void Dead(Vector3 hitPos, bool isHitGate)

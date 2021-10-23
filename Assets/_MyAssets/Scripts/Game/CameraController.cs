@@ -14,6 +14,8 @@ public class CameraController : MonoBehaviour
     [Inject] CharacterManager characterManager;
     Vector3 offset;
     Vector3 currentVelocity;
+    public bool IsFollow { get; set; } = true;
+
     void Start()
     {
         offset = transform.position - characterManager.BottomCharacterPos;
@@ -22,6 +24,18 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         if (characterManager.ActiveCount == 0) return;
+        if (IsFollow)
+        {
+            Follow();
+        }
+        else
+        {
+            Rotation();
+        }
+    }
+
+    void Follow()
+    {
         float distance = Vector3.Distance(offset, Vector3.zero);
         if (characterManager.ActiveCount > 6)
         {
@@ -32,5 +46,10 @@ public class CameraController : MonoBehaviour
         Vector3 targetPos = characterManager.BottomCharacterPos;
         targetPos.x = 0;
         transform.position = Vector3.SmoothDamp(transform.position, targetPos + offset.normalized * distance, ref currentVelocity, 0.2f);
+    }
+
+    void Rotation()
+    {
+        transform.RotateAround(characterManager.BottomCharacterPos, Vector3.up, Time.deltaTime * 5f);
     }
 }
