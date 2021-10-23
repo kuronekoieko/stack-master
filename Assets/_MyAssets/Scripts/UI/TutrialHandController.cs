@@ -13,7 +13,7 @@ public class TutrialHandController : MonoBehaviour
     Sequence sequence;
     public RectTransform rectTransform { get; private set; }
 
-    public void OnStart()
+    void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         gameObject.SetActive(false);
