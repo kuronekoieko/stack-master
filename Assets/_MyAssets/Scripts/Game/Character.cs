@@ -23,7 +23,7 @@ public class Character : MonoBehaviour
     {
         inkScale = inkSr.transform.lossyScale;
         inkSr.gameObject.SetActive(false);
-        gameObject.AddComponent<ZenAutoInjecter>();
+        gameObject.AddComponent<ZenAutoInjecter>();// awakeはだめっぽい
     }
 
     public void OnInstantiate(CharacterManager characterManager)
@@ -59,6 +59,7 @@ public class Character : MonoBehaviour
 
     public void Follow(Vector3 bottomPos)
     {
+        if (!gameObject.activeSelf) return;
         var pos = bottomPos;
         pos.y = rb.position.y;
         rb.position = pos;
