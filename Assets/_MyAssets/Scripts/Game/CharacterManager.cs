@@ -19,7 +19,7 @@ public class CharacterManager : MonoBehaviour
     {
         dummyGo.SetActive(false);
         InstantiateCharacters(100);
-        Application.targetFrameRate = 300;
+        // Application.targetFrameRate = 300;
     }
 
     void InstantiateCharacters(int count)
