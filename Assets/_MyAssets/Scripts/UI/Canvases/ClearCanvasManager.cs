@@ -36,10 +36,6 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         UICameraController.i.PlayConfetti();
-        bool isLastStage = Variables.currentSceneBuildIndex == Variables.lastSceneBuildIndex;
-        nextButton.gameObject.SetActive(!isLastStage);
-        retryButton.gameObject.SetActive(isLastStage);
-        if (isLastStage) titleText.text = "COMPLETE!";
 
         DOVirtual.DelayedCall(1.0f, () =>
         {
@@ -75,13 +71,13 @@ public class ClearCanvasManager : BaseCanvasManager
 
     void OnClickNextButton()
     {
-        base.ToNextScene();
+        StageTransManager.i.LoadNextStage();
         SoundManager.i.PlayOneShot(0);
     }
 
     void OnClickRetryButton()
     {
-        base.ReLoadScene();
+        StageTransManager.i.ReLoadStage();
         SoundManager.i.PlayOneShot(0);
     }
     void OnClickHomeButton()

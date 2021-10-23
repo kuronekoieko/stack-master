@@ -30,7 +30,7 @@ public class DebugCanvasManager : BaseCanvasManager
         debugPanel.gameObject.SetActive(false);
         applyButton.onClick.AddListener(OnClickApplyButton);
         cancelButton.onClick.AddListener(OnClickCancelButton);
-        restartButton.onClick.AddListener(() => base.ReLoadScene());
+        restartButton.onClick.AddListener(() => StageTransManager.i.ReLoadStage());
     }
 
     public override void OnInitialize()
@@ -77,7 +77,7 @@ public class DebugCanvasManager : BaseCanvasManager
         }
 
         Close();
-        base.ReLoadScene();
+        StageTransManager.i.ReLoadStage();
     }
 
     void OnClickCancelButton()

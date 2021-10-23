@@ -25,11 +25,13 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        StageTransManager.i.LoadStageOnAppLaunch(
+            startStageNum: 1,
+            isMultiScene: true);
         SetCanvases();
-        Variables.currentSceneBuildIndex++;
-        SceneManager.LoadScene(Variables.currentSceneBuildIndex);
         // イベントにイベントハンドラーを追加
         SceneManager.sceneLoaded += SceneLoaded;
+        StageTransManager.i.ReLoadStage();
     }
 
     void SetCanvases()

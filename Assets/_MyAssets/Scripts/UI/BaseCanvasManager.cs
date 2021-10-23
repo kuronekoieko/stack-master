@@ -49,19 +49,6 @@ public abstract class BaseCanvasManager : MonoBehaviour
 
     public abstract void OnInitialize();
 
-    protected void ToNextScene()
-    {
-        if (!IsThisScreen) { return; }
-        Variables.currentSceneBuildIndex++;
-        SceneManager.LoadScene(Variables.currentSceneBuildIndex);
-    }
-
-    protected void ReLoadScene()
-    {
-        if (!IsThisScreen) { return; }
-        SceneManager.LoadScene(Variables.currentSceneBuildIndex);
-    }
-
     protected bool IsThisScreen => Variables.screenState == thisScreen;
 
     /*

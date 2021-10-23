@@ -55,7 +55,7 @@ public class FailedCanvasManager : BaseCanvasManager
 
     void OnClickRestartButton()
     {
-        base.ReLoadScene();
+        StageTransManager.i.ReLoadStage();
         SoundManager.i.PlayOneShot(0);
     }
 
