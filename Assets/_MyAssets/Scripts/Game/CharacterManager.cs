@@ -4,6 +4,13 @@ using UnityEngine;
 using System.Linq;
 using UniRx;
 
+public enum PlayerState
+{
+    BeforeStart,
+    Playing,
+    AfterFinishedGame,
+}
+
 public class CharacterManager : MonoBehaviour
 {
     [SerializeField] Character characterPrefab;
@@ -12,8 +19,8 @@ public class CharacterManager : MonoBehaviour
     public Vector3 BottomCharacterPos => Characters[0].transform.position;
     public int ActiveCount => activeCount;
     int activeCount;
-    bool isStart;
     float deltaX;
+    PlayerState playerState = PlayerState.BeforeStart;
 
     void Awake()
     {
@@ -43,36 +50,47 @@ public class CharacterManager : MonoBehaviour
                 if (_ > 0) return;
                 if (Variables.screenState != ScreenState.Game) return;
                 Variables.screenState = ScreenState.Failed;
+                playerState = PlayerState.AfterFinishedGame;
             })
             .AddTo(this.gameObject);
-
-        deltaX = Input.GetAxis("Mouse X") * Time.fixedDeltaTime / Time.deltaTime;
     }
 
 
     void Update()
     {
         deltaX = Input.GetAxis("Mouse X") * Time.fixedDeltaTime / Time.deltaTime * (float)Screen.width / 750f;
-
-        if (Input.GetMouseButtonDown(0))
+        switch (playerState)
         {
-            isStart = true;
+            case PlayerState.BeforeStart:
+                if (Input.GetMouseButtonDown(0))
+                {
+                    playerState = PlayerState.Playing;
+                }
+                break;
+            case PlayerState.Playing: Run(); break;
+            case PlayerState.AfterFinishedGame: Stop(); break;
+            default: break;
         }
 
-        if (!isStart) return;
+    }
 
+    void Run()
+    {
         if (!Input.GetMouseButton(0))
-        {
-            deltaX = 0;
-        }
-
-        if (Variables.screenState != ScreenState.Game)
         {
             deltaX = 0;
         }
 
         if (Characters.Count == 0) return;
         Characters[0].VelocityControl(deltaX);
+    }
+
+    void Stop()
+    {
+        for (int i = 0; i < Characters.Count; i++)
+        {
+            Characters[i].Stop();
+        }
     }
 
     void FixedUpdate()
@@ -85,6 +103,7 @@ public class CharacterManager : MonoBehaviour
 
     public void Dance()
     {
+        playerState = PlayerState.AfterFinishedGame;
         for (int i = 0; i < Characters.Count; i++)
         {
             Characters[i].Dance();

@@ -66,6 +66,11 @@ public class Character : MonoBehaviour
         animator.SetBool("IsFall", true);
     }
 
+    public void Stop()
+    {
+        rb.velocity = Vector3.zero;
+    }
+
     public void Dance()
     {
         transform.forward = -transform.forward;
