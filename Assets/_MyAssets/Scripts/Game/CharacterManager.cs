@@ -132,16 +132,18 @@ public class CharacterManager : MonoBehaviour
 
     public void Dead(int deadCount)
     {
-        var activeCharacters = Characters.Where(_ => _.gameObject.activeSelf).ToArray();
-        int lackCount = deadCount - activeCount;
-        if (lackCount > 0)
+        bool isKillTop = false;
+        var activeCharacters = Characters.Where(_ => _.gameObject.activeSelf).ToList();
+        if (isKillTop)
         {
-            deadCount = activeCount;
+            activeCharacters = activeCharacters.Reverse<Character>().ToList();
         }
 
-        for (int i = 0; i < deadCount; i++)
+        var killedCharacters = activeCharacters.Take(deadCount).ToArray();
+
+        for (int i = 0; i < killedCharacters.Length; i++)
         {
-            activeCharacters[i].Dead(Vector3.zero, true);
+            killedCharacters[i].Dead(Vector3.zero, true);
         }
     }
 }
