@@ -9,6 +9,7 @@ public class BackgroundManager : MonoBehaviour
     [SerializeField] int bgIndex;
     [SerializeField] Camera cam;
     [SerializeField] bool isDebug;
+    int CurrentBGIndex => (StageTransManager.i.CurrentDisplayStageNum - 1) % bgControllers.Length;
 
     void OnValidate()
     {
@@ -25,15 +26,14 @@ public class BackgroundManager : MonoBehaviour
     {
         bgControllers = GetComponentsInChildren<BackgroundController>(true);
     }
+
     void Start()
     {
         foreach (var bg in bgControllers)
         {
             bg.gameObject.SetActive(false);
         }
-        var index = isDebug ? bgIndex : Variables.bgIndex;
+        var index = isDebug ? bgIndex : CurrentBGIndex;
         bgControllers[index].Activate(cam);
-        Variables.bgIndex++;
-        if (Variables.bgIndex == bgControllers.Length) Variables.bgIndex = 0;
     }
 }

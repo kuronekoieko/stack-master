@@ -6,9 +6,9 @@ using System.IO;
 
 public class StageTransManager
 {
-    public static StageTransManager i { get { return _i; } }
+    public static StageTransManager i => _i;
     private static StageTransManager _i = new StageTransManager();
-    public int CurrentDisplayStageNum { get; private set; }
+    public int CurrentDisplayStageNum { get; private set; } = 1;
     int CurrentStageNum
     {
         get
