@@ -114,7 +114,6 @@ public class Character : MonoBehaviour
         if (goal == null) return;
         if (Variables.screenState != ScreenState.Game) return;
         Variables.screenState = ScreenState.Clear;
-        goal.OnGoaled();
         speedZ = 0;
         characterManager.Dance();
         cameraController.IsFollow = false;
