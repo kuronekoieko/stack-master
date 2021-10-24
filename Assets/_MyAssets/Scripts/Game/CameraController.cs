@@ -40,8 +40,8 @@ public class CameraController : MonoBehaviour
         if (characterManager.ActiveCount > 6)
         {
             distance = distance * (float)characterManager.ActiveCount / 6f;
-            RenderSettings.fogStartDistance = (float)characterManager.ActiveCount * 1.5f;
-            RenderSettings.fogEndDistance = 300f + RenderSettings.fogStartDistance;
+            // RenderSettings.fogStartDistance = (float)characterManager.ActiveCount * 1.5f;
+            // RenderSettings.fogEndDistance = 300f + RenderSettings.fogStartDistance;
         }
         Vector3 targetPos = characterManager.BottomCharacterPos;
         targetPos.x = 0;

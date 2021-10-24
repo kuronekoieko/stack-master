@@ -6,6 +6,12 @@ public class BackgroundController : MonoBehaviour
 {
     [SerializeField] Color fogColor;
 
+    void OnValidate()
+    {
+        Camera.main.backgroundColor = fogColor;
+        RenderSettings.fogColor = fogColor;
+    }
+
 
     public void Activate()
     {
