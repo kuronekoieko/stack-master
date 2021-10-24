@@ -7,12 +7,12 @@ public class GoalController : MonoBehaviour
 {
     [SerializeField] SpriteRenderer goalSr;
 
-
     void Awake()
     {
         Material material = new Material(goalSr.material);
         goalSr.material = material;
     }
+
     public void OnGoaled()
     {
         DOTween.ToAlpha(
