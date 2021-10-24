@@ -5,17 +5,20 @@ using UnityEngine;
 public class BackgroundController : MonoBehaviour
 {
     [SerializeField] Color fogColor;
+    public BackgroundManager BackgroundManager { get; set; }
 
     void OnValidate()
     {
-        Camera.main.backgroundColor = fogColor;
+        var cameraController = FindObjectOfType<CameraController>();
+        if (cameraController == null) return;
+        cameraController.GetComponent<Camera>().backgroundColor = fogColor;
         RenderSettings.fogColor = fogColor;
     }
 
 
-    public void Activate()
+    public void Activate(Camera cam)
     {
-        Camera.main.backgroundColor = fogColor;
+        cam.backgroundColor = fogColor;
         RenderSettings.fogColor = fogColor;
         gameObject.SetActive(true);
     }

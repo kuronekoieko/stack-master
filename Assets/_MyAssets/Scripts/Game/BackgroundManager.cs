@@ -7,6 +7,8 @@ public class BackgroundManager : MonoBehaviour
 {
     BackgroundController[] bgControllers;
     [SerializeField] int bgIndex;
+    [SerializeField] Camera cam;
+    [SerializeField] bool isDebug;
 
     void OnValidate()
     {
@@ -16,7 +18,7 @@ public class BackgroundManager : MonoBehaviour
         {
             bg.gameObject.SetActive(false);
         }
-        bgControllers[bgIndex].Activate();
+        bgControllers[bgIndex].Activate(cam);
     }
 
     void Awake()
@@ -29,6 +31,9 @@ public class BackgroundManager : MonoBehaviour
         {
             bg.gameObject.SetActive(false);
         }
-        bgControllers[bgIndex].Activate();
+        var index = isDebug ? bgIndex : Variables.bgIndex;
+        bgControllers[index].Activate(cam);
+        Variables.bgIndex++;
+        if (Variables.bgIndex == bgControllers.Length) Variables.bgIndex = 0;
     }
 }
