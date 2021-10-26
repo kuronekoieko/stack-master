@@ -17,6 +17,4 @@ public class MaxSdkManager : MonoBehaviour
         MaxSdk.InitializeSdk();
         MaxSdk.SetMuted(true);  // オーディオのミュート
     }
-
-
 }
