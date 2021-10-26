@@ -78,8 +78,13 @@ public class ClearCanvasManager : BaseCanvasManager
 
     void OnClickNextButton()
     {
-        StageTransManager.i.LoadNextStage();
+        Time.timeScale = 0;
         SoundManager.i.PlayOneShot(0);
+        MaxSdkInterstitial.i.Show(() =>
+        {
+            StageTransManager.i.LoadNextStage();
+            Time.timeScale = 1;
+        });
     }
 
     void OnClickRetryButton()
