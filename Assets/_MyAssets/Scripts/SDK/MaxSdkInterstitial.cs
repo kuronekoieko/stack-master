@@ -5,7 +5,7 @@ using System;
 
 public class MaxSdkInterstitial : MonoBehaviour
 {
-    string adUnitId = "YOUR_AD_UNIT_ID";
+    string adUnitId = "328618b8e949358c";
     int retryAttempt;
     public static MaxSdkInterstitial i;
     Action onHidden = () => { };
