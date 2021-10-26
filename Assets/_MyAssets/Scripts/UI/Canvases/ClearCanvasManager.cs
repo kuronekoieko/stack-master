@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using DG.Tweening;
+using System;
 
 public class ClearCanvasManager : BaseCanvasManager
 {
@@ -78,13 +79,27 @@ public class ClearCanvasManager : BaseCanvasManager
 
     void OnClickNextButton()
     {
-        Time.timeScale = 0;
+
         SoundManager.i.PlayOneShot(0);
-        MaxSdkInterstitial.i.Show(() =>
+
+        Time.timeScale = 0;
+        ShowInterstitial(() =>
         {
             StageTransManager.i.LoadNextStage();
             Time.timeScale = 1;
         });
+
+    }
+
+    void ShowInterstitial(Action onHidden)
+    {
+        if (StageTransManager.i.CurrentDisplayStageNum % 3 != 0)
+        {
+            onHidden();
+            return;
+        }
+
+        MaxSdkInterstitial.i.Show(onHidden);
     }
 
     void OnClickRetryButton()
