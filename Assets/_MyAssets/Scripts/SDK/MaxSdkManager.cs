@@ -15,6 +15,7 @@ public class MaxSdkManager : MonoBehaviour
         MaxSdk.SetSdkKey("nirDFR5Ia8FAlCZc9rlX8wP_kDNEiuHc4HGKHSQ4fFDhScOd5lW-T31uZdVJ9vqy35mpZCJVS7URsASrlXu7iF");
         // MaxSdk.SetUserId("USER_ID");
         MaxSdk.InitializeSdk();
+        MaxSdk.SetMuted(true);  // オーディオのミュート
     }
 
 
