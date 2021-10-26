@@ -6,10 +6,11 @@ public class MaxSdkBanner : MonoBehaviour
 {
     string bannerAdUnitId = "643474e10e4d8d8c"; // Retrieve the ID from your account
 
-    void Start()
+    public static MaxSdkBanner i;
+
+    void Awake()
     {
-        InitializeBannerAds();
-        Show();
+        i = this;
     }
 
     public void InitializeBannerAds()
@@ -20,6 +21,7 @@ public class MaxSdkBanner : MonoBehaviour
 
         // Set background or background color for banners to be fully functional
         MaxSdk.SetBannerBackgroundColor(bannerAdUnitId, Color.white);
+        Show();
     }
 
     public void Show()

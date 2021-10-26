@@ -1,0 +1,30 @@
+<dependencies>
+  <packages>
+    <package>com.applovin.mediation:mintegral-adapter:15.7.21.0</package>
+    <package>com.applovin.mediation:unityads-adapter:3.7.5.1</package>
+    <package>com.applovin:applovin-sdk:10.3.4</package>
+    <package>com.google.android.exoplayer:exoplayer:2.13.3</package>
+    <package>com.google.android.gms:play-services-ads-identifier:16.0.0</package>
+  </packages>
+  <files>
+    <file>Assets/Plugins/Android/androidx.legacy.legacy-support-core-utils-1.0.0.aar</file>
+    <file>Assets/Plugins/Android/androidx.lifecycle.lifecycle-livedata-core-2.0.0.aar</file>
+    <file>Assets/Plugins/Android/com.mbridge.msdk.oversea.interstitial-15.7.21.aar</file>
+    <file>Assets/Plugins/Android/com.mbridge.msdk.oversea.mbjscommon-15.7.21.aar</file>
+  </files>
+  <settings>
+    <setting name="androidAbis" value="arm64-v8a" />
+    <setting name="bundleId" value="com.studiozzz.human" />
+    <setting name="explodeAars" value="True" />
+    <setting name="gradleBuildEnabled" value="True" />
+    <setting name="gradlePropertiesTemplateEnabled" value="False" />
+    <setting name="gradleTemplateEnabled" value="False" />
+    <setting name="installAndroidPackages" value="True" />
+    <setting name="localMavenRepoDir" value="Assets/GeneratedLocalRepo" />
+    <setting name="packageDir" value="Assets/Plugins/Android" />
+    <setting name="patchAndroidManifest" value="True" />
+    <setting name="patchMainTemplateGradle" value="True" />
+    <setting name="projectExportEnabled" value="False" />
+    <setting name="useJetifier" value="True" />
+  </settings>
+</dependencies>

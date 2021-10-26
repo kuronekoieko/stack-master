@@ -15,11 +15,6 @@ public class MaxSdkInterstitial : MonoBehaviour
         i = this;
     }
 
-    void Start()
-    {
-        InitializeInterstitialAds();
-    }
-
     public void Show(Action onHidden)
     {
         this.onHidden = onHidden;
