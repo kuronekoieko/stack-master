@@ -15,7 +15,7 @@ public class GoalController : MonoBehaviour
 
     void Awake()
     {
-        int stepCount = 10;
+        int stepCount = 50;
         goalStairs = new GoalStairController[stepCount];
         Vector3 pos = firstGoalStair.transform.position;
         stepHeight = firstGoalStair.StepHeight;
@@ -31,8 +31,7 @@ public class GoalController : MonoBehaviour
             {
                 goalStairs[i] = Instantiate(firstGoalStair, transform);
             }
-            goalStairs[i].OnInstansiate(i * stepHeight, stepColors[i % stepColors.Length]);
-            goalStairs[i].transform.position = pos;
+            goalStairs[i].OnInstansiate(pos, i * stepHeight, stepColors[i % stepColors.Length]);
             pos.z += stepDepth;
             pos.y += stepHeight;
         }
