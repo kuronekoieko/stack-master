@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Firebase.Extensions;
+using Firebase.Analytics;
 
 /// <summary>
 /// Unity 用 Google アナリティクスを使ってみる
@@ -21,7 +23,7 @@ public class FirebaseAnalyticsManager : MonoBehaviour
     bool isAvailable;
 
 
-   public void Initialize()
+    public void Initialize()
     {
 #if UNITY_IOS
         isAvailable = true;
@@ -55,19 +57,25 @@ public class FirebaseAnalyticsManager : MonoBehaviour
         long value)
     {
         if (!isAvailable) { return; }
-        Firebase.Analytics.FirebaseAnalytics.LogEvent(
+        FirebaseAnalytics.LogEvent(
             name: eventCategory + ":" + eventAction,
             parameterName: eventAction,
             parameterValue: value);
     }
 
-    public void LogScreen(string title)
+    public void LogScreen1(string title)
     {
         if (!isAvailable) { return; }
-        // Firebase.Analytics.FirebaseAnalytics.SetCurrentScreen(screenName: title, screenClass: title);
+        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventScreenView, "テスト1", title);
+        Debug.Log("LogScreen1");
     }
 
-
+    public void LogScreen2(string title)
+    {
+        if (!isAvailable) { return; }
+        FirebaseAnalytics.LogEvent(title, "テスト2", title);
+        Debug.Log("LogScreen2");
+    }
 
 
 
