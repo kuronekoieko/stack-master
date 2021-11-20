@@ -15,7 +15,7 @@ public class HomeCanvasManager : BaseCanvasManager
         startButton.onClick.AddListener(OnClickStartButton);
     }
 
-    public override void OnInitialize()
+    public override void OnSceneLoaded()
     {
     }
 

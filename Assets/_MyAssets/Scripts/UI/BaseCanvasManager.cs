@@ -47,7 +47,7 @@ public abstract class BaseCanvasManager : MonoBehaviour
 
     protected abstract void OnClose();
 
-    public abstract void OnInitialize();
+    public abstract void OnSceneLoaded();
 
     protected bool IsThisScreen => Variables.screenState == thisScreen;
 

@@ -33,7 +33,7 @@ public class DebugCanvasManager : BaseCanvasManager
         restartButton.onClick.AddListener(() => StageTransManager.i.ReLoadStage());
     }
 
-    public override void OnInitialize()
+    public override void OnSceneLoaded()
     {
     }
 

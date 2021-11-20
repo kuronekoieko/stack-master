@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
         Application.targetFrameRate = 60;
         DontDestroyOnLoad(gameObject);
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
+        FirebaseAnalyticsManager.i.Initialize();
     }
 
     void Start()
@@ -49,12 +50,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // イベントハンドラー（イベント発生時に動かしたい処理）
     void SceneLoaded(Scene nextScene, LoadSceneMode mode)
     {
         foreach (var baseCanvasManager in baseCanvasManagers)
         {
-            baseCanvasManager.OnInitialize();
+            baseCanvasManager.OnSceneLoaded();
         }
         Variables.screenState = initializeScreen;
     }

@@ -13,7 +13,7 @@ public class StartCanvasManager : BaseCanvasManager
         //tutrialHandController.OnStart();
     }
 
-    public override void OnInitialize()
+    public override void OnSceneLoaded()
     {
         gameObject.SetActive(true);
     }

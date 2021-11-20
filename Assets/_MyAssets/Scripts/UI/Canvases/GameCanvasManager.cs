@@ -26,7 +26,7 @@ public class GameCanvasManager : BaseCanvasManager
         gameObject.SetActive(true);
     }
 
-    public override void OnInitialize()
+    public override void OnSceneLoaded()
     {
     }
 

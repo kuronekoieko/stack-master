@@ -34,7 +34,7 @@ public class LoginCanvasManager : BaseCanvasManager
         coinGetAnim.OnStart();
     }
 
-    public override void OnInitialize()
+    public override void OnSceneLoaded()
     {
     }
 
