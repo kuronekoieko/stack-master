@@ -12,7 +12,7 @@ public class Character : MonoBehaviour
     [SerializeField] SpriteRenderer inkSr;
     [SerializeField] Animator animator;
     [Inject] CameraController cameraController;
-    float speedZ = 13f;
+    float speedZ = 15f;
     Vector3 vel;
     float currentVelocity;
     CharacterManager characterManager;
@@ -119,6 +119,8 @@ public class Character : MonoBehaviour
         // characterManager.Dance();
         // cameraController.IsFollow = false;
         characterManager.playerState = PlayerState.GoalBonus;
+        cameraController.CameraState = CameraState.ClimbingStairs;
+        speedZ *= 1.5f;
     }
 
     void OnTriggerEnterGoalStair(Collider other)
@@ -164,7 +166,7 @@ public class Character : MonoBehaviour
 
         if (characterManager.ActiveCount > 0) return;
         animator.SetBool("IsDance", true);
-        cameraController.IsFollow = false;
+        cameraController.CameraState = CameraState.Rotate;
         Variables.screenState = ScreenState.Clear;
 
     }

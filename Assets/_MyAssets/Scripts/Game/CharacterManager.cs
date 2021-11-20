@@ -17,7 +17,18 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] Character characterPrefab;
     [SerializeField] GameObject dummyGo;
     public List<Character> Characters { get; set; } = new List<Character>();
-    public Vector3 BottomCharacterPos => Characters[0].transform.position;
+    public Vector3 BottomCharacterPos
+    {
+        get
+        {
+            if (Characters[0].gameObject.activeSelf)
+            {
+                bottomCharacterPos = Characters[0].transform.position;
+            }
+            return bottomCharacterPos;
+        }
+    }
+    Vector3 bottomCharacterPos;
     public int ActiveCount => activeCount;
     int activeCount;
     float deltaX;
