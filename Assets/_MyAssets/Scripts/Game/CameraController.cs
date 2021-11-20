@@ -13,7 +13,6 @@ public enum CameraState
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] Transform startTarget;
     [Inject] CharacterManager characterManager;
     Vector3 offset;
     Vector3 currentVelocity;

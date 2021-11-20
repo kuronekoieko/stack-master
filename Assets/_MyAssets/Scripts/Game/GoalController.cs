@@ -31,7 +31,8 @@ public class GoalController : MonoBehaviour
             {
                 goalStairs[i] = Instantiate(firstGoalStair, transform);
             }
-            goalStairs[i].OnInstansiate(pos, i * stepHeight, stepColors[i % stepColors.Length]);
+            float rate = 1.1f + (float)i * 0.1f;
+            goalStairs[i].OnInstansiate(rate, pos, i * stepHeight, stepColors[i % stepColors.Length]);
             pos.z += stepDepth;
             pos.y += stepHeight;
         }
