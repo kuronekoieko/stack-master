@@ -81,6 +81,7 @@ public class Character : MonoBehaviour
     {
         OnTriggerEnterGate(other);
         OnTriggerEnterGoal(other);
+        OnTriggerEnterGoalStair(other);
         if (other.CompareTag("Obstacle"))
         {
             Dead(other.ClosestPoint(transform.position), false);
@@ -112,11 +113,19 @@ public class Character : MonoBehaviour
     {
         var goal = other.gameObject.GetComponent<GoalController>();
         if (goal == null) return;
-        if (Variables.screenState != ScreenState.Game) return;
-        Variables.screenState = ScreenState.Clear;
-        speedZ = 0;
-        characterManager.Dance();
-        cameraController.IsFollow = false;
+        // if (Variables.screenState != ScreenState.Game) return;
+        // Variables.screenState = ScreenState.Clear;
+        // speedZ = 0;
+        // characterManager.Dance();
+        // cameraController.IsFollow = false;
+        characterManager.playerState = PlayerState.GoalBonus;
+    }
+
+    void OnTriggerEnterGoalStair(Collider other)
+    {
+        var goalStair = other.gameObject.GetComponent<GoalStairController>();
+        if (goalStair == null) return;
+        Leave();
     }
 
     public void Dead(Vector3 hitPos, bool isHitGate)
@@ -144,5 +153,19 @@ public class Character : MonoBehaviour
         hitPos.y += Height / 2f;
         inkSr.transform.position = hitPos;
         inkSr.transform.DOScale(inkScale, 0.5f);
+    }
+
+    void Leave()
+    {
+        characterManager.Characters.Remove(this);
+        rb.isKinematic = true;
+        animator.SetBool("IsFall", false);
+        animator.SetBool("IsRun", false);
+
+        if (characterManager.ActiveCount > 0) return;
+        animator.SetBool("IsDance", true);
+        cameraController.IsFollow = false;
+        Variables.screenState = ScreenState.Clear;
+
     }
 }

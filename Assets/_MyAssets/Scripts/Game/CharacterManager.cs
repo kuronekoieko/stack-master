@@ -8,6 +8,7 @@ public enum PlayerState
 {
     BeforeStart,
     Playing,
+    GoalBonus,
     AfterFinishedGame,
 }
 
@@ -20,7 +21,7 @@ public class CharacterManager : MonoBehaviour
     public int ActiveCount => activeCount;
     int activeCount;
     float deltaX;
-    PlayerState playerState = PlayerState.BeforeStart;
+    public PlayerState playerState { get; set; } = PlayerState.BeforeStart;
 
     void Awake()
     {
@@ -68,6 +69,7 @@ public class CharacterManager : MonoBehaviour
                 }
                 break;
             case PlayerState.Playing: Run(); break;
+            case PlayerState.GoalBonus: GoalBonus(); break;
             case PlayerState.AfterFinishedGame: Stop(); break;
             default: break;
         }
@@ -83,6 +85,11 @@ public class CharacterManager : MonoBehaviour
 
         if (Characters.Count == 0) return;
         Characters[0].VelocityControl(deltaX);
+    }
+
+    void GoalBonus()
+    {
+        Characters[0].VelocityControl(-Characters[0].transform.position.x);
     }
 
     void Stop()

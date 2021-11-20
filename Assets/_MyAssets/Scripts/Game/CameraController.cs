@@ -4,10 +4,11 @@ using UnityEngine;
 using DG.Tweening;
 using Zenject;
 
-/// <summary>
-/// Unityで解像度に合わせて画面のサイズを自動調整する
-/// http://www.project-unknown.jp/entry/2017/01/05/212837
-/// </summary>
+public enum CameraState
+{
+
+}
+
 public class CameraController : MonoBehaviour
 {
     [SerializeField] Transform startTarget;
