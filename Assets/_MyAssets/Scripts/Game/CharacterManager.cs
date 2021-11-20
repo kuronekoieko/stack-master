@@ -61,6 +61,7 @@ public class CharacterManager : MonoBehaviour
                 activeCount = _;
                 if (_ > 0) return;
                 if (Variables.screenState != ScreenState.Game) return;
+                if (playerState != PlayerState.Playing) return;
                 Variables.screenState = ScreenState.Failed;
                 playerState = PlayerState.AfterFinishedGame;
             })
