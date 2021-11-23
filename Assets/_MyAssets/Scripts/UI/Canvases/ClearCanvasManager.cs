@@ -17,7 +17,7 @@ public class ClearCanvasManager : BaseCanvasManager
     Sequence retryButtonSequence;
     Tween emojiRotateTween;
     Tween emojiScaleTween;
-    int currencyBaseCount = 10;
+    int currencyBaseCount = 15;
 
 
     public override void OnStart()
@@ -41,7 +41,8 @@ public class ClearCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
-        UICameraController.i.PlayConfetti();
+        //UICameraController.i.PlayConfetti();
+        SoundManager.i.PlayOneShot(1);
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
 
         int curencyCount = Mathf.RoundToInt(Variables.goalRate * currencyBaseCount);
