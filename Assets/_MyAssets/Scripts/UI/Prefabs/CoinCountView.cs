@@ -12,7 +12,7 @@ public class CoinCountView : MonoBehaviour
 
     void Awake()
     {
-        this.ObserveEveryValueChanged(coinCount => SaveData.i.coinCount)
+        this.ObserveEveryValueChanged(coinCount => SaveData.i.currencyCount)
             .Subscribe(coinCount => CountUpAnim())
             .AddTo(this.gameObject);
 
@@ -23,7 +23,7 @@ public class CoinCountView : MonoBehaviour
 
     void CountUpAnim()
     {
-        DOTween.To(() => coinCount, (x) => coinCount = x, SaveData.i.coinCount, 0.5f);
+        DOTween.To(() => coinCount, (x) => coinCount = x, SaveData.i.currencyCount, 0.5f);
     }
 
 

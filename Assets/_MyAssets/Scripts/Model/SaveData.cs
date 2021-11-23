@@ -7,7 +7,7 @@ public class SaveData
     public static SaveData i => _i;
     private static SaveData _i = new SaveData();
     public bool isOffSE;
-    public int coinCount;
+    public int currencyCount;
     public UserDateTime receivedLoginBonusUserDateTime;
     public int lastClearedDisplayStageNum = 0;
 }

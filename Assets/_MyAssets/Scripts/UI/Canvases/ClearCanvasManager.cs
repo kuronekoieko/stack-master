@@ -12,10 +12,12 @@ public class ClearCanvasManager : BaseCanvasManager
     [SerializeField] Button retryButton;
     [SerializeField] Text titleText;
     [SerializeField] Image emojiImage;
+    [SerializeField] Text currencyCountText;
     Sequence nextButtonSequence;
     Sequence retryButtonSequence;
     Tween emojiRotateTween;
     Tween emojiScaleTween;
+    int currencyBaseCount = 10;
 
 
     public override void OnStart()
@@ -41,6 +43,11 @@ public class ClearCanvasManager : BaseCanvasManager
     {
         UICameraController.i.PlayConfetti();
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
+
+        int curencyCount = Mathf.RoundToInt(Variables.goalRate * currencyBaseCount);
+        SaveData.i.currencyCount += curencyCount;
+        currencyCountText.text = "+" + curencyCount.ToString();
+
         SaveDataManager.i.Save();
 
         DOVirtual.DelayedCall(1.0f, () =>
