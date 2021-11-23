@@ -9,7 +9,8 @@ public class CoinCountView : MonoBehaviour
 {
     [SerializeField] Text coinCountText;
     int coinCount;
-    public void OnStart()
+
+    void Awake()
     {
         this.ObserveEveryValueChanged(coinCount => SaveData.i.coinCount)
             .Subscribe(coinCount => CountUpAnim())
