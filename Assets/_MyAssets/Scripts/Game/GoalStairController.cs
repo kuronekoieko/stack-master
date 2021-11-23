@@ -33,6 +33,7 @@ public class GoalStairController : MonoBehaviour
     {
         Variables.goalRate = goalRate;
         stepMr.material.DOColor(Color.white, 1f).SetEase(Ease.InOutFlash, 2).SetLoops(-1);
+        textMeshPro.DOFade(0, 1f).SetEase(Ease.InOutFlash, 2).SetLoops(-1);
         confetti_L.Play();
         confetti_R.Play();
     }
