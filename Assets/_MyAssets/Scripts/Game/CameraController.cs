@@ -40,9 +40,11 @@ public class CameraController : MonoBehaviour
         if (characterManager.ActiveCount == 0) return;
 
         float distance = Vector3.Distance(offset, Vector3.zero);
-        if (characterManager.ActiveCount > 6)
+        if (6 < characterManager.ActiveCount)
         {
-            distance = distance * (float)characterManager.ActiveCount / 6f;
+            float rate = (float)characterManager.ActiveCount / 6f;
+
+            distance = distance * Mathf.Clamp(rate, 1f, 3.5f);
             RenderSettings.fogStartDistance = Mathf.Lerp(RenderSettings.fogStartDistance, 100f + (float)characterManager.ActiveCount * 1.5f, 0.5f * Time.deltaTime);
             RenderSettings.fogEndDistance = Mathf.Lerp(RenderSettings.fogEndDistance, 300f + RenderSettings.fogStartDistance, 0.5f * Time.deltaTime);
         }
