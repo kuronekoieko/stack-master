@@ -67,14 +67,14 @@ public class FirebaseAnalyticsManager : MonoBehaviour
     {
         if (!isAvailable) { return; }
         FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventScreenView, "テスト1", title);
-        Debug.Log("LogScreen1");
+        Debug.Log("LogScreen1 " + title);
     }
 
     public void LogScreen2(string title)
     {
         if (!isAvailable) { return; }
         FirebaseAnalytics.LogEvent(title, "テスト2", title);
-        Debug.Log("LogScreen2");
+        Debug.Log("LogScreen2 " + title);
     }
 
 

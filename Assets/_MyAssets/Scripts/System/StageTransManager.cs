@@ -9,7 +9,7 @@ public class StageTransManager
     public static StageTransManager i => _i;
     private static StageTransManager _i = new StageTransManager();
     public int CurrentDisplayStageNum { get; private set; } = 1;
-    int CurrentStageNum
+    public int CurrentStageNum
     {
         get
         {
@@ -46,7 +46,7 @@ public class StageTransManager
     /// </summary>
     public void ReLoadStage()
     {
-        int sceneBuildIndex = CurrentStageNum;
+        int sceneBuildIndex = 1;
         SceneManager.LoadScene(sceneBuildIndex);
     }
 

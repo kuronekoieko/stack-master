@@ -169,7 +169,6 @@ public class Character : MonoBehaviour
         cameraController.CameraState = CameraState.Rotate;
         Variables.screenState = ScreenState.Clear;
 
-        Debug.Log("aaaaa");
         Variables.goalRate = 1.0f;
 
         Ray ray = new Ray(transform.position + Vector3.up * 0.1f, Vector3.down);
