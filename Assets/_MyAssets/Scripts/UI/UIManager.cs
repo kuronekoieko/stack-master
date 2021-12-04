@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
         FirebaseAnalyticsManager.i.Initialize();
+        Variables.isLaunchUIScene = true;
     }
 
     void Start()

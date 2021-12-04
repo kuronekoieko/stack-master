@@ -9,4 +9,5 @@ public class Variables : MonoBehaviour
     public static float speedX = 6f;
     public static float smoothTimeX = 0.05f;
     public static float goalRate = 1.0f;
+    public static bool isLaunchUIScene = false;
 }
