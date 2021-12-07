@@ -75,10 +75,18 @@ public class CharacterManager : MonoBehaviour
         switch (playerState)
         {
             case PlayerState.BeforeStart:
-                if (Input.GetMouseButtonDown(0))
+
+                if (Variables.isLaunchUIScene)
                 {
-                    playerState = PlayerState.Playing;
+                    if (Variables.screenState != ScreenState.Game) return;
                 }
+                else
+                {
+                    if (!Input.GetMouseButtonDown(0)) return;
+                }
+
+                playerState = PlayerState.Playing;
+
                 break;
             case PlayerState.Playing: Run(); break;
             case PlayerState.GoalBonus: GoalBonus(); break;

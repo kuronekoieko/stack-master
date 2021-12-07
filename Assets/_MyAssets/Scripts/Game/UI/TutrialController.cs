@@ -17,15 +17,8 @@ public class TutrialController : MonoBehaviour
         tutrialHandController.DragHorizontalAnim(leftPosRt.anchoredPosition3D, rightPosRt.anchoredPosition3D);
     }
 
-    public void OnUpdate()
+    public void OnClose()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            tutrialHandController.Kill();
-            gameObject.SetActive(false);
-            Variables.screenState = ScreenState.Game;
-        }
+        tutrialHandController.Kill();
     }
-
-
 }
