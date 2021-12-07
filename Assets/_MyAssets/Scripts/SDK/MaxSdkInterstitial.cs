@@ -18,14 +18,19 @@ public class MaxSdkInterstitial : MonoBehaviour
     public void Show(Action onHidden)
     {
         this.onHidden = onHidden;
-        if (MaxSdk.IsInterstitialReady(adUnitId))
-        {
-            MaxSdk.ShowInterstitial(adUnitId);
-        }
-        else
+        if (Debug.isDebugBuild)
         {
             onHidden();
+            return;
         }
+
+        if (!MaxSdk.IsInterstitialReady(adUnitId))
+        {
+            onHidden();
+            return;
+        }
+
+        MaxSdk.ShowInterstitial(adUnitId);
     }
 
     public void InitializeInterstitialAds()

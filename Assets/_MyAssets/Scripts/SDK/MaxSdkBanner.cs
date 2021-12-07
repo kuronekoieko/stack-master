@@ -15,6 +15,7 @@ public class MaxSdkBanner : MonoBehaviour
 
     public void InitializeBannerAds()
     {
+        if (Debug.isDebugBuild) return;
         // Banners are automatically sized to 320×50 on phones and 728×90 on tablets
         // You may call the utility method MaxSdkUtils.isTablet() to help with view sizing adjustments
         MaxSdk.CreateBanner(bannerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter);
