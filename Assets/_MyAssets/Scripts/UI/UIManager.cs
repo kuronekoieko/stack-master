@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour
     {
         foreach (var baseCanvasManager in baseCanvasManagers)
         {
-            if (!baseCanvasManager.gameObject.activeSelf) continue;
+            if (!baseCanvasManager.IsThisScreen) continue;
             baseCanvasManager.OnUpdate();
         }
     }
