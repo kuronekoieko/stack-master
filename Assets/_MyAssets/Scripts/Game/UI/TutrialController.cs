@@ -11,17 +11,21 @@ public class TutrialController : MonoBehaviour
     [SerializeField] RectTransform rightPosRt;
 
 
-    void Start()
+    public void OnOpen()
     {
+        gameObject.SetActive(true);
         tutrialHandController.DragHorizontalAnim(leftPosRt.anchoredPosition3D, rightPosRt.anchoredPosition3D);
     }
 
-    void Update()
+    public void OnUpdate()
     {
         if (Input.GetMouseButtonDown(0))
         {
             tutrialHandController.Kill();
             gameObject.SetActive(false);
+            Variables.screenState = ScreenState.Game;
         }
     }
+
+
 }
