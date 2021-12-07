@@ -173,7 +173,7 @@ public class Character : MonoBehaviour
 
         Ray ray = new Ray(transform.position + Vector3.up * 0.1f, Vector3.down);
         if (!Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 5f)) return;
-        Debug.Log(hit.collider.gameObject.name);
+        //        Debug.Log(hit.collider.gameObject.name);
         var goalStair = hit.collider.gameObject.GetComponent<GoalStairController>();
         if (goalStair == null) return;
         goalStair.Selected();

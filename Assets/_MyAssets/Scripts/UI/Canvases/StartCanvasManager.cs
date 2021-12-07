@@ -18,7 +18,6 @@ public class StartCanvasManager : BaseCanvasManager
 
     public override void OnUpdate()
     {
-        if (!base.IsThisScreen) { return; }
         tutrialController.OnUpdate();
     }
 

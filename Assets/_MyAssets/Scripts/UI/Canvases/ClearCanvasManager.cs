@@ -35,7 +35,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
     public override void OnUpdate()
     {
-        if (!base.IsThisScreen) { return; }
+
 
     }
 
@@ -89,13 +89,11 @@ public class ClearCanvasManager : BaseCanvasManager
     {
 
         SoundManager.i.PlayOneShot(0);
-        Debug.Log("A");
         Time.timeScale = 0;
         ShowInterstitial(() =>
         {
             StageTransManager.i.LoadNextStage();
             Time.timeScale = 1;
-            Debug.Log("B");
         });
 
     }

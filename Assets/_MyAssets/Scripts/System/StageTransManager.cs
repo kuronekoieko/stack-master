@@ -48,7 +48,6 @@ public class StageTransManager
     {
         int sceneBuildIndex = 1;
         SceneManager.LoadScene(sceneBuildIndex);
-        Debug.Log("B");
     }
 
     /// <summary>

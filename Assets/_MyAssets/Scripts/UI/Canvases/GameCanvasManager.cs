@@ -34,7 +34,6 @@ public class GameCanvasManager : BaseCanvasManager
 
     public override void OnUpdate()
     {
-        if (!base.IsThisScreen) { return; }
 
     }
 

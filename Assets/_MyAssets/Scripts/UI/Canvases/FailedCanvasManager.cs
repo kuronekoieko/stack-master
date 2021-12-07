@@ -24,7 +24,6 @@ public class FailedCanvasManager : BaseCanvasManager
 
     public override void OnUpdate()
     {
-        if (!base.IsThisScreen) { return; }
 
     }
 
