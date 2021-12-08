@@ -12,6 +12,7 @@ public enum ScreenState
     Login = 3,
     Home = 4,
     Start = 5,
+    Gift = 6,
 }
 
 public abstract class BaseCanvasManager : MonoBehaviour

@@ -9,12 +9,12 @@ using System;
 public class ClearCanvasManager : BaseCanvasManager
 {
     [SerializeField] Button nextButton;
-    [SerializeField] Button retryButton;
+    [SerializeField] Button giftButton;
     [SerializeField] Text titleText;
     [SerializeField] Image emojiImage;
     [SerializeField] Text currencyCountText;
     Sequence nextButtonSequence;
-    Sequence retryButtonSequence;
+    Sequence giftButtonSequence;
     Tween emojiRotateTween;
     Tween emojiScaleTween;
     int currencyBaseCount = 15;
@@ -25,7 +25,7 @@ public class ClearCanvasManager : BaseCanvasManager
         base.SetScreenAction(thisScreen: ScreenState.Clear);
 
         nextButton.onClick.AddListener(OnClickNextButton);
-        retryButton.onClick.AddListener(OnClickRetryButton);
+        giftButton.onClick.AddListener(OnClickGiftButton);
         gameObject.SetActive(false);
     }
 
@@ -41,7 +41,11 @@ public class ClearCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
-        //UICameraController.i.PlayConfetti();
+        bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
+        isNextGiftScreen = true;
+        nextButton.gameObject.SetActive(!isNextGiftScreen);
+        giftButton.gameObject.SetActive(isNextGiftScreen); ;
+
         SoundManager.i.PlayOneShot(1);
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
 
@@ -57,11 +61,11 @@ public class ClearCanvasManager : BaseCanvasManager
             transform.localScale = Vector3.zero;
             transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
 
-            retryButton.transform.localScale = Vector3.one;
-            retryButtonSequence = DOTween.Sequence()
-            .Append(retryButton.transform.DOScale(Vector3.one * 1.1f, 0.5f))
-            .Append(retryButton.transform.DOScale(Vector3.one, 0.5f));
-            retryButtonSequence.SetLoops(-1);
+            giftButton.transform.localScale = Vector3.one;
+            giftButtonSequence = DOTween.Sequence()
+            .Append(giftButton.transform.DOScale(Vector3.one * 1.1f, 0.5f))
+            .Append(giftButton.transform.DOScale(Vector3.one, 0.5f));
+            giftButtonSequence.SetLoops(-1);
 
             nextButton.transform.localScale = Vector3.one;
             nextButtonSequence = DOTween.Sequence()
@@ -80,7 +84,7 @@ public class ClearCanvasManager : BaseCanvasManager
     {
         gameObject.SetActive(false);
         nextButtonSequence.Kill();
-        retryButtonSequence.Kill();
+        giftButtonSequence.Kill();
         emojiRotateTween.Kill();
         emojiScaleTween.Kill();
     }
@@ -109,14 +113,20 @@ public class ClearCanvasManager : BaseCanvasManager
         MaxSdkInterstitial.i.Show(onHidden);
     }
 
-    void OnClickRetryButton()
-    {
-        StageTransManager.i.ReLoadStage();
-        SoundManager.i.PlayOneShot(0);
-    }
     void OnClickHomeButton()
     {
         Variables.screenState = ScreenState.Home;
         SoundManager.i.PlayOneShot(0);
+    }
+
+    void OnClickGiftButton()
+    {
+        SoundManager.i.PlayOneShot(0);
+        Time.timeScale = 0;
+        ShowInterstitial(() =>
+        {
+            Variables.screenState = ScreenState.Gift;
+            Time.timeScale = 1;
+        });
     }
 }

@@ -281,6 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d129a7ffe9479c345bf1c38bd93fa0e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chests: {fileID: 1216242389}
 --- !u!1 &156812859
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,7 +352,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Tap to Retry
+  m_Text: "Gift(\u4EEE)"
 --- !u!222 &156812862
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3530,12 +3531,12 @@ GameObject:
   - component: {fileID: 1121325101}
   - component: {fileID: 1121325100}
   m_Layer: 5
-  m_Name: RetryButton
+  m_Name: GiftButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1121325099
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9734,7 +9735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextButton: {fileID: 2423863803430921132}
-  retryButton: {fileID: 1121325100}
+  giftButton: {fileID: 1121325100}
   titleText: {fileID: 710567488}
   emojiImage: {fileID: 232288247}
   currencyCountText: {fileID: 511325646}
