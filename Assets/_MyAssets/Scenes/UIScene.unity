@@ -1434,6 +1434,7 @@ GameObject:
   - component: {fileID: 546277027}
   - component: {fileID: 546277029}
   - component: {fileID: 546277028}
+  - component: {fileID: 546277030}
   m_Layer: 5
   m_Name: GiftBoxImage
   m_TagString: Untagged
@@ -1498,6 +1499,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 546277026}
   m_CullTransparentMesh: 1
+--- !u!114 &546277030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546277026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a80b58c978cbd4b9cd13db17217b3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &546935498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4973469075793816, guid: 211df3921ba166e4d97f049834dc5490, type: 3}
