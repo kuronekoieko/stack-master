@@ -25,12 +25,13 @@ public class ChestView : MonoBehaviour
 
     public ChestState ChestState { get; set; }
     Sequence chestSeq;
+    GiftCanvasManager giftCanvasManager;
 
-    public void OnStart()
+    public void OnStart(GiftCanvasManager giftCanvasManager)
     {
+        this.giftCanvasManager = giftCanvasManager;
         button.onClick.AddListener(OnClickChestButton);
         this.ObserveEveryValueChanged(_ => ChestState)
-            // .Where(_ => _ == thisScreen)
             .Subscribe(_ => OnChangeState())
             .AddTo(this.gameObject);
 
@@ -49,7 +50,9 @@ public class ChestView : MonoBehaviour
 
     void OnClickChestButton()
     {
+        if (!giftCanvasManager.CanClickChest) return;
         ChestState = ChestState.Opening;
+        giftCanvasManager.ClickedChestCount++;
     }
 
     void OnChangeState()
@@ -89,6 +92,7 @@ public class ChestView : MonoBehaviour
                 gemCountText.gameObject.SetActive(true);
                 gemImage.gameObject.SetActive(true);
                 button.gameObject.SetActive(false);
+                button.interactable = true;
                 Vector3 startOffset = Vector3.zero;
                 for (int i = 0; i < gemImageAnims.Length; i++)
                 {
