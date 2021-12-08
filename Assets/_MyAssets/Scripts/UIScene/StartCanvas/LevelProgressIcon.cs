@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelProgressIcon : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] Image notSelectedImage;
+    [SerializeField] Image selectedImage;
+    [SerializeField] Image arrowImage;
+    [SerializeField] Text levelText;
+    [SerializeField] Image clearedImage;
 
-    // Update is called once per frame
-    void Update()
+    public void Show(int level, bool isSelected, bool isCleared)
     {
-        
+        notSelectedImage.gameObject.SetActive(!isSelected);
+        selectedImage.gameObject.SetActive(isSelected);
+        arrowImage.gameObject.SetActive(isSelected);
+        levelText.text = level.ToString();
+        clearedImage.gameObject.SetActive(isCleared);
+        transform.localScale = isSelected ? Vector3.one * 1.3f : Vector3.one;
     }
 }

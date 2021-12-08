@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class StartCanvasManager : BaseCanvasManager
 {
     [SerializeField] TutrialController tutrialController;
+    [SerializeField] LevelProgressionManager levelProgressionManager;
 
     public override void OnStart()
     {
@@ -17,6 +18,7 @@ public class StartCanvasManager : BaseCanvasManager
     {
         gameObject.SetActive(true);
         tutrialController.OnOpen();
+        levelProgressionManager.OnOpen();
     }
 
     public override void OnUpdate()
