@@ -404,3 +404,38 @@ MonoBehaviour:
   button: {fileID: 3608961787790386253}
   gemCountText: {fileID: 3608961785978367026}
   gemImage: {fileID: 3608961786535915070}
+  chestOpeningScaleEasing:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.8275785
+      value: 0.98882663
+      inSlope: 0.24264166
+      outSlope: 0.24264166
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.20215239
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.9791565
+      value: 0.6424866
+      inSlope: -0.96436965
+      outSlope: -0.96436965
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.47421944
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  gemImageAnimPrefab: {fileID: 3760870193695078442, guid: baf280604be0926449d7a76e9fbf5a07, type: 3}
+  rectTransform: {fileID: 3608961787837017094}

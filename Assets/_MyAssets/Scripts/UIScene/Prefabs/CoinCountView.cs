@@ -8,10 +8,15 @@ using DG.Tweening;
 public class CoinCountView : MonoBehaviour
 {
     [SerializeField] Text coinCountText;
+    [SerializeField] RectTransform gemImageRt;
+    public Vector3 GemImagePos => gemImageRt.position;
     int coinCount;
+    public static CoinCountView i;
+
 
     void Awake()
     {
+        i = this;
         this.ObserveEveryValueChanged(coinCount => SaveData.i.currencyCount)
             .Subscribe(coinCount => CountUpAnim())
             .AddTo(this.gameObject);
