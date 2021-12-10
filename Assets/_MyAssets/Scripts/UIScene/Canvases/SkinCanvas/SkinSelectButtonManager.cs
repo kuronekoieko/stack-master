@@ -85,7 +85,12 @@ public class SkinSelectButtonManager : MonoBehaviour
         UpdateAllButtonsView(selectedSkinIndex);
     }
 
-    public void UpdateAllButtonsView(int selectedSkinIndex)
+    public void OnOpen()
+    {
+        UpdateAllButtonsView(SaveData.i.selectedSkinIndex);
+    }
+
+    void UpdateAllButtonsView(int selectedSkinIndex)
     {
         for (int i = 0; i < skinSelectControllers.Length; i++)
         {
@@ -95,7 +100,13 @@ public class SkinSelectButtonManager : MonoBehaviour
                 continue;
             }
 
-            skinSelectControllers[i].SelectState = (i == selectedSkinIndex) ? SkinSelectState.Select : SkinSelectState.Unlock;
+            if (i != selectedSkinIndex)
+            {
+                skinSelectControllers[i].SelectState = SkinSelectState.Unlock;
+                continue;
+            }
+
+            skinSelectControllers[i].SelectState = SkinSelectState.Select;
         }
     }
 

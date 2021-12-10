@@ -13,7 +13,6 @@ public class SkinCanvasManager : BaseCanvasManager
     [SerializeField] SkinSelectButtonManager skinSelectButtonManager;
 
 
-
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.Skin);
@@ -26,16 +25,10 @@ public class SkinCanvasManager : BaseCanvasManager
         skinSelectButtonManager.OnStart();
     }
 
-
-
-
-
-
-
     protected override void OnOpen()
     {
         gameObject.SetActive(true);
-        skinSelectButtonManager.UpdateAllButtonsView(SaveData.i.selectedSkinIndex);
+        skinSelectButtonManager.OnOpen();
     }
 
     public override void OnUpdate()
