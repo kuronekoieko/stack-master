@@ -42,7 +42,7 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
-        isNextGiftScreen = true; //デバッグ用
+        // isNextGiftScreen = true; //デバッグ用
         nextButton.gameObject.SetActive(!isNextGiftScreen);
         giftButton.gameObject.SetActive(isNextGiftScreen); ;
 
