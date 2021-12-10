@@ -38,10 +38,6 @@ public class GiftCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         gameObject.SetActive(true);
-        foreach (var item in chestViews)
-        {
-            item.OnScreenOpen();
-        }
         ClickedChestCount = 0;
     }
 
@@ -77,6 +73,7 @@ public class GiftCanvasManager : BaseCanvasManager
 
     void InitializeChests()
     {
+        Debug.Log("初期化");
         foreach (var item in chestViews)
         {
             item.OnScreenOpen();

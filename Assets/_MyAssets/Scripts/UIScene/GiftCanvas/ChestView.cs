@@ -30,10 +30,10 @@ public class ChestView : MonoBehaviour
     public void OnStart(GiftCanvasManager giftCanvasManager)
     {
         this.giftCanvasManager = giftCanvasManager;
+
         button.onClick.AddListener(OnClickChestButton);
         this.ObserveEveryValueChanged(_ => ChestState)
-            .Subscribe(_ => OnChangeState())
-            .AddTo(this.gameObject);
+            .Subscribe(_ => OnChangeState());
 
         gemImageAnims = new GemImageAnim[7];
         for (int i = 0; i < gemImageAnims.Length; i++)
@@ -45,7 +45,7 @@ public class ChestView : MonoBehaviour
 
     public void OnScreenOpen()
     {
-        ChestState = ChestState.Clickable;
+        Initialize();
     }
 
     void OnClickChestButton()
@@ -55,23 +55,31 @@ public class ChestView : MonoBehaviour
         giftCanvasManager.ClickedChestCount++;
     }
 
+
+    void Initialize()
+    {
+        ChestState = ChestState.Clickable;
+        if (chestSeq != null) chestSeq.Kill();
+
+        gemCountText.gameObject.SetActive(false);
+        gemImage.gameObject.SetActive(false);
+        button.gameObject.SetActive(true);
+        button.interactable = true;
+
+        button.transform.localScale = Vector3.one;
+        button.transform.eulerAngles = Vector3.zero;
+
+        chestSeq = DOTween.Sequence()
+        .Append(button.transform.DORotate(Vector3.forward * -10f, 2f).SetEase(Ease.InOutFlash, 2))
+        .Join(button.transform.DOScaleY(1.2f, 2f).SetEase(Ease.InOutFlash, 2));
+        chestSeq.SetLoops(-1);
+    }
+
     void OnChangeState()
     {
         switch (ChestState)
         {
             case ChestState.Clickable:
-                gemCountText.gameObject.SetActive(false);
-                gemImage.gameObject.SetActive(false);
-                button.gameObject.SetActive(true);
-                button.interactable = true;
-
-                button.transform.localScale = Vector3.one;
-                button.transform.eulerAngles = Vector3.zero;
-                chestSeq = DOTween.Sequence()
-                .Append(button.transform.DORotate(Vector3.forward * -10f, 2f).SetEase(Ease.InOutFlash, 2))
-                .Join(button.transform.DOScaleY(1.2f, 2f).SetEase(Ease.InOutFlash, 2));
-                chestSeq.SetLoops(-1);
-
                 break;
             case ChestState.NotClickable:
                 button.interactable = false;
