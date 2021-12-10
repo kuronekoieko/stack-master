@@ -38,7 +38,7 @@ public class ChestView : MonoBehaviour
         gemImageAnims = new GemImageAnim[7];
         for (int i = 0; i < gemImageAnims.Length; i++)
         {
-            gemImageAnims[i] = Instantiate(gemImageAnimPrefab, transform);
+            gemImageAnims[i] = Instantiate(gemImageAnimPrefab, transform.parent);
             gemImageAnims[i].OnInstansiate();
         }
     }
