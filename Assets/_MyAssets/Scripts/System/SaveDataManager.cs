@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class SaveDataManager : MonoBehaviour
 {
@@ -21,10 +22,11 @@ public class SaveDataManager : MonoBehaviour
     public void LoadSaveData()
     {
         //初回起動時のユーザーデータ作成
-        //string defaultJsonStr = GetDefaultJsonStr();
+        string defaultJsonStr = GetDefaultJsonStr();
         //PlayerPrefsに保存済みのユーザーデータのstringを取得
         //第二引数に初回起動時のデータを入れる
-        string jsonStr = PlayerPrefs.GetString(Strings.KEY_SAVE_DATA);
+        string jsonStr = PlayerPrefs.GetString(Strings.KEY_SAVE_DATA, defaultJsonStr);
+        Debug.Log(jsonStr);
         //ユーザーデータオブジェクトに読み出したデータを格納
         //※このとき、新しく追加された変数は消されずマージされる
         JsonUtility.FromJsonOverwrite(jsonStr, SaveData.i);
@@ -36,10 +38,17 @@ public class SaveDataManager : MonoBehaviour
 
     void InitSaveDataInstance()
     {
+        SaveData.i.characterSkinSaveDatas = SkinSettingSO.i.characterSkinDatas.Select(h => new CharacterSkinSaveData(h.id, false)).ToArray();
     }
 
     void AddSaveDataInstance()
     {
+    }
+
+    string GetDefaultJsonStr()
+    {
+        InitSaveDataInstance();
+        return JsonUtility.ToJson(SaveData.i);
     }
 
 }

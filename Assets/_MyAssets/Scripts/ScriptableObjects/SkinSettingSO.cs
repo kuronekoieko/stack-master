@@ -1,0 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "MyGame/Create SkinSettingSO", fileName = "SkinSettingSO")]
+public class SkinSettingSO : ScriptableObject
+{
+    public CharacterSkinData[] characterSkinDatas;
+
+    private static SkinSettingSO _i;
+    public static SkinSettingSO i
+    {
+        get
+        {
+            string PATH = "ScriptableObjects/" + nameof(SkinSettingSO);
+            //初アクセス時にロードする
+            if (_i == null)
+            {
+                _i = Resources.Load<SkinSettingSO>(PATH);
+
+                //ロード出来なかった場合はエラーログを表示
+                if (_i == null)
+                {
+                    Debug.LogError(PATH + " not found");
+                }
+            }
+
+            return _i;
+        }
+    }
+}
+
+[System.Serializable]
+public class CharacterSkinData
+{
+    public GameObject prefab;
+    public string id;//TODO:初期値を自動で決めるようにする
+}
