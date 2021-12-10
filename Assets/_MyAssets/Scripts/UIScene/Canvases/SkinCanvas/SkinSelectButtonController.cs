@@ -9,6 +9,7 @@ public enum SkinSelectState
     Lock = 0,
     Unlock = 1,
     Select = 2,
+    Dummy = 3,
 }
 
 public class SkinSelectButtonController : MonoBehaviour
@@ -31,12 +32,17 @@ public class SkinSelectButtonController : MonoBehaviour
         selectbutton.onClick.AddListener(OnClickSelectButton);
     }
 
-    public void OnInstantiate(int skinIndex)
+    public void OnInstantiate(int skinIndex, bool isDummy)
     {
         this.skinIndex = skinIndex;
         Vector3 pos = rectTransform.anchoredPosition3D;
         pos.z = 0;
         rectTransform.anchoredPosition3D = pos;
+        if (isDummy)
+        {
+            SelectState = SkinSelectState.Dummy;
+            return;
+        }
         hatObject = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, Vector3.zero, Quaternion.identity, transform);
         hatObject.layer = LayerMask.NameToLayer("UI");
         hatObject.transform.localPosition = Vector3.forward * -100;
@@ -66,6 +72,10 @@ public class SkinSelectButtonController : MonoBehaviour
                 image.sprite = selectedSprite;
                 hatObject.SetActive(true);
                 selectbutton.enabled = true;
+                break;
+            case SkinSelectState.Dummy:
+                image.enabled = false;
+                selectbutton.enabled = false;
                 break;
             default:
                 break;

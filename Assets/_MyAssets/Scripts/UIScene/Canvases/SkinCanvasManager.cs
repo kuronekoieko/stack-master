@@ -12,14 +12,12 @@ public class SkinCanvasManager : BaseCanvasManager
     [SerializeField] Button closeButton_x;
     [SerializeField] Button unlockButton;
     [SerializeField] Button rewardedButton;
-
     [SerializeField] SkinSelectButtonController skinSelectPrefab;
     [SerializeField] RectTransform scrollViewContent;
     [SerializeField] public SnapScrollView scrollView;
     [SerializeField] Image[] indicators;
     [SerializeField] Sprite activeIndicatorSprite;
     [SerializeField] Sprite inActiveIndicatorSprite;
-    GridLayoutGroup gridLayoutGroup;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
 
 
@@ -32,33 +30,36 @@ public class SkinCanvasManager : BaseCanvasManager
         unlockButton.onClick.AddListener(OnClickUnlockButton);
         rewardedButton.onClick.AddListener(OnClickRewardedButton);
 
-
-
-        gridLayoutGroup = scrollViewContent.GetComponent<GridLayoutGroup>();
         Generator();
         this.ObserveEveryValueChanged(selectedSkinIndex => SaveData.i.selectedSkinIndex)
-        .Subscribe(selectedSkinIndex => OnChangedSkin(selectedSkinIndex))
-        .AddTo(this.gameObject);
+        .Subscribe(selectedSkinIndex => OnChangedSkin(selectedSkinIndex));
     }
 
     public void Generator()
     {
         if (skinSelectControllers.Length > 0) { return; }
+        int contentsCountPerPage = 9;
 
         skinSelectControllers = new SkinSelectButtonController[SkinSettingSO.i.characterSkinDatas.Length];
         for (int i = 0; i < skinSelectControllers.Length; i++)
         {
-            skinSelectControllers[i] = Instantiate(skinSelectPrefab, Vector3.zero, Quaternion.identity, scrollViewContent);
-            skinSelectControllers[i].OnInstantiate(i);
+            skinSelectControllers[i] = Instantiate(skinSelectPrefab, scrollViewContent);
+            skinSelectControllers[i].OnInstantiate(i, false);
+        }
+
+        int dummyButtonCount = skinSelectControllers.Length - skinSelectControllers.Length % contentsCountPerPage;
+        for (int i = 0; i < dummyButtonCount; i++)
+        {
+            Instantiate(skinSelectPrefab, scrollViewContent).OnInstantiate(i, true);
         }
 
         /// 【UnityAsset】SnapScroll – iPhoneのホーム画面のようなスナップスクロールを作る
         /// https://tempura-kingdom.jp/snapscroll/
-        int conhtentsCountPerPage = 9;
-        scrollView.MaxPage = Mathf.CeilToInt((float)skinSelectControllers.Length / (float)conhtentsCountPerPage) - 1;
+
+        scrollView.MaxPage = Mathf.CeilToInt((float)skinSelectControllers.Length / (float)contentsCountPerPage) - 1;
         // scrollView.PageSize = scrollView.GetComponent<RectTransform>().sizeDelta.x;
         scrollView.PageSize = 800;
-        scrollView.ScrollableDistance = 1f;//スワイプ感度
+        scrollView.ScrollableDistance = 0.01f;//スワイプ感度
         scrollView.OnPageChanged += OnIndicatorUpdate;
         scrollView.RefreshPage();
     }
