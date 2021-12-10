@@ -6,7 +6,7 @@ using System;
 public class MaxSdkRewardedAds : MonoBehaviour
 {
     // studio zzz
-    string adUnitId = "YOUR_AD_UNIT_ID";
+    string adUnitId = "ec802260c3aa2c72";
     int retryAttempt;
     Action onRewarded = () => { };
     Action onNotRewarded = () => { };
