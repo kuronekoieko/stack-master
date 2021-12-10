@@ -16,6 +16,7 @@ public class GiftCanvasManager : BaseCanvasManager
 
     public bool CanClickChest { get; set; }
     public int ClickedChestCount { get; set; }
+    Tween showCloseButtonTween;
 
     public override void OnStart()
     {
@@ -79,6 +80,7 @@ public class GiftCanvasManager : BaseCanvasManager
         CanClickChest = true;
         rewardedVideoButton.gameObject.SetActive(false);
         closeButton.gameObject.SetActive(false);
+        showCloseButtonTween.Kill();
     }
 
     void ShowRewardedVideoButtonAnim()
@@ -101,7 +103,7 @@ public class GiftCanvasManager : BaseCanvasManager
         });
 
 
-        DOVirtual.DelayedCall(1.0f, () =>
+        showCloseButtonTween = DOVirtual.DelayedCall(1.0f, () =>
         {
             closeButton.gameObject.SetActive(true);
             Color color = closeButtonImage.color;
