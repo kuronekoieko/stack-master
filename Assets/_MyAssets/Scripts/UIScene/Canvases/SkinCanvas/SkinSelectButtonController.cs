@@ -18,6 +18,7 @@ public class SkinSelectButtonController : MonoBehaviour
     [SerializeField] Sprite lockSprite;
     [SerializeField] Sprite selectedSprite;
     [SerializeField] Image image;
+    [SerializeField] RectTransform rectTransform;
     GameObject hatObject;
     public SkinSelectState SelectState { get; set; }
     int skinIndex;
@@ -33,6 +34,9 @@ public class SkinSelectButtonController : MonoBehaviour
     public void OnInstantiate(int skinIndex)
     {
         this.skinIndex = skinIndex;
+        Vector3 pos = rectTransform.anchoredPosition3D;
+        pos.z = 0;
+        rectTransform.anchoredPosition3D = pos;
         hatObject = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, Vector3.zero, Quaternion.identity, transform);
         hatObject.layer = LayerMask.NameToLayer("UI");
         hatObject.transform.localPosition = Vector3.forward * -100;
@@ -49,18 +53,18 @@ public class SkinSelectButtonController : MonoBehaviour
         switch (selectState)
         {
             case SkinSelectState.Lock:
-                hatObject.gameObject.SetActive(false);
+                hatObject.SetActive(false);
                 image.sprite = lockSprite;
                 selectbutton.enabled = false;
                 break;
             case SkinSelectState.Unlock:
-                hatObject.gameObject.SetActive(true);
+                hatObject.SetActive(true);
                 image.sprite = unlockSprite;
                 selectbutton.enabled = true;
                 break;
             case SkinSelectState.Select:
                 image.sprite = selectedSprite;
-                hatObject.gameObject.SetActive(true);
+                hatObject.SetActive(true);
                 selectbutton.enabled = true;
                 break;
             default:

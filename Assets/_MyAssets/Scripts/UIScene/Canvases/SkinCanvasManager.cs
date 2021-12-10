@@ -54,10 +54,11 @@ public class SkinCanvasManager : BaseCanvasManager
 
         /// 【UnityAsset】SnapScroll – iPhoneのホーム画面のようなスナップスクロールを作る
         /// https://tempura-kingdom.jp/snapscroll/
-        scrollView.MaxPage = Mathf.CeilToInt((float)skinSelectControllers.Length / 6f) - 1;
+        int conhtentsCountPerPage = 9;
+        scrollView.MaxPage = Mathf.CeilToInt((float)skinSelectControllers.Length / (float)conhtentsCountPerPage) - 1;
         // scrollView.PageSize = scrollView.GetComponent<RectTransform>().sizeDelta.x;
-        scrollView.PageSize = 930;
-        scrollView.ScrollableDistance = 0.01f;//スワイプ感度
+        scrollView.PageSize = 800;
+        scrollView.ScrollableDistance = 1f;//スワイプ感度
         scrollView.OnPageChanged += OnIndicatorUpdate;
         scrollView.RefreshPage();
     }
