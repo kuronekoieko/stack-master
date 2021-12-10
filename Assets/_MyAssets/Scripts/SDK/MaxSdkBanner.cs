@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MaxSdkBanner : MonoBehaviour
 {
+    // studio zzz
     string bannerAdUnitId = "643474e10e4d8d8c"; // Retrieve the ID from your account
 
     public static MaxSdkBanner i;

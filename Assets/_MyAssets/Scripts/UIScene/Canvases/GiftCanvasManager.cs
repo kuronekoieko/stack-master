@@ -14,7 +14,7 @@ public class GiftCanvasManager : BaseCanvasManager
     ChestView[] chestViews;
     Tween rewardedVideoButtonTween;
 
-    public bool CanClickChest { get; set; }
+    public bool CanClickChest => ClickedChestCount < 3;
     public int ClickedChestCount { get; set; }
     Tween showCloseButtonTween;
 
@@ -29,8 +29,7 @@ public class GiftCanvasManager : BaseCanvasManager
         gameObject.SetActive(false);
 
         this.ObserveEveryValueChanged(_ => ClickedChestCount)
-            .Subscribe(_ => OnClickChestButton())
-            .AddTo(this.gameObject);
+            .Subscribe(_ => OnValueChanged(clickedChestCount: _));
 
         rewardedVideoButton.onClick.AddListener(OnClickRewardedVideoButton);
         closeButton.onClick.AddListener(OnClickCloseButton);
@@ -43,10 +42,7 @@ public class GiftCanvasManager : BaseCanvasManager
         {
             item.OnScreenOpen();
         }
-        CanClickChest = true;
         ClickedChestCount = 0;
-        rewardedVideoButton.gameObject.SetActive(false);
-        closeButton.gameObject.SetActive(false);
     }
 
     public override void OnUpdate()
@@ -64,23 +60,48 @@ public class GiftCanvasManager : BaseCanvasManager
 
     }
 
-    void OnClickChestButton()
+    void OnValueChanged(int clickedChestCount)
     {
-        if (ClickedChestCount == 0) return;
-        CanClickChest = ClickedChestCount % 3 != 0;
+        if (clickedChestCount == 0)
+        {
+            InitializeChests();
+            return;
+        }
         if (CanClickChest) return;
+        // ダイヤアニメーションの待機分の遅延
         DOVirtual.DelayedCall(3.0f, () =>
         {
             ShowRewardedVideoButtonAnim();
         });
     }
 
-    void OnClickRewardedVideoButton()
+    void InitializeChests()
     {
-        CanClickChest = true;
+        foreach (var item in chestViews)
+        {
+            item.OnScreenOpen();
+        }
         rewardedVideoButton.gameObject.SetActive(false);
         closeButton.gameObject.SetActive(false);
-        showCloseButtonTween.Kill();
+        if (showCloseButtonTween != null) showCloseButtonTween.Kill();
+    }
+
+    void OnClickRewardedVideoButton()
+    {
+        SoundManager.i.PlayOneShot(0);
+        Time.timeScale = 0;
+
+        MaxSdkRewardedAds.i.ShowRewardedAd(
+            onRewarded: () =>
+            {
+                Time.timeScale = 1;
+                ClickedChestCount = 0;
+            },
+            onNotRewarded: () =>
+            {
+                Time.timeScale = 1;
+            }
+        );
     }
 
     void ShowRewardedVideoButtonAnim()
