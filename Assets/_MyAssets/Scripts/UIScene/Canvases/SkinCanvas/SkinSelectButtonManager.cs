@@ -11,9 +11,11 @@ public class SkinSelectButtonManager : MonoBehaviour
     [SerializeField] SkinSelectButtonController skinSelectPrefab;
     [SerializeField] RectTransform scrollViewContent;
     [SerializeField] public SnapScrollView scrollView;
-    [SerializeField] Image[] indicators;
+    [SerializeField] Image originIndicator;
+    [SerializeField] Transform indicatorParent;
     [SerializeField] Sprite activeIndicatorSprite;
     [SerializeField] Sprite inActiveIndicatorSprite;
+    Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
 
     public void OnStart()
@@ -49,7 +51,24 @@ public class SkinSelectButtonManager : MonoBehaviour
         scrollView.PageSize = 800;
         scrollView.ScrollableDistance = 0.01f;//スワイプ感度
         scrollView.OnPageChanged += OnIndicatorUpdate;
+        GenerateIndicators();
         scrollView.RefreshPage();
+    }
+
+
+    void GenerateIndicators()
+    {
+        indicators = new Image[scrollView.MaxPage + 1];
+
+        float offset = 60f;
+        Vector3 pos = -Vector3.right * offset * (indicators.Length - 1) / 2f;
+        for (int i = 0; i < indicators.Length; i++)
+        {
+            indicators[i] = Instantiate(originIndicator, indicatorParent);
+            indicators[i].rectTransform.anchoredPosition3D = pos;
+            pos.x += offset;
+        }
+        originIndicator.gameObject.SetActive(false);
     }
 
     void OnIndicatorUpdate()
