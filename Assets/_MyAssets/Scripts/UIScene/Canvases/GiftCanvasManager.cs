@@ -103,14 +103,6 @@ public class GiftCanvasManager : BaseCanvasManager
 
     void ShowRewardedVideoButtonAnim()
     {
-        if (ClickedChestCount == 9)
-        {
-            DOVirtual.DelayedCall(1.0f, () =>
-            {
-                StageTransManager.i.LoadNextStage();
-            });
-            return;
-        }
         if (rewardedVideoButtonTween != null) rewardedVideoButtonTween.Kill();
         rewardedVideoButton.gameObject.SetActive(true);
         rewardedVideoButton.transform.localScale = Vector3.zero;
