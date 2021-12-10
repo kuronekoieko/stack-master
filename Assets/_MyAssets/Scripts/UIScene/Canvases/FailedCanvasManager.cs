@@ -60,7 +60,7 @@ public class FailedCanvasManager : BaseCanvasManager
 
     void OnClickHomeButton()
     {
-        Variables.screenState = ScreenState.Home;
+       // Variables.screenState = ScreenState.Home;
         SoundManager.i.PlayOneShot(0);
     }
 }
