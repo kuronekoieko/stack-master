@@ -3055,19 +3055,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 789404758}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1412022794}
   - {fileID: 332638155}
   - {fileID: 255791140}
-  m_Father: {fileID: 1305966435}
-  m_RootOrder: 15
+  m_Father: {fileID: 1712791349}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -532}
+  m_AnchoredPosition: {x: 0, y: -449.00003}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &830532918
@@ -5522,8 +5522,7 @@ RectTransform:
   - {fileID: 1376771502}
   - {fileID: 562099454}
   - {fileID: 1794241421}
-  - {fileID: 1876296378}
-  - {fileID: 789404759}
+  - {fileID: 1712791349}
   m_Father: {fileID: 233245274872573424}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5548,15 +5547,7 @@ MonoBehaviour:
   closeButton_x: {fileID: 1598123382}
   unlockButton: {fileID: 1189469668}
   rewardedButton: {fileID: 1918293587}
-  skinSelectPrefab: {fileID: -1310030710458041042, guid: 45d0885e7d4281a42b647be024e7bf1e, type: 3}
-  scrollViewContent: {fileID: 982317824}
-  scrollView: {fileID: 1876296379}
-  indicators:
-  - {fileID: 1412022795}
-  - {fileID: 332638156}
-  - {fileID: 255791141}
-  activeIndicatorSprite: {fileID: 21300000, guid: 8a598721d6ae7004483d26ae3602aa59, type: 3}
-  inActiveIndicatorSprite: {fileID: 21300000, guid: 6163cf103812ee24a8c1a49a4963eac1, type: 3}
+  skinSelectButtonManager: {fileID: 1712791350}
 --- !u!1 &1320332465
 GameObject:
   m_ObjectHideFlags: 0
@@ -7434,6 +7425,65 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 198617934630346986, guid: 211df3921ba166e4d97f049834dc5490, type: 3}
   m_PrefabInstance: {fileID: 685837720945685840}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1712791348
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1712791349}
+  - component: {fileID: 1712791350}
+  m_Layer: 5
+  m_Name: SkinSelectButtonManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1712791349
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712791348}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1876296378}
+  - {fileID: 789404759}
+  m_Father: {fileID: 1305966435}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -83}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1712791350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712791348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 132d0da7fe456d349ba9df6be6bd9fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skinSelectPrefab: {fileID: -1310030710458041042, guid: 45d0885e7d4281a42b647be024e7bf1e, type: 3}
+  scrollViewContent: {fileID: 982317824}
+  scrollView: {fileID: 1876296379}
+  indicators:
+  - {fileID: 1412022795}
+  - {fileID: 332638156}
+  - {fileID: 255791141}
+  activeIndicatorSprite: {fileID: 21300000, guid: 8a598721d6ae7004483d26ae3602aa59, type: 3}
+  inActiveIndicatorSprite: {fileID: 21300000, guid: 6163cf103812ee24a8c1a49a4963eac1, type: 3}
 --- !u!1 &1728785177
 GameObject:
   m_ObjectHideFlags: 0
@@ -8448,17 +8498,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1876296377}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1766575460}
-  m_Father: {fileID: 1305966435}
-  m_RootOrder: 14
+  m_Father: {fileID: 1712791349}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -83}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1876296379
