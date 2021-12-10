@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MaxSdkBanner : MonoBehaviour
 {
+    // studio zzz
     string bannerAdUnitId = "643474e10e4d8d8c"; // Retrieve the ID from your account
 
     public static MaxSdkBanner i;
@@ -15,6 +16,7 @@ public class MaxSdkBanner : MonoBehaviour
 
     public void InitializeBannerAds()
     {
+        if (Debug.isDebugBuild) return;
         // Banners are automatically sized to 320×50 on phones and 728×90 on tablets
         // You may call the utility method MaxSdkUtils.isTablet() to help with view sizing adjustments
         MaxSdk.CreateBanner(bannerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter);

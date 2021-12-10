@@ -1,0 +1,35 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UniRx;
+using DG.Tweening;
+
+public class CoinCountView : MonoBehaviour
+{
+    [SerializeField] Text coinCountText;
+    [SerializeField] RectTransform gemImageRt;
+    public Vector3 GemImagePos => gemImageRt.position;
+    int coinCount;
+    public static CoinCountView i;
+
+
+    void Awake()
+    {
+        i = this;
+        this.ObserveEveryValueChanged(coinCount => SaveData.i.currencyCount)
+            .Subscribe(coinCount => CountUpAnim())
+            .AddTo(this.gameObject);
+
+        this.ObserveEveryValueChanged(coinCount => this.coinCount)
+            .Subscribe(coinCount => coinCountText.text = coinCount.ToString())
+            .AddTo(this.gameObject);
+    }
+
+    void CountUpAnim()
+    {
+        DOTween.To(() => coinCount, (x) => coinCount = x, SaveData.i.currencyCount, 0.5f);
+    }
+
+
+}

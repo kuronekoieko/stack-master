@@ -5,6 +5,7 @@ using System;
 
 public class MaxSdkInterstitial : MonoBehaviour
 {
+    // studio zzz
     string adUnitId = "328618b8e949358c";
     int retryAttempt;
     public static MaxSdkInterstitial i;
@@ -18,14 +19,19 @@ public class MaxSdkInterstitial : MonoBehaviour
     public void Show(Action onHidden)
     {
         this.onHidden = onHidden;
-        if (MaxSdk.IsInterstitialReady(adUnitId))
-        {
-            MaxSdk.ShowInterstitial(adUnitId);
-        }
-        else
+        if (Debug.isDebugBuild)
         {
             onHidden();
+            return;
         }
+
+        if (!MaxSdk.IsInterstitialReady(adUnitId))
+        {
+            onHidden();
+            return;
+        }
+
+        MaxSdk.ShowInterstitial(adUnitId);
     }
 
     public void InitializeInterstitialAds()
