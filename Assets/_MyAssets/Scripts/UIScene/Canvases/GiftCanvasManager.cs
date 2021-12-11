@@ -31,6 +31,9 @@ public class GiftCanvasManager : BaseCanvasManager
         this.ObserveEveryValueChanged(_ => ClickedChestCount)
             .Subscribe(_ => OnValueChanged(clickedChestCount: _));
 
+        this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
+            .Subscribe(_ => OnChangedRewardedAdReady(_));
+
         rewardedVideoButton.onClick.AddListener(OnClickRewardedVideoButton);
         closeButton.onClick.AddListener(OnClickCloseButton);
     }
@@ -73,7 +76,6 @@ public class GiftCanvasManager : BaseCanvasManager
 
     void InitializeChests()
     {
-        Debug.Log("初期化");
         foreach (var item in chestViews)
         {
             item.OnScreenOpen();
@@ -126,5 +128,11 @@ public class GiftCanvasManager : BaseCanvasManager
     void OnClickCloseButton()
     {
         StageTransManager.i.LoadNextStage();
+    }
+
+    void OnChangedRewardedAdReady(bool isRewardedAdReady)
+    {
+        isRewardedAdReady = false;
+        rewardedVideoButton.interactable = isRewardedAdReady;
     }
 }

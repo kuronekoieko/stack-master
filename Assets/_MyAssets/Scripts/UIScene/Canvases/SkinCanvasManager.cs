@@ -22,6 +22,8 @@ public class SkinCanvasManager : BaseCanvasManager
         closeButton_x.onClick.AddListener(OnClickCloseButton);
         unlockButton.onClick.AddListener(OnClickUnlockButton);
         rewardedButton.onClick.AddListener(OnClickRewardedButton);
+        this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
+            .Subscribe(_ => OnChangedRewardedAdReady(_));
 
         skinSelectButtonManager.OnStart();
     }
@@ -55,7 +57,7 @@ public class SkinCanvasManager : BaseCanvasManager
 
     void OnClickUnlockButton()
     {
-
+        skinSelectButtonManager.UnlockRandom();
     }
 
     void OnClickRewardedButton()
@@ -75,5 +77,10 @@ public class SkinCanvasManager : BaseCanvasManager
                 Time.timeScale = 1;
             }
         );
+    }
+
+    void OnChangedRewardedAdReady(bool isRewardedAdReady)
+    {
+        rewardedButton.interactable = isRewardedAdReady;
     }
 }
