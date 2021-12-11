@@ -19,6 +19,7 @@ public class SkinSelectButtonManager : MonoBehaviour
     [SerializeField] Button scrollButton_Left;
     Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
+    int contentsCountPerPage = 9;
 
     public void OnStart()
     {
@@ -32,7 +33,7 @@ public class SkinSelectButtonManager : MonoBehaviour
     void Generator()
     {
         if (skinSelectControllers.Length > 0) { return; }
-        int contentsCountPerPage = 9;
+
 
         skinSelectControllers = new SkinSelectButtonController[SkinSettingSO.i.characterSkinDatas.Length];
         for (int i = 0; i < skinSelectControllers.Length; i++)
@@ -130,5 +131,23 @@ public class SkinSelectButtonManager : MonoBehaviour
         }
         scrollView.Page = Mathf.Clamp(page, 0, scrollView.MaxPage);
         scrollView.RefreshPage();
+    }
+
+    public void UnlockRandom()
+    {
+        int upperLeftIndex = scrollView.Page * contentsCountPerPage;
+
+        List<int> notOwnIndexes = new List<int>();
+        for (int i = upperLeftIndex; i < upperLeftIndex + contentsCountPerPage; i++)
+        {
+            if (SaveData.i.characterSkinSaveDatas[i].isOwn) continue;
+            notOwnIndexes.Add(i);
+        }
+        if (notOwnIndexes.Count == 0) return;
+        int randomInt = notOwnIndexes[Random.Range(0, notOwnIndexes.Count)];
+
+        SaveData.i.characterSkinSaveDatas[randomInt].isOwn = true;
+        SaveData.i.selectedSkinIndex = randomInt;
+        SaveDataManager.i.Save();
     }
 }
