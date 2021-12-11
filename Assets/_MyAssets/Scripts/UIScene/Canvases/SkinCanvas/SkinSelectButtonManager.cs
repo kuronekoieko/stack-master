@@ -15,6 +15,8 @@ public class SkinSelectButtonManager : MonoBehaviour
     [SerializeField] Transform indicatorParent;
     [SerializeField] Sprite activeIndicatorSprite;
     [SerializeField] Sprite inActiveIndicatorSprite;
+    [SerializeField] Button scrollButton_Right;
+    [SerializeField] Button scrollButton_Left;
     Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
 
@@ -23,6 +25,8 @@ public class SkinSelectButtonManager : MonoBehaviour
         Generator();
         this.ObserveEveryValueChanged(selectedSkinIndex => SaveData.i.selectedSkinIndex)
             .Subscribe(selectedSkinIndex => OnChangedSkin(selectedSkinIndex));
+        scrollButton_Right.onClick.AddListener(() => OnClickScrollButton(true));
+        scrollButton_Left.onClick.AddListener(() => OnClickScrollButton(false));
     }
 
     void Generator()
@@ -50,7 +54,7 @@ public class SkinSelectButtonManager : MonoBehaviour
         // scrollView.PageSize = scrollView.GetComponent<RectTransform>().sizeDelta.x;
         scrollView.PageSize = 800;
         scrollView.ScrollableDistance = 0.01f;//スワイプ感度
-        scrollView.OnPageChanged += OnIndicatorUpdate;
+        scrollView.OnPageChanged += OnPageChanged;
         GenerateIndicators();
         scrollView.RefreshPage();
     }
@@ -71,12 +75,15 @@ public class SkinSelectButtonManager : MonoBehaviour
         originIndicator.gameObject.SetActive(false);
     }
 
-    void OnIndicatorUpdate()
+    void OnPageChanged()
     {
         for (var i = 0; i < indicators.Length; i++)
         {
             indicators[i].sprite = (i == scrollView.Page) ? activeIndicatorSprite : inActiveIndicatorSprite;
         }
+
+        scrollButton_Left.gameObject.SetActive(scrollView.Page != 0);
+        scrollButton_Right.gameObject.SetActive(scrollView.Page != scrollView.MaxPage);
     }
 
 
@@ -110,4 +117,18 @@ public class SkinSelectButtonManager : MonoBehaviour
         }
     }
 
+    void OnClickScrollButton(bool isRight)
+    {
+        int page = scrollView.Page;
+        if (isRight)
+        {
+            page++;
+        }
+        else
+        {
+            page--;
+        }
+        scrollView.Page = Mathf.Clamp(page, 0, scrollView.MaxPage);
+        scrollView.RefreshPage();
+    }
 }

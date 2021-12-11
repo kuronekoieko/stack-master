@@ -11,6 +11,7 @@ public class SkinCanvasManager : BaseCanvasManager
     [SerializeField] Button unlockButton;
     [SerializeField] Button rewardedButton;
     [SerializeField] SkinSelectButtonManager skinSelectButtonManager;
+    int rewardedCurrencyCount = 500;
 
 
     public override void OnStart()
@@ -59,6 +60,20 @@ public class SkinCanvasManager : BaseCanvasManager
 
     void OnClickRewardedButton()
     {
+        SoundManager.i.PlayOneShot(0);
+        Time.timeScale = 0;
 
+        MaxSdkRewardedAds.i.ShowRewardedAd(
+            onRewarded: () =>
+            {
+                Time.timeScale = 1;
+                SaveData.i.currencyCount += rewardedCurrencyCount;
+                SaveDataManager.i.Save();
+            },
+            onNotRewarded: () =>
+            {
+                Time.timeScale = 1;
+            }
+        );
     }
 }
