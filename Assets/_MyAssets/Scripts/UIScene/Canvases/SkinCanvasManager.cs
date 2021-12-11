@@ -25,6 +25,9 @@ public class SkinCanvasManager : BaseCanvasManager
         this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
             .Subscribe(_ => OnChangedRewardedAdReady(_));
 
+        this.ObserveEveryValueChanged(_ => skinSelectButtonManager.EnableUnlockRandom)
+            .Subscribe(_ => unlockButton.interactable = _);
+
         skinSelectButtonManager.OnStart();
     }
 

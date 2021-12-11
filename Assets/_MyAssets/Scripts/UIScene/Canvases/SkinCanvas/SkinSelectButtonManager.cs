@@ -5,6 +5,7 @@ using SnapScroll;
 using DG.Tweening;
 using UniRx;
 using UnityEngine.UI;
+using System.Linq;
 
 public class SkinSelectButtonManager : MonoBehaviour
 {
@@ -20,12 +21,15 @@ public class SkinSelectButtonManager : MonoBehaviour
     Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
     int contentsCountPerPage = 9;
+    int gemCountForUnlockRandom = 1;
+    public bool EnableUnlockRandom => SaveData.i.currencyCount >= gemCountForUnlockRandom && notOwnIndexes.Count > 0;
+    List<int> notOwnIndexes = new List<int>();
 
     public void OnStart()
     {
         Generator();
-        this.ObserveEveryValueChanged(selectedSkinIndex => SaveData.i.selectedSkinIndex)
-            .Subscribe(selectedSkinIndex => OnChangedSkin(selectedSkinIndex));
+        this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
+            .Subscribe(_ => OnChangedSkin(_));
         scrollButton_Right.onClick.AddListener(() => OnClickScrollButton(true));
         scrollButton_Left.onClick.AddListener(() => OnClickScrollButton(false));
     }
@@ -85,6 +89,8 @@ public class SkinSelectButtonManager : MonoBehaviour
 
         scrollButton_Left.gameObject.SetActive(scrollView.Page != 0);
         scrollButton_Right.gameObject.SetActive(scrollView.Page != scrollView.MaxPage);
+
+        SetNotOwnIndexes();
     }
 
 
@@ -135,24 +141,25 @@ public class SkinSelectButtonManager : MonoBehaviour
 
     public void UnlockRandom()
     {
-        int upperLeftIndex = scrollView.Page * contentsCountPerPage;
-        int nextPageUpperLeftIndex = upperLeftIndex + contentsCountPerPage;
-        if (scrollView.MaxPage == scrollView.Page)
-        {
-            nextPageUpperLeftIndex = upperLeftIndex + skinSelectControllers.Length % contentsCountPerPage;
-        }
+        SetNotOwnIndexes();
+        int randomInt = notOwnIndexes[Random.Range(0, notOwnIndexes.Count)];
+        SaveData.i.currencyCount -= gemCountForUnlockRandom;
+        SaveData.i.characterSkinSaveDatas[randomInt].isOwn = true;
+        SaveData.i.selectedSkinIndex = randomInt;
+        SaveDataManager.i.Save();
+        SetNotOwnIndexes();
+    }
 
-        List<int> notOwnIndexes = new List<int>();
+
+    void SetNotOwnIndexes()
+    {
+        int upperLeftIndex = scrollView.Page * contentsCountPerPage;
+        int nextPageUpperLeftIndex = Mathf.Clamp(upperLeftIndex + contentsCountPerPage, 0, skinSelectControllers.Length);
+        notOwnIndexes.Clear();
         for (int i = upperLeftIndex; i < nextPageUpperLeftIndex; i++)
         {
             if (SaveData.i.characterSkinSaveDatas[i].isOwn) continue;
             notOwnIndexes.Add(i);
         }
-        if (notOwnIndexes.Count == 0) return;
-        int randomInt = notOwnIndexes[Random.Range(0, notOwnIndexes.Count)];
-
-        SaveData.i.characterSkinSaveDatas[randomInt].isOwn = true;
-        SaveData.i.selectedSkinIndex = randomInt;
-        SaveDataManager.i.Save();
     }
 }

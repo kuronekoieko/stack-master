@@ -132,7 +132,6 @@ public class GiftCanvasManager : BaseCanvasManager
 
     void OnChangedRewardedAdReady(bool isRewardedAdReady)
     {
-        isRewardedAdReady = false;
         rewardedVideoButton.interactable = isRewardedAdReady;
     }
 }

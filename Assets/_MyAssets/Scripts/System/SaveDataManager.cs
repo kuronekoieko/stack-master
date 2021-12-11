@@ -39,6 +39,7 @@ public class SaveDataManager : MonoBehaviour
     void InitSaveDataInstance()
     {
         SaveData.i.characterSkinSaveDatas = SkinSettingSO.i.characterSkinDatas.Select(h => new CharacterSkinSaveData(h.id, false)).ToArray();
+        SaveData.i.characterSkinSaveDatas[0].isOwn = true;
     }
 
     void AddSaveDataInstance()
