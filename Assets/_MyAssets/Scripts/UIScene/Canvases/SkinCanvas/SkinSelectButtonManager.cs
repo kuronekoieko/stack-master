@@ -21,8 +21,8 @@ public class SkinSelectButtonManager : MonoBehaviour
     Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
     int contentsCountPerPage = 9;
-    int gemCountForUnlockRandom = 1;
-    public bool EnableUnlockRandom => SaveData.i.currencyCount >= gemCountForUnlockRandom && notOwnIndexes.Count > 0;
+
+    public bool EnableUnlockRandom => SaveData.i.currencyCount >= ParameterSettingSO.i.SkinUnlockRandomCurrency && notOwnIndexes.Count > 0;
     List<int> notOwnIndexes = new List<int>();
 
     public void OnStart()
@@ -143,7 +143,7 @@ public class SkinSelectButtonManager : MonoBehaviour
     {
         SetNotOwnIndexes();
         int randomInt = notOwnIndexes[Random.Range(0, notOwnIndexes.Count)];
-        SaveData.i.currencyCount -= gemCountForUnlockRandom;
+        SaveData.i.currencyCount -= ParameterSettingSO.i.SkinUnlockRandomCurrency;
         SaveData.i.characterSkinSaveDatas[randomInt].isOwn = true;
         SaveData.i.selectedSkinIndex = randomInt;
         SaveDataManager.i.Save();

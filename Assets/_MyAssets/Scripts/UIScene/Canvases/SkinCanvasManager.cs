@@ -9,9 +9,10 @@ public class SkinCanvasManager : BaseCanvasManager
     [SerializeField] Button closeButton_arrow;
     [SerializeField] Button closeButton_x;
     [SerializeField] Button unlockButton;
+    [SerializeField] Text unlockButtonText;
     [SerializeField] Button rewardedButton;
+    [SerializeField] Text rewardedButtonText;
     [SerializeField] SkinSelectButtonManager skinSelectButtonManager;
-    int rewardedCurrencyCount = 500;
 
 
     public override void OnStart()
@@ -29,6 +30,8 @@ public class SkinCanvasManager : BaseCanvasManager
             .Subscribe(_ => unlockButton.interactable = _);
 
         skinSelectButtonManager.OnStart();
+        unlockButtonText.text = ParameterSettingSO.i.SkinUnlockRandomCurrency.ToString();
+        rewardedButtonText.text = "+" + ParameterSettingSO.i.SkinRewardedCurrency;
     }
 
     protected override void OnOpen()
@@ -60,6 +63,7 @@ public class SkinCanvasManager : BaseCanvasManager
 
     void OnClickUnlockButton()
     {
+        SoundManager.i.PlayOneShot(0);
         skinSelectButtonManager.UnlockRandom();
     }
 
@@ -72,7 +76,7 @@ public class SkinCanvasManager : BaseCanvasManager
             onRewarded: () =>
             {
                 Time.timeScale = 1;
-                SaveData.i.currencyCount += rewardedCurrencyCount;
+                SaveData.i.currencyCount += ParameterSettingSO.i.SkinUnlockRandomCurrency;
                 SaveDataManager.i.Save();
             },
             onNotRewarded: () =>
