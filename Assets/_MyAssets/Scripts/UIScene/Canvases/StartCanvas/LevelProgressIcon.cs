@@ -18,6 +18,6 @@ public class LevelProgressIcon : MonoBehaviour
         arrowImage.gameObject.SetActive(isSelected);
         levelText.text = level.ToString();
         clearedImage.gameObject.SetActive(isCleared);
-        transform.localScale = isSelected ? Vector3.one * 1.3f : Vector3.one;
+        // transform.localScale = isSelected ? Vector3.one * 1.3f : Vector3.one;
     }
 }
