@@ -136,9 +136,14 @@ public class SkinSelectButtonManager : MonoBehaviour
     public void UnlockRandom()
     {
         int upperLeftIndex = scrollView.Page * contentsCountPerPage;
+        int nextPageUpperLeftIndex = upperLeftIndex + contentsCountPerPage;
+        if (scrollView.MaxPage == scrollView.Page)
+        {
+            nextPageUpperLeftIndex = upperLeftIndex + skinSelectControllers.Length % contentsCountPerPage;
+        }
 
         List<int> notOwnIndexes = new List<int>();
-        for (int i = upperLeftIndex; i < upperLeftIndex + contentsCountPerPage; i++)
+        for (int i = upperLeftIndex; i < nextPageUpperLeftIndex; i++)
         {
             if (SaveData.i.characterSkinSaveDatas[i].isOwn) continue;
             notOwnIndexes.Add(i);
