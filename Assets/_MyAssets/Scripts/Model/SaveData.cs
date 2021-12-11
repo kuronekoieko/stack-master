@@ -1,18 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class SaveData
 {
     public static SaveData i => _i;
     private static SaveData _i = new SaveData();
+
+    SaveData()
+    {
+        characterSkinSaveDatas = SkinSettingSO.i.characterSkinDatas.Select(h => new CharacterSkinSaveData(h.id, false)).ToList();
+        characterSkinSaveDatas[0].isOwn = true;
+    }
+
+
     public bool isOffSE;
     public int currencyCount;
     public UserDateTime receivedLoginBonusUserDateTime;
     public int lastClearedDisplayStageNum = 0;
     public int selectedSkinIndex;
-    public CharacterSkinSaveData[] characterSkinSaveDatas;
-    // public TestClass[] testClasses;
+    public List<CharacterSkinSaveData> characterSkinSaveDatas = new List<CharacterSkinSaveData>();
+
 
 }
 

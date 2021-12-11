@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class SaveDataManager : MonoBehaviour
+public class SaveDataManager
 {
     public static SaveDataManager i => _i;
     private static SaveDataManager _i = new SaveDataManager();
@@ -21,8 +21,9 @@ public class SaveDataManager : MonoBehaviour
 
     public void LoadSaveData()
     {
-        //初回起動時のユーザーデータ作成
-        string defaultJsonStr = GetDefaultJsonStr();
+        //初回起動時のユーザーデータ作成(コンストラクタで初期値設定)
+        string defaultJsonStr = JsonUtility.ToJson(SaveData.i);
+        Debug.Log(SaveData.i.characterSkinSaveDatas.Count);
         //PlayerPrefsに保存済みのユーザーデータのstringを取得
         //第二引数に初回起動時のデータを入れる
         string jsonStr = PlayerPrefs.GetString(Strings.KEY_SAVE_DATA, defaultJsonStr);
@@ -30,26 +31,23 @@ public class SaveDataManager : MonoBehaviour
         //ユーザーデータオブジェクトに読み出したデータを格納
         //※このとき、新しく追加された変数は消されずマージされる
         JsonUtility.FromJsonOverwrite(jsonStr, SaveData.i);
+        Debug.Log(SaveData.i.characterSkinSaveDatas.Count);
         //アプデ対応(配列のサイズを追加するため)
-        AddSaveDataInstance();
+        AddNewArrayElements();
         //ユーザーデータ保存
         Save();
     }
 
-    void InitSaveDataInstance()
+    /// <summary>
+    /// アプデで配列が増えてたときに追加する
+    /// </summary>
+    void AddNewArrayElements()
     {
-        SaveData.i.characterSkinSaveDatas = SkinSettingSO.i.characterSkinDatas.Select(h => new CharacterSkinSaveData(h.id, false)).ToArray();
-        SaveData.i.characterSkinSaveDatas[0].isOwn = true;
+        // TODO:あとで新しいIDを追加するように変更
+        for (int i = SaveData.i.characterSkinSaveDatas.Count; i < SkinSettingSO.i.characterSkinDatas.Length; i++)
+        {
+            CharacterSkinData characterSkinData = SkinSettingSO.i.characterSkinDatas[i];
+            SaveData.i.characterSkinSaveDatas.Add(new CharacterSkinSaveData(characterSkinData.id, false));
+        }
     }
-
-    void AddSaveDataInstance()
-    {
-    }
-
-    string GetDefaultJsonStr()
-    {
-        InitSaveDataInstance();
-        return JsonUtility.ToJson(SaveData.i);
-    }
-
 }
