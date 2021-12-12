@@ -37,7 +37,7 @@ public class SkinSettingSO : ScriptableObject
 public class CharacterSkinData
 {
     [OnValueChanged(nameof(OnPrefabSet))]
-    public GameObject prefab;
+    public SkinController prefab;
     [ReadOnly]
     public string id;//TODO:初期値を自動で決めるようにする
 

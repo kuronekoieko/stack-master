@@ -45,4 +45,13 @@ public class SkinController : MonoBehaviour
         }
 
     }
+
+    public void ChangeLayers(Transform transform, string layerName)
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.layer = LayerMask.NameToLayer(layerName);
+            ChangeLayers(child, layerName);
+        }
+    }
 }

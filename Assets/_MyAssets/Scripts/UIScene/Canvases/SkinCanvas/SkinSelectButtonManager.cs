@@ -19,6 +19,8 @@ public class SkinSelectButtonManager : MonoBehaviour
     [SerializeField] Button scrollButton_Right;
     [SerializeField] Button scrollButton_Left;
     [SerializeField] GameObject skinMasks;
+    [SerializeField] Transform skinPreviewParent;
+    SkinController previewSkin;
     Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
     int contentsCountPerPage = 9;
@@ -99,6 +101,12 @@ public class SkinSelectButtonManager : MonoBehaviour
     void OnChangedSkin(int selectedSkinIndex)
     {
         UpdateAllButtonsView(selectedSkinIndex);
+
+        if (previewSkin) DestroyImmediate(previewSkin.gameObject);
+        previewSkin = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, skinPreviewParent);
+        previewSkin.OnInstantiate(SkinSettingSO.i.characterMaterialDatas[0].material);
+        previewSkin.ChangeLayers(previewSkin.transform, "Skin");
+        previewSkin.transform.eulerAngles = Vector3.up * -158f;
     }
 
     public void OnOpen()

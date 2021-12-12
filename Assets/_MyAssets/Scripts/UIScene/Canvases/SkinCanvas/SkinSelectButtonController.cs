@@ -20,10 +20,10 @@ public class SkinSelectButtonController : MonoBehaviour
     [SerializeField] Sprite selectedSprite;
     [SerializeField] Image image;
     [SerializeField] RectTransform rectTransform;
-    GameObject skinObject;
+    SkinController skinController;
     public SkinSelectState SelectState { get; set; }
     int skinIndex;
-    SkinController skinController;
+
 
 
     private void Awake()
@@ -44,27 +44,18 @@ public class SkinSelectButtonController : MonoBehaviour
             SelectState = SkinSelectState.Dummy;
             return;
         }
-        skinObject = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, Vector3.zero, Quaternion.identity, transform);
-        ChangeLayerChildren(skinObject.transform, "Skin");
-        skinObject.transform.localPosition = new Vector3(0, -80f, -100f);
-        skinObject.transform.localScale *= 95f;
-        skinObject.transform.eulerAngles = Vector3.up * -158f;
-        skinController = skinObject.GetComponent<SkinController>();
+        skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, Vector3.zero, Quaternion.identity, transform);
         skinController.OnInstantiate(SkinSettingSO.i.characterMaterialDatas[0].material);
-
-        skinObject.gameObject.SetActive(false);
+        skinController.ChangeLayers(skinController.transform, "Skin");
+        skinController.transform.localPosition = new Vector3(0, -80f, -100f);
+        skinController.transform.localScale *= 95f;
+        skinController.transform.eulerAngles = Vector3.up * -158f;
+        skinController.gameObject.SetActive(false);
         image.sprite = lockSprite;
         SelectState = SkinSelectState.Lock;
     }
 
-    void ChangeLayerChildren(Transform transform, string layerName)
-    {
-        foreach (Transform child in transform)
-        {
-            child.gameObject.layer = LayerMask.NameToLayer(layerName);
-            ChangeLayerChildren(child, layerName);
-        }
-    }
+
 
 
     void ChangeView(SkinSelectState selectState)
@@ -72,18 +63,18 @@ public class SkinSelectButtonController : MonoBehaviour
         switch (selectState)
         {
             case SkinSelectState.Lock:
-                skinObject.SetActive(false);
+                skinController.gameObject.SetActive(false);
                 image.sprite = lockSprite;
                 selectbutton.enabled = false;
                 break;
             case SkinSelectState.Unlock:
-                skinObject.SetActive(true);
+                skinController.gameObject.SetActive(true);
                 image.sprite = unlockSprite;
                 selectbutton.enabled = true;
                 break;
             case SkinSelectState.Select:
                 image.sprite = selectedSprite;
-                skinObject.SetActive(true);
+                skinController.gameObject.SetActive(true);
                 selectbutton.enabled = true;
                 break;
             case SkinSelectState.Dummy:
