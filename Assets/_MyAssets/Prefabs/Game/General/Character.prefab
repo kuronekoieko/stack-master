@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 793040985480188578}
   - component: {fileID: 793040985480188579}
   - component: {fileID: 9173680592066081795}
+  - component: {fileID: 2004514835800616214}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -50,7 +51,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 793040985480188579}
-  col: {fileID: 793040985480188578}
+  capsuleCollider: {fileID: 793040985480188578}
+  boxCollider: {fileID: 2004514835800616214}
   bloodPs: {fileID: 5148522275619384062}
   inkSr: {fileID: 6112539446565419947}
   animator: {fileID: 5191878760188104103}
@@ -97,6 +99,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   downForce: 30
+--- !u!65 &2004514835800616214
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793040985480188583}
+  m_Material: {fileID: 13400000, guid: 5f92916aa56666a4db765cafa5ac680e, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.67543554, z: 1}
+  m_Center: {x: 0, y: 1.366595, z: 0}
 --- !u!1 &3168470471486961821
 GameObject:
   m_ObjectHideFlags: 0

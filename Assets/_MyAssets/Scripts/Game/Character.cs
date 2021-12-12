@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using Zenject;
+using UniRx;
 
 public class Character : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
-    [SerializeField] CapsuleCollider col;
+    [SerializeField] CapsuleCollider capsuleCollider;
+    [SerializeField] BoxCollider boxCollider;
     [SerializeField] ParticleSystem bloodPs;
     [SerializeField] SpriteRenderer inkSr;
     [SerializeField] Animator animator;
@@ -16,8 +18,22 @@ public class Character : MonoBehaviour
     Vector3 vel;
     float currentVelocity;
     CharacterManager characterManager;
-    public float Height => col.height;
+    public float Height => capsuleCollider.height;
     Vector3 inkScale;
+
+    void Awake()
+    {
+        this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
+            .Subscribe(_ => OnChangedSkin(_));
+    }
+
+    void OnChangedSkin(int selectedSkinIndex)
+    {
+        SkinController skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
+        skinController.OnInstantiate(SkinSettingSO.i.characterMaterialDatas[0].material);
+        DestroyImmediate(animator.gameObject);
+        animator = skinController.Animator;
+    }
 
     void Start()
     {
@@ -30,7 +46,8 @@ public class Character : MonoBehaviour
     {
         gameObject.SetActive(false);
         this.characterManager = characterManager;
-        col.enabled = false;
+        capsuleCollider.enabled = false;
+        boxCollider.enabled = false;
     }
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration)
@@ -41,7 +58,8 @@ public class Character : MonoBehaviour
         transform.DOMoveY(targetPos.y, duration)
         .OnComplete(() =>
         {
-            col.enabled = true;
+            capsuleCollider.enabled = true;
+            boxCollider.enabled = true;
             if (characterManager.Characters[0] != this) SoundManager.i?.PlayOneShot(0);
         });
     }
@@ -166,6 +184,7 @@ public class Character : MonoBehaviour
 
         if (characterManager.ActiveCount > 0) return;
         animator.SetBool("IsDance", true);
+        transform.forward = Vector3.back;
         cameraController.CameraState = CameraState.Rotate;
         Variables.screenState = ScreenState.Clear;
 

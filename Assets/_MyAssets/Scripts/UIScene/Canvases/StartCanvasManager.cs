@@ -8,10 +8,14 @@ public class StartCanvasManager : BaseCanvasManager
 {
     [SerializeField] TutrialController tutrialController;
     [SerializeField] LevelProgressionManager levelProgressionManager;
+    [SerializeField] Button skinButton;
+    [SerializeField] Button levelUpButton;
+    [SerializeField] Button offlineIncomeButton;
 
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.Start);
+        skinButton.onClick.AddListener(() => Variables.screenState = ScreenState.Skin);
     }
 
     protected override void OnOpen()

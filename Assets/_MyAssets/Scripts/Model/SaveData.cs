@@ -1,15 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class SaveData
 {
     public static SaveData i => _i;
     private static SaveData _i = new SaveData();
+
+    SaveData()
+    {
+        characterSkinSaveDatas = SkinSettingSO.i.characterSkinDatas.Select(h => new CharacterSkinSaveData(h.id, false)).ToList();
+        characterSkinSaveDatas[0].isOwn = true;
+    }
+
+
     public bool isOffSE;
     public int currencyCount;
     public UserDateTime receivedLoginBonusUserDateTime;
     public int lastClearedDisplayStageNum = 0;
+    public int selectedSkinIndex;
+    public List<CharacterSkinSaveData> characterSkinSaveDatas = new List<CharacterSkinSaveData>();
+
+
 }
 
 /// <summary>
@@ -24,4 +37,26 @@ public class UserDateTime
     public int hour;
     public int minute;
     public int second;
+}
+
+
+
+[System.Serializable]
+public class CharacterSkinSaveData
+{
+    public string id;
+    public bool isOwn;
+
+    public CharacterSkinSaveData(string id, bool isOwn)
+    {
+        this.id = id;
+        this.isOwn = isOwn;
+    }
+}
+
+[System.Serializable]
+public class TestClass
+{
+    public string name;
+    public int num;
 }

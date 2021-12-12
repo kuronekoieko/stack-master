@@ -10,7 +10,7 @@ public enum ScreenState
     Clear = 1,
     Failed = 2,
     Login = 3,
-    Home = 4,
+    Skin = 4,
     Start = 5,
     Gift = 6,
 }

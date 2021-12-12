@@ -6,7 +6,7 @@ using System;
 public class MaxSdkRewardedAds : MonoBehaviour
 {
     // studio zzz
-    string adUnitId = "YOUR_AD_UNIT_ID";
+    string adUnitId = "ec802260c3aa2c72";
     int retryAttempt;
     Action onRewarded = () => { };
     Action onNotRewarded = () => { };
@@ -58,6 +58,8 @@ public class MaxSdkRewardedAds : MonoBehaviour
         MaxSdk.ShowRewardedAd(adUnitId);
     }
 
+    public bool IsRewardedAdReady => MaxSdk.IsRewardedAdReady(adUnitId);
+
     private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
         // Rewarded ad is ready for you to show. MaxSdk.IsRewardedAdReady(adUnitId) now returns 'true'.
@@ -77,7 +79,7 @@ public class MaxSdkRewardedAds : MonoBehaviour
         retryAttempt++;
         double retryDelay = Math.Pow(2, Math.Min(6, retryAttempt));
 
-        Invoke("LoadRewardedAd", (float)retryDelay);
+        Invoke(nameof(LoadRewardedAd), (float)retryDelay);
     }
 
     private void OnRewardedAdDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) { }
