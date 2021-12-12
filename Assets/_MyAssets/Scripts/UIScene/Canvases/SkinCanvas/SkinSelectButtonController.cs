@@ -46,7 +46,7 @@ public class SkinSelectButtonController : MonoBehaviour
             return;
         }
         skinObject = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, Vector3.zero, Quaternion.identity, transform);
-        ChangeLayerChildren(skinObject.transform, "UI");
+        ChangeLayerChildren(skinObject.transform, "Skin");
         skinObject.transform.localPosition = new Vector3(0, -80f, -100f);
         skinObject.transform.localScale = Vector3.one * 95f;
         skinObject.transform.eulerAngles = Vector3.up * -158f;
