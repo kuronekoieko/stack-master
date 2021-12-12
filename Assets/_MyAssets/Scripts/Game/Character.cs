@@ -184,6 +184,7 @@ public class Character : MonoBehaviour
 
         if (characterManager.ActiveCount > 0) return;
         animator.SetBool("IsDance", true);
+        transform.forward = Vector3.back;
         cameraController.CameraState = CameraState.Rotate;
         Variables.screenState = ScreenState.Clear;
 
