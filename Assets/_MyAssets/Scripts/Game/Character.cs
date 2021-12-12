@@ -8,7 +8,8 @@ using UniRx;
 public class Character : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
-    [SerializeField] CapsuleCollider col;
+    [SerializeField] CapsuleCollider capsuleCollider;
+    [SerializeField] BoxCollider boxCollider;
     [SerializeField] ParticleSystem bloodPs;
     [SerializeField] SpriteRenderer inkSr;
     [SerializeField] Animator animator;
@@ -17,7 +18,7 @@ public class Character : MonoBehaviour
     Vector3 vel;
     float currentVelocity;
     CharacterManager characterManager;
-    public float Height => col.height;
+    public float Height => capsuleCollider.height;
     Vector3 inkScale;
 
     void Awake()
@@ -45,7 +46,8 @@ public class Character : MonoBehaviour
     {
         gameObject.SetActive(false);
         this.characterManager = characterManager;
-        col.enabled = false;
+        capsuleCollider.enabled = false;
+        boxCollider.enabled = false;
     }
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration)
@@ -56,7 +58,8 @@ public class Character : MonoBehaviour
         transform.DOMoveY(targetPos.y, duration)
         .OnComplete(() =>
         {
-            col.enabled = true;
+            capsuleCollider.enabled = true;
+            boxCollider.enabled = true;
             if (characterManager.Characters[0] != this) SoundManager.i?.PlayOneShot(0);
         });
     }
