@@ -106,7 +106,6 @@ public class SkinSelectButtonManager : MonoBehaviour
         previewSkin = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, skinPreviewParent);
         previewSkin.OnInstantiate(SkinSettingSO.i.characterMaterialDatas[0].material);
         previewSkin.ChangeLayers(previewSkin.transform, "Skin");
-        previewSkin.transform.eulerAngles = Vector3.up * -158f;
     }
 
     public void OnOpen()

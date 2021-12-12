@@ -20,6 +20,7 @@ public class SkinSelectButtonController : MonoBehaviour
     [SerializeField] Sprite selectedSprite;
     [SerializeField] Image image;
     [SerializeField] RectTransform rectTransform;
+    [SerializeField] Transform skinPreviewParent;
     SkinController skinController;
     public SkinSelectState SelectState { get; set; }
     int skinIndex;
@@ -44,12 +45,9 @@ public class SkinSelectButtonController : MonoBehaviour
             SelectState = SkinSelectState.Dummy;
             return;
         }
-        skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, Vector3.zero, Quaternion.identity, transform);
+        skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, skinPreviewParent);
         skinController.OnInstantiate(SkinSettingSO.i.characterMaterialDatas[0].material);
         skinController.ChangeLayers(skinController.transform, "Skin");
-        skinController.transform.localPosition = new Vector3(0, -80f, -100f);
-        skinController.transform.localScale *= 95f;
-        skinController.transform.eulerAngles = Vector3.up * -158f;
         skinController.gameObject.SetActive(false);
         image.sprite = lockSprite;
         SelectState = SkinSelectState.Lock;
@@ -75,7 +73,7 @@ public class SkinSelectButtonController : MonoBehaviour
             case SkinSelectState.Select:
                 image.sprite = selectedSprite;
                 skinController.gameObject.SetActive(true);
-                selectbutton.enabled = true;
+                selectbutton.enabled = false;
                 break;
             case SkinSelectState.Dummy:
                 image.enabled = false;
@@ -88,13 +86,7 @@ public class SkinSelectButtonController : MonoBehaviour
 
     void OnClickSelectButton()
     {
-        if (SelectState == SkinSelectState.Lock) { return; }
-        if (SelectState == SkinSelectState.Select)
-        {
-            SaveData.i.selectedSkinIndex = -1;
-            SaveDataManager.i.Save();
-            return;
-        }
+        if (SelectState != SkinSelectState.Unlock) { return; }
         SaveData.i.selectedSkinIndex = skinIndex;
         SaveDataManager.i.Save();
         // ここではセーブデータの入れ替えだけにして、実際の処理はunirxで起動するようにする
