@@ -20,9 +20,11 @@ public class SkinSelectButtonController : MonoBehaviour
     [SerializeField] Sprite selectedSprite;
     [SerializeField] Image image;
     [SerializeField] RectTransform rectTransform;
-    GameObject hatObject;
+    [SerializeField] Material characterMaterial;
+    GameObject skinObject;
     public SkinSelectState SelectState { get; set; }
     int skinIndex;
+    SkinnedMeshRenderer skinnedMeshRenderer;
 
     private void Awake()
     {
@@ -43,34 +45,45 @@ public class SkinSelectButtonController : MonoBehaviour
             SelectState = SkinSelectState.Dummy;
             return;
         }
-        hatObject = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, Vector3.zero, Quaternion.identity, transform);
-        hatObject.layer = LayerMask.NameToLayer("UI");
-        hatObject.transform.localPosition = Vector3.forward * -100;
-        hatObject.transform.localScale = Vector3.one * 20;
-        hatObject.transform.localPosition -= Vector3.up * 50f;
-        hatObject.transform.up = new Vector3(1, 5, 0);
-        hatObject.gameObject.SetActive(false);
+        skinObject = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, Vector3.zero, Quaternion.identity, transform);
+        ChangeLayerChildren(skinObject.transform, "UI");
+        skinObject.transform.localPosition = new Vector3(0, -80f, -100f);
+        skinObject.transform.localScale = Vector3.one * 95f;
+        skinObject.transform.eulerAngles = Vector3.up * -158f;
+        skinnedMeshRenderer = skinObject.GetComponentInChildren<SkinnedMeshRenderer>();
+        skinnedMeshRenderer.material = characterMaterial;
+        skinObject.gameObject.SetActive(false);
         image.sprite = lockSprite;
         SelectState = SkinSelectState.Lock;
     }
+
+    void ChangeLayerChildren(Transform transform, string layerName)
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.layer = LayerMask.NameToLayer(layerName);
+            ChangeLayerChildren(child, layerName);
+        }
+    }
+
 
     void ChangeView(SkinSelectState selectState)
     {
         switch (selectState)
         {
             case SkinSelectState.Lock:
-                hatObject.SetActive(false);
+                skinObject.SetActive(false);
                 image.sprite = lockSprite;
                 selectbutton.enabled = false;
                 break;
             case SkinSelectState.Unlock:
-                hatObject.SetActive(true);
+                skinObject.SetActive(true);
                 image.sprite = unlockSprite;
                 selectbutton.enabled = true;
                 break;
             case SkinSelectState.Select:
                 image.sprite = selectedSprite;
-                hatObject.SetActive(true);
+                skinObject.SetActive(true);
                 selectbutton.enabled = true;
                 break;
             case SkinSelectState.Dummy:
