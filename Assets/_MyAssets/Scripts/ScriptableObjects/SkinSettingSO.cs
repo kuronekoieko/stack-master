@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 [CreateAssetMenu(menuName = "MyGame/Create SkinSettingSO", fileName = "SkinSettingSO")]
 public class SkinSettingSO : ScriptableObject
@@ -33,6 +34,16 @@ public class SkinSettingSO : ScriptableObject
 [System.Serializable]
 public class CharacterSkinData
 {
+    [OnValueChanged(nameof(OnPrefabSet))]
     public GameObject prefab;
+    [ReadOnly]
     public string id;//TODO:初期値を自動で決めるようにする
+
+    void OnPrefabSet()
+    {
+        id = prefab.name;
+    }
+
+
+
 }

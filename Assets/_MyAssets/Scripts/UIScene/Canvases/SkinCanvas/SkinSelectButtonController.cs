@@ -24,7 +24,7 @@ public class SkinSelectButtonController : MonoBehaviour
     GameObject skinObject;
     public SkinSelectState SelectState { get; set; }
     int skinIndex;
-    SkinnedMeshRenderer skinnedMeshRenderer;
+    SkinnedMeshRenderer[] skinnedMeshRenderers;
 
     private void Awake()
     {
@@ -48,10 +48,25 @@ public class SkinSelectButtonController : MonoBehaviour
         skinObject = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, Vector3.zero, Quaternion.identity, transform);
         ChangeLayerChildren(skinObject.transform, "Skin");
         skinObject.transform.localPosition = new Vector3(0, -80f, -100f);
-        skinObject.transform.localScale = Vector3.one * 95f;
+        skinObject.transform.localScale *= 95f;
         skinObject.transform.eulerAngles = Vector3.up * -158f;
-        skinnedMeshRenderer = skinObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        skinnedMeshRenderer.material = characterMaterial;
+        skinnedMeshRenderers = skinObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        for (int i = 0; i < skinnedMeshRenderers.Length; i++)
+        {
+            var skinnedMeshRenderer = skinnedMeshRenderers[i];
+            // https://ymgsapo.com/2021/04/27/change-material-script/
+            var materials = new Material[skinnedMeshRenderer.sharedMaterials.Length];
+            for (int j = 0; j < materials.Length; j++)
+            {
+                if (skinnedMeshRenderer.materials[j] == null) continue;
+                Texture texture = skinnedMeshRenderer.materials[j].GetTexture("_MainTex");
+                if (texture) continue;
+                materials[j] = new Material(characterMaterial);
+            }
+            skinnedMeshRenderer.materials = materials;
+        }
+
         skinObject.gameObject.SetActive(false);
         image.sprite = lockSprite;
         SelectState = SkinSelectState.Lock;
