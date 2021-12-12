@@ -302,8 +302,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4831290010428779316}
-  m_LocalRotation: {x: -0.10725311, y: -0.000000018010292, z: -0.000000028890161,
-    w: 0.99423176}
+  m_LocalRotation: {x: -0.10725311, y: -0.000000018010292, z: -0.000000028890161, w: 0.99423176}
   m_LocalPosition: {x: 0.0000000040010173, y: 0.14178623, z: -0.028992187}
   m_LocalScale: {x: 1, y: 0.9999999, z: 1}
   m_Children:
@@ -334,8 +333,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4831290010428779318}
-  m_LocalRotation: {x: 0.0010047636, y: -0.000000016697776, z: -0.000000018084597,
-    w: 0.9999995}
+  m_LocalRotation: {x: 0.0010047636, y: -0.000000016697776, z: -0.000000018084597, w: 0.9999995}
   m_LocalPosition: {x: 5.3290705e-15, y: 0.14148884, z: 0.0000000074505775}
   m_LocalScale: {x: 1, y: 0.99999994, z: 0.99999994}
   m_Children:
@@ -355,6 +353,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4831290010429273944}
   - component: {fileID: 4831290010421516432}
+  - component: {fileID: -6973886857872704206}
   m_Layer: 0
   m_Name: Stickman
   m_TagString: Untagged
@@ -397,6 +396,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-6973886857872704206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4831290010428779320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c35a016b38d41b14289f48bd76c82447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4831290010428779322
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,6 +484,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -484,6 +497,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0

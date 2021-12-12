@@ -6,7 +6,9 @@ using Sirenix.OdinInspector;
 [CreateAssetMenu(menuName = "MyGame/Create SkinSettingSO", fileName = "SkinSettingSO")]
 public class SkinSettingSO : ScriptableObject
 {
+    public RuntimeAnimatorController animatorController;
     public CharacterSkinData[] characterSkinDatas;
+    public CharacterMaterialData[] characterMaterialDatas;
 
     private static SkinSettingSO _i;
     public static SkinSettingSO i
@@ -43,7 +45,18 @@ public class CharacterSkinData
     {
         id = prefab.name;
     }
+}
 
+[System.Serializable]
+public class CharacterMaterialData
+{
+    [OnValueChanged(nameof(OnPrefabSet))]
+    public Material material;
+    [ReadOnly]
+    public string id;//TODO:初期値を自動で決めるようにする
 
-
+    void OnPrefabSet()
+    {
+        id = material.name;
+    }
 }

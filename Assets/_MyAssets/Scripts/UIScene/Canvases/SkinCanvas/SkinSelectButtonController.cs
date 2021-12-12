@@ -20,17 +20,16 @@ public class SkinSelectButtonController : MonoBehaviour
     [SerializeField] Sprite selectedSprite;
     [SerializeField] Image image;
     [SerializeField] RectTransform rectTransform;
-    [SerializeField] Material characterMaterial;
     GameObject skinObject;
     public SkinSelectState SelectState { get; set; }
     int skinIndex;
-    SkinnedMeshRenderer[] skinnedMeshRenderers;
+    SkinController skinController;
+
 
     private void Awake()
     {
         this.ObserveEveryValueChanged(selectState => SelectState)
-        .Subscribe(selectState => ChangeView(selectState))
-        .AddTo(this.gameObject);
+        .Subscribe(selectState => ChangeView(selectState));
         selectbutton.onClick.AddListener(OnClickSelectButton);
     }
 
@@ -50,22 +49,8 @@ public class SkinSelectButtonController : MonoBehaviour
         skinObject.transform.localPosition = new Vector3(0, -80f, -100f);
         skinObject.transform.localScale *= 95f;
         skinObject.transform.eulerAngles = Vector3.up * -158f;
-        skinnedMeshRenderers = skinObject.GetComponentsInChildren<SkinnedMeshRenderer>();
-
-        for (int i = 0; i < skinnedMeshRenderers.Length; i++)
-        {
-            var skinnedMeshRenderer = skinnedMeshRenderers[i];
-            // https://ymgsapo.com/2021/04/27/change-material-script/
-            var materials = new Material[skinnedMeshRenderer.sharedMaterials.Length];
-            for (int j = 0; j < materials.Length; j++)
-            {
-                if (skinnedMeshRenderer.materials[j] == null) continue;
-                Texture texture = skinnedMeshRenderer.materials[j].GetTexture("_MainTex");
-                if (texture) continue;
-                materials[j] = new Material(characterMaterial);
-            }
-            skinnedMeshRenderer.materials = materials;
-        }
+        skinController = skinObject.GetComponent<SkinController>();
+        skinController.OnInstantiate(SkinSettingSO.i.characterMaterialDatas[0].material);
 
         skinObject.gameObject.SetActive(false);
         image.sprite = lockSprite;

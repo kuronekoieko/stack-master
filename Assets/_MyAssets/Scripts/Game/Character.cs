@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using Zenject;
+using UniRx;
 
 public class Character : MonoBehaviour
 {
@@ -18,6 +19,20 @@ public class Character : MonoBehaviour
     CharacterManager characterManager;
     public float Height => col.height;
     Vector3 inkScale;
+
+    void Awake()
+    {
+        this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
+            .Subscribe(_ => OnChangedSkin(_));
+    }
+
+    void OnChangedSkin(int selectedSkinIndex)
+    {
+        SkinController skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform).GetComponent<SkinController>();
+        skinController.OnInstantiate(SkinSettingSO.i.characterMaterialDatas[0].material);
+        DestroyImmediate(animator.gameObject);
+        animator = skinController.Animator;
+    }
 
     void Start()
     {
