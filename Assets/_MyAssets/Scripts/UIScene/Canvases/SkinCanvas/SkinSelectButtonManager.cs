@@ -18,6 +18,7 @@ public class SkinSelectButtonManager : MonoBehaviour
     [SerializeField] Sprite inActiveIndicatorSprite;
     [SerializeField] Button scrollButton_Right;
     [SerializeField] Button scrollButton_Left;
+    [SerializeField] GameObject skinMasks;
     Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
     int contentsCountPerPage = 9;
@@ -32,6 +33,7 @@ public class SkinSelectButtonManager : MonoBehaviour
             .Subscribe(_ => OnChangedSkin(_));
         scrollButton_Right.onClick.AddListener(() => OnClickScrollButton(true));
         scrollButton_Left.onClick.AddListener(() => OnClickScrollButton(false));
+        skinMasks.SetActive(true);
     }
 
     void Generator()

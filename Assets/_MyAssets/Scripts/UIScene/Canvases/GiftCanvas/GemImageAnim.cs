@@ -20,7 +20,7 @@ public class GemImageAnim : MonoBehaviour
         .Append(rectTransform.DOScale(Vector3.one * 1.3f, 0.5f).SetEase(Ease.OutBack))
         .AppendInterval(0.5f + Random.Range(0, 0.2f))
         .Append(rectTransform.DOMove(endPos, 1.0f))
-        .Join((rectTransform.DOScale(Vector3.zero, 0.5f)).SetEase(Ease.InQuint))
+        .Join((rectTransform.DOScale(Vector3.zero, 1.0f)).SetEase(Ease.InCubic))
         .OnComplete(() =>
         {
             gameObject.SetActive(false);

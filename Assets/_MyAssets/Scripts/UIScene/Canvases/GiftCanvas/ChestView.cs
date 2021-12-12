@@ -113,11 +113,12 @@ public class ChestView : MonoBehaviour
                 button.gameObject.SetActive(false);
                 button.interactable = true;
                 Vector3 startOffset = Vector3.zero;
+                float width = 0.5f;
                 for (int i = 0; i < gemImageAnims.Length; i++)
                 {
-                    startOffset.x = Random.Range(-5f, 5f);
-                    startOffset.y = Random.Range(-5f, 5f);
-                    gemImageAnims[i].Anim(rectTransform.position + startOffset, CoinCountView.i.GemImagePos * 2f, 0);
+                    startOffset.x = Random.Range(-width, width);
+                    startOffset.y = Random.Range(-width, width);
+                    gemImageAnims[i].Anim(rectTransform.position + startOffset, CoinCountView.i.GemImagePos, 0);
                 }
 
                 gemCountText.text = gemCount.ToString();
