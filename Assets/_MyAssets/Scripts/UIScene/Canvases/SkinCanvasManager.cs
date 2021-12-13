@@ -34,6 +34,11 @@ public class SkinCanvasManager : BaseCanvasManager
         rewardedButtonText.text = "+" + ParameterSettingSO.i.SkinRewardedCurrency;
     }
 
+    void OnTabChanged(bool isOn)
+    {
+
+    }
+
     protected override void OnOpen()
     {
         gameObject.SetActive(true);
