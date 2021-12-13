@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using SnapScroll;
 using DG.Tweening;
-using UniRx;
 using UnityEngine.UI;
 using System.Linq;
+using UniRx;
+using System;
 
 public class SkinSelectButtonManager : MonoBehaviour
 {
@@ -19,31 +20,45 @@ public class SkinSelectButtonManager : MonoBehaviour
     [SerializeField] Button scrollButton_Right;
     [SerializeField] Button scrollButton_Left;
     [SerializeField] GameObject skinMasks;
-    [SerializeField] Transform skinPreviewParent;
-    SkinController previewSkin;
+    [SerializeField] Button unlockButton;
+    [SerializeField] Text unlockButtonText;
+    [SerializeField] Button rewardedButton;
+    [SerializeField] Text rewardedButtonText;
     Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
     int contentsCountPerPage = 9;
+    [System.NonSerialized] public List<int> notOwnIndexes = new List<int>();
+    [System.NonSerialized] public Action OnCompleteRewardedAds = () => { };
+    [System.NonSerialized] public Action<int> OnCompleteUnlock = (randomInt) => { };
+    [System.NonSerialized] public int unlockRandomCurrency;
+    [System.NonSerialized] public int rewardedCurrency;
+    bool EnableUnlockRandom => SaveData.i.currencyCount >= unlockRandomCurrency && notOwnIndexes.Count > 0;
 
-    public bool EnableUnlockRandom => SaveData.i.currencyCount >= ParameterSettingSO.i.SkinUnlockRandomCurrency && notOwnIndexes.Count > 0;
-    List<int> notOwnIndexes = new List<int>();
-
-    public void OnStart()
+    public virtual void OnStart()
     {
-        Generator();
-        this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
-            .Subscribe(_ => OnChangedSkin(_));
         scrollButton_Right.onClick.AddListener(() => OnClickScrollButton(true));
         scrollButton_Left.onClick.AddListener(() => OnClickScrollButton(false));
         skinMasks.SetActive(true);
+
+        unlockButton.onClick.AddListener(OnClickUnlockButton);
+        rewardedButton.onClick.AddListener(OnClickRewardedButton);
+        this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
+            .Subscribe(_ => OnChangedRewardedAdReady(_));
+
+        this.ObserveEveryValueChanged(_ => EnableUnlockRandom)
+            .Subscribe(_ => unlockButton.interactable = _);
+
+
+        unlockButtonText.text = unlockRandomCurrency.ToString();
+        rewardedButtonText.text = "+" + rewardedCurrency;
     }
 
-    void Generator()
+    public void Generator(int buttonCount)
     {
         if (skinSelectControllers.Length > 0) { return; }
 
 
-        skinSelectControllers = new SkinSelectButtonController[SkinSettingSO.i.characterSkinDatas.Length];
+        skinSelectControllers = new SkinSelectButtonController[buttonCount];
         for (int i = 0; i < skinSelectControllers.Length; i++)
         {
             skinSelectControllers[i] = Instantiate(skinSelectPrefab, scrollViewContent);
@@ -98,41 +113,6 @@ public class SkinSelectButtonManager : MonoBehaviour
     }
 
 
-    void OnChangedSkin(int selectedSkinIndex)
-    {
-        UpdateAllButtonsView(selectedSkinIndex);
-
-        if (previewSkin) DestroyImmediate(previewSkin.gameObject);
-        previewSkin = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, skinPreviewParent);
-        previewSkin.OnInstantiate(SkinSettingSO.i.characterMaterialDatas[0].material);
-        previewSkin.ChangeLayers(previewSkin.transform, "Skin");
-    }
-
-    public void OnOpen()
-    {
-        UpdateAllButtonsView(SaveData.i.selectedSkinIndex);
-    }
-
-    void UpdateAllButtonsView(int selectedSkinIndex)
-    {
-        for (int i = 0; i < skinSelectControllers.Length; i++)
-        {
-            if (!SaveData.i.characterSkinSaveDatas[i].isOwn)
-            {
-                skinSelectControllers[i].SelectState = SkinSelectState.Lock;
-                continue;
-            }
-
-            if (i != selectedSkinIndex)
-            {
-                skinSelectControllers[i].SelectState = SkinSelectState.Unlock;
-                continue;
-            }
-
-            skinSelectControllers[i].SelectState = SkinSelectState.Select;
-        }
-    }
-
     void OnClickScrollButton(bool isRight)
     {
         int page = scrollView.Page;
@@ -148,27 +128,56 @@ public class SkinSelectButtonManager : MonoBehaviour
         scrollView.RefreshPage();
     }
 
-    public void UnlockRandom()
-    {
-        SetNotOwnIndexes();
-        int randomInt = notOwnIndexes[Random.Range(0, notOwnIndexes.Count)];
-        SaveData.i.currencyCount -= ParameterSettingSO.i.SkinUnlockRandomCurrency;
-        SaveData.i.characterSkinSaveDatas[randomInt].isOwn = true;
-        SaveData.i.selectedSkinIndex = randomInt;
-        SaveDataManager.i.Save();
-        SetNotOwnIndexes();
-    }
 
 
-    void SetNotOwnIndexes()
+
+    public void SetNotOwnIndexes()
     {
         int upperLeftIndex = scrollView.Page * contentsCountPerPage;
         int nextPageUpperLeftIndex = Mathf.Clamp(upperLeftIndex + contentsCountPerPage, 0, skinSelectControllers.Length);
         notOwnIndexes.Clear();
         for (int i = upperLeftIndex; i < nextPageUpperLeftIndex; i++)
         {
-            if (SaveData.i.characterSkinSaveDatas[i].isOwn) continue;
+            if (skinSelectControllers[i].SelectState != SkinSelectState.Lock) continue;
             notOwnIndexes.Add(i);
         }
     }
+
+    public void UnlockRandom()
+    {
+        SetNotOwnIndexes();
+        int randomInt = notOwnIndexes[UnityEngine.Random.Range(0, notOwnIndexes.Count)];
+        OnCompleteUnlock(randomInt);
+        SetNotOwnIndexes();
+    }
+
+    void OnClickUnlockButton()
+    {
+        SoundManager.i.PlayOneShot(0);
+        UnlockRandom();
+    }
+
+    void OnClickRewardedButton()
+    {
+        SoundManager.i.PlayOneShot(0);
+        Time.timeScale = 0;
+
+        MaxSdkRewardedAds.i.ShowRewardedAd(
+            onRewarded: () =>
+            {
+                Time.timeScale = 1;
+                OnCompleteRewardedAds();
+            },
+            onNotRewarded: () =>
+            {
+                Time.timeScale = 1;
+            }
+        );
+    }
+
+    void OnChangedRewardedAdReady(bool isRewardedAdReady)
+    {
+        rewardedButton.interactable = isRewardedAdReady;
+    }
+
 }

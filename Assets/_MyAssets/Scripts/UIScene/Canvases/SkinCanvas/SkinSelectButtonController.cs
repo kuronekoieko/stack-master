@@ -22,27 +22,23 @@ public class SkinSelectButtonController : MonoBehaviour
     [SerializeField] RectTransform rectTransform;
     [SerializeField] Transform skinPreviewParent;
     SkinController skinController;
-    public SkinSelectState SelectState { get; set; }
+    public SkinSelectState SelectState { get; private set; }
     int skinIndex;
-
-
-
-    private void Awake()
-    {
-        this.ObserveEveryValueChanged(selectState => SelectState)
-        .Subscribe(selectState => ChangeView(selectState));
-        selectbutton.onClick.AddListener(OnClickSelectButton);
-    }
+    bool IsOwn => SaveData.i.characterSkinSaveDatas[skinIndex].isOwn;
+    bool IsSelected => SaveData.i.selectedSkinIndex == skinIndex;
 
     public void OnInstantiate(int skinIndex, bool isDummy)
     {
         this.skinIndex = skinIndex;
+
         Vector3 pos = rectTransform.anchoredPosition3D;
         pos.z = 0;
         rectTransform.anchoredPosition3D = pos;
         if (isDummy)
         {
             SelectState = SkinSelectState.Dummy;
+            image.enabled = false;
+            selectbutton.enabled = false;
             return;
         }
         skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, skinPreviewParent);
@@ -51,10 +47,34 @@ public class SkinSelectButtonController : MonoBehaviour
         skinController.gameObject.SetActive(false);
         image.sprite = lockSprite;
         SelectState = SkinSelectState.Lock;
+
+        selectbutton.onClick.AddListener(OnClickSelectButton);
+
+        this.ObserveEveryValueChanged(_ => SelectState)
+            .Subscribe(_ => ChangeView(_));
+
+        this.ObserveEveryValueChanged(_ => IsSelected)
+            .Subscribe(_ => OnChangedSaveData());
+
+        this.ObserveEveryValueChanged(_ => IsOwn)
+            .Subscribe(_ => OnChangedSaveData());
     }
 
+    void OnChangedSaveData()
+    {
+        if (!IsOwn)
+        {
+            SelectState = SkinSelectState.Lock;
+            return;
+        }
 
-
+        if (!IsSelected)
+        {
+            SelectState = SkinSelectState.Unlock;
+            return;
+        }
+        SelectState = SkinSelectState.Select;
+    }
 
     void ChangeView(SkinSelectState selectState)
     {
@@ -76,8 +96,6 @@ public class SkinSelectButtonController : MonoBehaviour
                 selectbutton.enabled = false;
                 break;
             case SkinSelectState.Dummy:
-                image.enabled = false;
-                selectbutton.enabled = false;
                 break;
             default:
                 break;
