@@ -27,7 +27,7 @@ public class SkinSelectButtonController : MonoBehaviour
     public GameObject skinObj { get; set; }
     public SkinSelectState SelectState { get; set; }
     public int skinIndex { get; private set; }
-    public UnityAction OnClickSelectButton { get; set; } = () => { };
+    public UnityAction OnClickSelectButton { set => selectbutton.onClick.AddListener(value); }
 
     public void OnInstantiate(int skinIndex, bool isDummy)
     {
@@ -47,7 +47,7 @@ public class SkinSelectButtonController : MonoBehaviour
         image.sprite = lockSprite;
         SelectState = SkinSelectState.Lock;
 
-        selectbutton.onClick.AddListener(OnClickSelectButton);
+
 
         this.ObserveEveryValueChanged(_ => SelectState)
             .Subscribe(_ => ChangeView(_));
