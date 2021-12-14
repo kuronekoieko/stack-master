@@ -32,7 +32,7 @@ public class SkinSelectButtonManager : MonoBehaviour
     [System.NonSerialized] public Action<int> OnCompleteUnlock = (randomInt) => { };
     [System.NonSerialized] public int unlockRandomCurrency;
     [System.NonSerialized] public int rewardedCurrency;
-    bool EnableUnlockRandom => SaveData.i.currencyCount >= unlockRandomCurrency && notOwnIndexes.Count > 0;
+    bool EnableUnlockRandom => SaveData.i.currencyCount >= unlockRandomCurrency && ExistNotOwnSkin;
 
     public virtual void OnStart()
     {
@@ -46,7 +46,11 @@ public class SkinSelectButtonManager : MonoBehaviour
             .Subscribe(_ => OnChangedRewardedAdReady(_));
 
         this.ObserveEveryValueChanged(_ => EnableUnlockRandom)
-            .Subscribe(_ => unlockButton.interactable = _);
+            .Subscribe(_ =>
+            {
+                unlockButton.interactable = _;
+                Debug.Log(notOwnIndexes.Count);
+            });
 
 
         unlockButtonText.text = unlockRandomCurrency.ToString();
@@ -110,8 +114,6 @@ public class SkinSelectButtonManager : MonoBehaviour
 
         scrollButton_Left.gameObject.SetActive(scrollView.Page != 0);
         scrollButton_Right.gameObject.SetActive(scrollView.Page != scrollView.MaxPage);
-
-        SetNotOwnIndexes();
     }
 
 
@@ -130,27 +132,25 @@ public class SkinSelectButtonManager : MonoBehaviour
         scrollView.RefreshPage();
     }
 
-
-
-
-    public void SetNotOwnIndexes()
+    bool ExistNotOwnSkin
     {
-        int upperLeftIndex = scrollView.Page * contentsCountPerPage;
-        int nextPageUpperLeftIndex = Mathf.Clamp(upperLeftIndex + contentsCountPerPage, 0, skinSelectControllers.Length);
-        notOwnIndexes.Clear();
-        for (int i = upperLeftIndex; i < nextPageUpperLeftIndex; i++)
+        get
         {
-            if (skinSelectControllers[i].SelectState != SkinSelectState.Lock) continue;
-            notOwnIndexes.Add(i);
+            int upperLeftIndex = scrollView.Page * contentsCountPerPage;
+            int nextPageUpperLeftIndex = Mathf.Clamp(upperLeftIndex + contentsCountPerPage, 0, skinSelectControllers.Length);
+            for (int i = upperLeftIndex; i < nextPageUpperLeftIndex; i++)
+            {
+                if (skinSelectControllers[i].SelectState != SkinSelectState.Lock) continue;
+                return true;
+            }
+            return false;
         }
     }
 
     public void UnlockRandom()
     {
-        SetNotOwnIndexes();
         int randomInt = notOwnIndexes[UnityEngine.Random.Range(0, notOwnIndexes.Count)];
         OnCompleteUnlock(randomInt);
-        SetNotOwnIndexes();
     }
 
     void OnClickUnlockButton()
