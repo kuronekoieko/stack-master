@@ -32,7 +32,7 @@ public class SkinSelectButtonManager : MonoBehaviour
     [System.NonSerialized] public Action<int> OnCompleteUnlock = (randomInt) => { };
     [System.NonSerialized] public int unlockRandomCurrency;
     [System.NonSerialized] public int rewardedCurrency;
-    bool EnableUnlockRandom => SaveData.i.currencyCount >= unlockRandomCurrency && ExistNotOwnSkin;
+    bool EnableUnlockRandom => SaveData.i.currencyCount >= unlockRandomCurrency && NotOwnIndexes.Count > 0;
 
     public virtual void OnStart()
     {
@@ -46,12 +46,7 @@ public class SkinSelectButtonManager : MonoBehaviour
             .Subscribe(_ => OnChangedRewardedAdReady(_));
 
         this.ObserveEveryValueChanged(_ => EnableUnlockRandom)
-            .Subscribe(_ =>
-            {
-                unlockButton.interactable = _;
-                Debug.Log(notOwnIndexes.Count);
-            });
-
+            .Subscribe(_ => unlockButton.interactable = _);
 
         unlockButtonText.text = unlockRandomCurrency.ToString();
         rewardedButtonText.text = "+" + rewardedCurrency;
@@ -132,18 +127,19 @@ public class SkinSelectButtonManager : MonoBehaviour
         scrollView.RefreshPage();
     }
 
-    bool ExistNotOwnSkin
+    List<int> NotOwnIndexes
     {
         get
         {
             int upperLeftIndex = scrollView.Page * contentsCountPerPage;
             int nextPageUpperLeftIndex = Mathf.Clamp(upperLeftIndex + contentsCountPerPage, 0, skinSelectControllers.Length);
+            notOwnIndexes.Clear();
             for (int i = upperLeftIndex; i < nextPageUpperLeftIndex; i++)
             {
                 if (skinSelectControllers[i].SelectState != SkinSelectState.Lock) continue;
-                return true;
+                notOwnIndexes.Add(i);
             }
-            return false;
+            return notOwnIndexes;
         }
     }
 

@@ -20,11 +20,16 @@ public class Character : MonoBehaviour
     CharacterManager characterManager;
     public float Height => capsuleCollider.height;
     Vector3 inkScale;
+    ParticleSystem[] bloodPsChildren;
 
     void Awake()
     {
+        bloodPsChildren = bloodPs.GetComponentsInChildren<ParticleSystem>();
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
             .Subscribe(_ => OnChangedSkin(_));
+
+        this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
+            .Subscribe(_ => OnChangedMaterial(_));
     }
 
     void OnChangedSkin(int selectedSkinIndex)
@@ -33,6 +38,16 @@ public class Character : MonoBehaviour
         skinController.OnInstantiate();
         DestroyImmediate(animator.gameObject);
         animator = skinController.Animator;
+    }
+
+    void OnChangedMaterial(int selectedIndex)
+    {
+        inkSr.material = new Material(SkinSettingSO.i.characterMaterialDatas[selectedIndex].material);
+        for (int i = 0; i < bloodPsChildren.Length; i++)
+        {
+            ParticleSystem.MainModule main = bloodPsChildren[i].main;
+            main.startColor = inkSr.material.color;
+        }
     }
 
     void Start()
