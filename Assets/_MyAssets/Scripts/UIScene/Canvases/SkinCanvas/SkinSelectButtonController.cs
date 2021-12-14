@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using UnityEngine.Events;
 
 public enum SkinSelectState
 {
@@ -20,12 +21,13 @@ public class SkinSelectButtonController : MonoBehaviour
     [SerializeField] Sprite selectedSprite;
     [SerializeField] Image image;
     [SerializeField] RectTransform rectTransform;
-    [SerializeField] Transform skinPreviewParent;
-    SkinController skinController;
-    public SkinSelectState SelectState { get; private set; }
-    int skinIndex;
-    bool IsOwn => SaveData.i.characterSkinSaveDatas[skinIndex].isOwn;
-    bool IsSelected => SaveData.i.selectedSkinIndex == skinIndex;
+    public Transform skinPreviewParent;
+    public MeshRenderer sphereMrPrefab;
+
+    public GameObject skinObj { get; set; }
+    public SkinSelectState SelectState { get; set; }
+    public int skinIndex { get; private set; }
+    public UnityAction OnClickSelectButton { get; set; } = () => { };
 
     public void OnInstantiate(int skinIndex, bool isDummy)
     {
@@ -41,10 +43,7 @@ public class SkinSelectButtonController : MonoBehaviour
             selectbutton.enabled = false;
             return;
         }
-        skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[skinIndex].prefab, skinPreviewParent);
-        skinController.OnInstantiate(SkinSettingSO.i.characterMaterialDatas[0].material);
-        skinController.ChangeLayers(skinController.transform, "Skin");
-        skinController.gameObject.SetActive(false);
+
         image.sprite = lockSprite;
         SelectState = SkinSelectState.Lock;
 
@@ -52,28 +51,6 @@ public class SkinSelectButtonController : MonoBehaviour
 
         this.ObserveEveryValueChanged(_ => SelectState)
             .Subscribe(_ => ChangeView(_));
-
-        this.ObserveEveryValueChanged(_ => IsSelected)
-            .Subscribe(_ => OnChangedSaveData());
-
-        this.ObserveEveryValueChanged(_ => IsOwn)
-            .Subscribe(_ => OnChangedSaveData());
-    }
-
-    void OnChangedSaveData()
-    {
-        if (!IsOwn)
-        {
-            SelectState = SkinSelectState.Lock;
-            return;
-        }
-
-        if (!IsSelected)
-        {
-            SelectState = SkinSelectState.Unlock;
-            return;
-        }
-        SelectState = SkinSelectState.Select;
     }
 
     void ChangeView(SkinSelectState selectState)
@@ -81,18 +58,18 @@ public class SkinSelectButtonController : MonoBehaviour
         switch (selectState)
         {
             case SkinSelectState.Lock:
-                skinController.gameObject.SetActive(false);
+                skinObj?.gameObject.SetActive(false);
                 image.sprite = lockSprite;
                 selectbutton.enabled = false;
                 break;
             case SkinSelectState.Unlock:
-                skinController.gameObject.SetActive(true);
+                skinObj?.gameObject.SetActive(true);
                 image.sprite = unlockSprite;
                 selectbutton.enabled = true;
                 break;
             case SkinSelectState.Select:
                 image.sprite = selectedSprite;
-                skinController.gameObject.SetActive(true);
+                skinObj?.gameObject.SetActive(true);
                 selectbutton.enabled = false;
                 break;
             case SkinSelectState.Dummy:
@@ -102,11 +79,4 @@ public class SkinSelectButtonController : MonoBehaviour
         }
     }
 
-    void OnClickSelectButton()
-    {
-        if (SelectState != SkinSelectState.Unlock) { return; }
-        SaveData.i.selectedSkinIndex = skinIndex;
-        SaveDataManager.i.Save();
-        // ここではセーブデータの入れ替えだけにして、実際の処理はunirxで起動するようにする
-    }
 }

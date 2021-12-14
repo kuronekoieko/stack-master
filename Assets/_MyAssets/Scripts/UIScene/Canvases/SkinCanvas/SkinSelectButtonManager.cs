@@ -12,7 +12,7 @@ public class SkinSelectButtonManager : MonoBehaviour
 {
     [SerializeField] SkinSelectButtonController skinSelectPrefab;
     [SerializeField] RectTransform scrollViewContent;
-    [SerializeField] public SnapScrollView scrollView;
+    [SerializeField] SnapScrollView scrollView;
     [SerializeField] Image originIndicator;
     [SerializeField] Transform indicatorParent;
     [SerializeField] Sprite activeIndicatorSprite;
@@ -27,7 +27,7 @@ public class SkinSelectButtonManager : MonoBehaviour
     Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
     int contentsCountPerPage = 9;
-    [System.NonSerialized] public List<int> notOwnIndexes = new List<int>();
+    List<int> notOwnIndexes = new List<int>();
     [System.NonSerialized] public Action OnCompleteRewardedAds = () => { };
     [System.NonSerialized] public Action<int> OnCompleteUnlock = (randomInt) => { };
     [System.NonSerialized] public int unlockRandomCurrency;
@@ -53,7 +53,7 @@ public class SkinSelectButtonManager : MonoBehaviour
         rewardedButtonText.text = "+" + rewardedCurrency;
     }
 
-    public void Generator(int buttonCount)
+    public void Generator<T>(int buttonCount, bool isCharacterSkin) where T : MonoBehaviour
     {
         if (skinSelectControllers.Length > 0) { return; }
 
@@ -62,7 +62,9 @@ public class SkinSelectButtonManager : MonoBehaviour
         for (int i = 0; i < skinSelectControllers.Length; i++)
         {
             skinSelectControllers[i] = Instantiate(skinSelectPrefab, scrollViewContent);
+            skinSelectControllers[i].gameObject.AddComponent<T>();
             skinSelectControllers[i].OnInstantiate(i, false);
+
         }
 
         int dummyButtonCount = skinSelectControllers.Length - skinSelectControllers.Length % contentsCountPerPage;

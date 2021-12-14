@@ -10,7 +10,7 @@ public class TabController_Skin : MonoBehaviour
     [SerializeField] SkinSelectButtonManager skinSelectButtonManager;
     public void OnStart()
     {
-        skinSelectButtonManager.Generator(SkinSettingSO.i.characterSkinDatas.Length);
+        skinSelectButtonManager.Generator<SkinSelectButtonController_Skin>(SkinSettingSO.i.characterSkinDatas.Length, true);
         skinSelectButtonManager.OnCompleteRewardedAds = () =>
         {
             SaveData.i.currencyCount += ParameterSettingSO.i.SkinRewardedCurrency;

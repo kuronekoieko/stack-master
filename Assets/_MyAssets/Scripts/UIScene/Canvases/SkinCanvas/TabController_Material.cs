@@ -7,7 +7,7 @@ public class TabController_Material : MonoBehaviour
     [SerializeField] SkinSelectButtonManager skinSelectButtonManager;
     public void OnStart()
     {
-        skinSelectButtonManager.Generator(SkinSettingSO.i.characterSkinDatas.Length);
+        skinSelectButtonManager.Generator<SkinSelectButtonController_Material>(SkinSettingSO.i.characterMaterialDatas.Length, false);
 
         skinSelectButtonManager.OnCompleteRewardedAds = () =>
         {
@@ -17,8 +17,8 @@ public class TabController_Material : MonoBehaviour
         skinSelectButtonManager.OnCompleteUnlock = (randomInt) =>
         {
             SaveData.i.currencyCount -= ParameterSettingSO.i.SkinUnlockRandomCurrency;
-            SaveData.i.characterSkinSaveDatas[randomInt].isOwn = true;
-            SaveData.i.selectedSkinIndex = randomInt;
+            SaveData.i.materialSkinSaveDatas[randomInt].isOwn = true;
+            SaveData.i.selectedMaterialIndex = randomInt;
             SaveDataManager.i.Save();
         };
         skinSelectButtonManager.unlockRandomCurrency = ParameterSettingSO.i.SkinUnlockRandomCurrency;
