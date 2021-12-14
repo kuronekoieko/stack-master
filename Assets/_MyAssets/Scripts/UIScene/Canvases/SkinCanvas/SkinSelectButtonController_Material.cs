@@ -28,6 +28,7 @@ public class SkinSelectButtonController_Material : MonoBehaviour
         skinSelectButtonController.skinObj = sphereMr.gameObject;
         skinSelectButtonController.skinObj.layer = LayerMask.NameToLayer("Skin");
         sphereMr.material = new Material(SkinSettingSO.i.characterMaterialDatas[skinIndex].material);
+        skinSelectButtonController.skinObj.SetActive(false);
     }
 
     void OnClickSelectButton()
