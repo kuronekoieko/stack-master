@@ -308,6 +308,7 @@ namespace AppLovinMax.Scripts.Editor
             EnableConsentFlowIfNeeded(plist);
             AddSkAdNetworksInfoIfNeeded(plist);
             UpdateAppTransportSecuritySettingsIfNeeded(plist);
+            AddSnapAppStoreAppIdIfNeeded(plist);
 
             plist.WriteToFile(plistPath);
         }
@@ -513,6 +514,25 @@ namespace AppLovinMax.Scripts.Editor
                 MaxSdkLogger.UserDebug("Removing NSAllowsArbitraryLoadsInWebContent");
                 atsRootDict.Remove("NSAllowsArbitraryLoadsInWebContent");
             }
+        }
+
+        private static void AddSnapAppStoreAppIdIfNeeded(PlistDocument plist)
+        {
+            var snapDependencyPath = Path.Combine(PluginMediationDirectory, "Snap/Editor/Dependencies.xml");
+            if (!File.Exists(snapDependencyPath)) return;
+
+            // App Store App ID is only needed for iOS versions 2.0.0.0 or newer.
+            var currentVersion = AppLovinIntegrationManager.GetCurrentVersions(snapDependencyPath);
+            var iosVersionComparison = MaxSdkUtils.CompareVersions(currentVersion.Ios, AppLovinSettings.SnapAppStoreAppIdMinVersion);
+            if (iosVersionComparison == MaxSdkUtils.VersionComparisonResult.Lesser) return;
+
+            if (AppLovinSettings.Instance.SnapAppStoreAppId <= 0)
+            {
+                MaxSdkLogger.UserError("Snap App Store App ID is not set. Please enter a valid App ID within the AppLovin Integration Manager window.");
+                return;
+            }
+
+            plist.root.SetInteger("SCAppStoreAppID", AppLovinSettings.Instance.SnapAppStoreAppId);
         }
 
         private static bool ShouldEmbedSnapSdk()
