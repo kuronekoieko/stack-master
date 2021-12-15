@@ -13,6 +13,7 @@ public enum ScreenState
     Skin = 4,
     Start = 5,
     Gift = 6,
+    Splash = 7,
 }
 
 public abstract class BaseCanvasManager : MonoBehaviour

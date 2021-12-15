@@ -11,8 +11,7 @@ using UniRx;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] Transform canvasesParentTf;
-    [SerializeField] ScreenState launchScreen;//起動時の画面
-    [SerializeField] ScreenState initializeScreen;//初期化後に開く画面
+    [SerializeField] bool isSkipSplash;
     BaseCanvasManager[] baseCanvasManagers;
 
     void Awake()
@@ -32,7 +31,20 @@ public class UIManager : MonoBehaviour
         SetCanvases();
         // イベントにイベントハンドラーを追加
         SceneManager.sceneLoaded += SceneLoaded;
+
+        if (!Application.isEditor)
+        {
+            Variables.screenState = ScreenState.Splash;
+            return;
+        }
+
+        if (!isSkipSplash)
+        {
+            Variables.screenState = ScreenState.Splash;
+            return;
+        }
         StageTransManager.i.ReLoadStage();
+
     }
 
     void SetCanvases()
@@ -58,6 +70,6 @@ public class UIManager : MonoBehaviour
         {
             baseCanvasManager.OnSceneLoaded();
         }
-        Variables.screenState = initializeScreen;
+        Variables.screenState = ScreenState.Start;
     }
 }
