@@ -48,6 +48,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
         SoundManager.i.PlayOneShot(1);
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
+        FirebaseAnalyticsManager.i.LogEvent_StageClear(StageTransManager.i.CurrentDisplayStageNum);
 
         int curencyCount = Mathf.RoundToInt(Variables.goalRate * currencyBaseCount);
         SaveData.i.currencyCount += curencyCount;
