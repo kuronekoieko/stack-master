@@ -8,12 +8,10 @@ public class SkinCanvasManager : BaseCanvasManager
 {
     [SerializeField] Button closeButton_arrow;
     [SerializeField] Button closeButton_x;
-    [SerializeField] Button unlockButton;
-    [SerializeField] Text unlockButtonText;
-    [SerializeField] Button rewardedButton;
-    [SerializeField] Text rewardedButtonText;
-    [SerializeField] SkinSelectButtonManager skinSelectButtonManager;
-
+    [SerializeField] TabController_Skin tabController_Skin;
+    [SerializeField] TabController_Material tabController_Material;
+    [SerializeField] Transform skinPreviewParent;
+    SkinController previewSkin;
 
     public override void OnStart()
     {
@@ -21,23 +19,22 @@ public class SkinCanvasManager : BaseCanvasManager
         gameObject.SetActive(false);
         closeButton_arrow.onClick.AddListener(OnClickCloseButton);
         closeButton_x.onClick.AddListener(OnClickCloseButton);
-        unlockButton.onClick.AddListener(OnClickUnlockButton);
-        rewardedButton.onClick.AddListener(OnClickRewardedButton);
-        this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
-            .Subscribe(_ => OnChangedRewardedAdReady(_));
 
-        this.ObserveEveryValueChanged(_ => skinSelectButtonManager.EnableUnlockRandom)
-            .Subscribe(_ => unlockButton.interactable = _);
+        this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
+            .Subscribe(_ => OnChangedSelected(_));
 
-        skinSelectButtonManager.OnStart();
-        unlockButtonText.text = ParameterSettingSO.i.SkinUnlockRandomCurrency.ToString();
-        rewardedButtonText.text = "+" + ParameterSettingSO.i.SkinRewardedCurrency;
+        tabController_Skin.OnStart();
+        tabController_Material.OnStart();
+    }
+
+    void OnTabChanged(bool isOn)
+    {
+
     }
 
     protected override void OnOpen()
     {
         gameObject.SetActive(true);
-        skinSelectButtonManager.OnOpen();
     }
 
     public override void OnUpdate()
@@ -61,33 +58,13 @@ public class SkinCanvasManager : BaseCanvasManager
         Variables.screenState = ScreenState.Start;
     }
 
-    void OnClickUnlockButton()
+
+    void OnChangedSelected(int selectedButtonIndex)
     {
-        SoundManager.i.PlayOneShot(0);
-        skinSelectButtonManager.UnlockRandom();
+        if (previewSkin) DestroyImmediate(previewSkin.gameObject);
+        previewSkin = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedButtonIndex].prefab, skinPreviewParent);
+        previewSkin.OnInstantiate();
+        previewSkin.ChangeLayers(previewSkin.transform, "Skin");
     }
 
-    void OnClickRewardedButton()
-    {
-        SoundManager.i.PlayOneShot(0);
-        Time.timeScale = 0;
-
-        MaxSdkRewardedAds.i.ShowRewardedAd(
-            onRewarded: () =>
-            {
-                Time.timeScale = 1;
-                SaveData.i.currencyCount += ParameterSettingSO.i.SkinUnlockRandomCurrency;
-                SaveDataManager.i.Save();
-            },
-            onNotRewarded: () =>
-            {
-                Time.timeScale = 1;
-            }
-        );
-    }
-
-    void OnChangedRewardedAdReady(bool isRewardedAdReady)
-    {
-        rewardedButton.interactable = isRewardedAdReady;
-    }
 }

@@ -43,8 +43,14 @@ public class SaveDataManager
         // TODO:あとで新しいIDを追加するように変更
         for (int i = SaveData.i.characterSkinSaveDatas.Count; i < SkinSettingSO.i.characterSkinDatas.Length; i++)
         {
-            CharacterSkinData characterSkinData = SkinSettingSO.i.characterSkinDatas[i];
-            SaveData.i.characterSkinSaveDatas.Add(new CharacterSkinSaveData(characterSkinData.id, false));
+            var characterSkinData = SkinSettingSO.i.characterSkinDatas[i];
+            SaveData.i.characterSkinSaveDatas.Add(new SkinSaveData(characterSkinData.id, false));
+        }
+
+        for (int i = SaveData.i.materialSkinSaveDatas.Count; i < SkinSettingSO.i.characterMaterialDatas.Length; i++)
+        {
+            var characterSkinData = SkinSettingSO.i.characterMaterialDatas[i];
+            SaveData.i.materialSkinSaveDatas.Add(new SkinSaveData(characterSkinData.id, false));
         }
     }
 }

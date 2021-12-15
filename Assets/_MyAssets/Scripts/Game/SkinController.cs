@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 [RequireComponent(typeof(Animator))]
 public class SkinController : MonoBehaviour
@@ -8,18 +9,18 @@ public class SkinController : MonoBehaviour
     Animator animator;
     public Animator Animator => animator;
     SkinnedMeshRenderer[] skinnedMeshRenderers;
-    Material material;
 
-    public void OnInstantiate(Material material)
+    public void OnInstantiate()
     {
         animator = GetComponent<Animator>();
         animator.runtimeAnimatorController = SkinSettingSO.i.animatorController;
-        this.material = material;
-        ChangeMaterial(material);
+        this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
+            .Subscribe(_ => ChangeMaterial());
     }
 
-    public void ChangeMaterial(Material material)
+    public void ChangeMaterial()
     {
+        Material material = SkinSettingSO.i.characterMaterialDatas[SaveData.i.selectedMaterialIndex].material;
         skinnedMeshRenderers = animator.GetComponentsInChildren<SkinnedMeshRenderer>();
 
         for (int i = 0; i < skinnedMeshRenderers.Length; i++)

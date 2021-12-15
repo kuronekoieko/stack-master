@@ -10,8 +10,11 @@ public class SaveData
 
     SaveData()
     {
-        characterSkinSaveDatas = SkinSettingSO.i.characterSkinDatas.Select(h => new CharacterSkinSaveData(h.id, false)).ToList();
+        characterSkinSaveDatas = SkinSettingSO.i.characterSkinDatas.Select(h => new SkinSaveData(h.id, false)).ToList();
         characterSkinSaveDatas[0].isOwn = true;
+
+        materialSkinSaveDatas = SkinSettingSO.i.characterMaterialDatas.Select(h => new SkinSaveData(h.id, false)).ToList();
+        materialSkinSaveDatas[0].isOwn = true;
     }
 
 
@@ -20,9 +23,10 @@ public class SaveData
     public UserDateTime receivedLoginBonusUserDateTime;
     public int lastClearedDisplayStageNum = 0;
     public int selectedSkinIndex;
-    public List<CharacterSkinSaveData> characterSkinSaveDatas = new List<CharacterSkinSaveData>();
+    public int selectedMaterialIndex;
+    public List<SkinSaveData> characterSkinSaveDatas = new List<SkinSaveData>();
 
-
+    public List<SkinSaveData> materialSkinSaveDatas = new List<SkinSaveData>();
 }
 
 /// <summary>
@@ -42,12 +46,12 @@ public class UserDateTime
 
 
 [System.Serializable]
-public class CharacterSkinSaveData
+public class SkinSaveData
 {
     public string id;
     public bool isOwn;
 
-    public CharacterSkinSaveData(string id, bool isOwn)
+    public SkinSaveData(string id, bool isOwn)
     {
         this.id = id;
         this.isOwn = isOwn;
