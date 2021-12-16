@@ -10,16 +10,18 @@ public class ClearCanvasManager : BaseCanvasManager
 {
     [SerializeField] Button nextButton;
     [SerializeField] Button giftButton;
-    [SerializeField] GameObject gems;
+    [SerializeField] RectTransform gems;
     [SerializeField] Image titleImage;
     [SerializeField] Text currencyCountText;
     [SerializeField] SkinProgress skinProgress;
+    [SerializeField] GemImageAnim gemImageAnimPrefab;
+    [SerializeField] RectTransform gemImageRt;
     Sequence nextButtonSequence;
     Sequence giftButtonSequence;
     Tween emojiRotateTween;
     Tween emojiScaleTween;
     int currencyBaseCount = 15;
-
+    GemImageAnim[] gemImageAnims;
 
     public override void OnStart()
     {
@@ -29,6 +31,13 @@ public class ClearCanvasManager : BaseCanvasManager
         giftButton.onClick.AddListener(OnClickGiftButton);
         gameObject.SetActive(false);
         skinProgress.OnStart();
+
+        gemImageAnims = new GemImageAnim[20];
+        for (int i = 0; i < gemImageAnims.Length; i++)
+        {
+            gemImageAnims[i] = Instantiate(gemImageAnimPrefab, transform);
+            gemImageAnims[i].OnInstansiate();
+        }
     }
 
     public override void OnSceneLoaded()
@@ -47,7 +56,7 @@ public class ClearCanvasManager : BaseCanvasManager
         nextButton.gameObject.SetActive(false);
         giftButton.gameObject.SetActive(false);
         titleImage.gameObject.SetActive(true);
-        gems.SetActive(true);
+        gems.gameObject.SetActive(true);
 
         SoundManager.i.PlayOneShot(1);
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
@@ -67,6 +76,7 @@ public class ClearCanvasManager : BaseCanvasManager
             .OnComplete(() =>
             {
                 skinProgress.Anim(OnCompleteSkinProgress);
+                GemAnim();
             });
 
             giftButton.transform.localScale = Vector3.one;
@@ -83,11 +93,23 @@ public class ClearCanvasManager : BaseCanvasManager
         });
     }
 
+    void GemAnim()
+    {
+        Vector3 startOffset = Vector3.zero;
+        float width = 0.7f;
+        for (int i = 0; i < gemImageAnims.Length; i++)
+        {
+            startOffset.x = UnityEngine.Random.Range(-width, width);
+            startOffset.y = UnityEngine.Random.Range(-width, width);
+            gemImageAnims[i].Anim(gemImageRt.position, startOffset, CoinCountView.i.GemImagePos, 0);
+        }
+    }
+
     void OnCompleteSkinProgress(bool isMax)
     {
         if (isMax)
         {
-            gems.SetActive(false);
+            gems.gameObject.SetActive(false);
             titleImage.gameObject.SetActive(false);
             return;
         }
