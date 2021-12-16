@@ -66,13 +66,7 @@ public class ClearCanvasManager : BaseCanvasManager
             transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack)
             .OnComplete(() =>
             {
-                int randomInt = UnityEngine.Random.Range(25, 35);
-                int startVal = SaveData.i.unlockingSkin.percentage;
-                int endVal = Mathf.Clamp(SaveData.i.unlockingSkin.percentage + randomInt, 0, 100);
-                endVal = 100;
-                SaveData.i.unlockingSkin.percentage = endVal;
-                SaveDataManager.i.Save();
-                skinProgress.Anim(startVal, endVal, OnCompleteSkinProgress);
+                skinProgress.Anim(OnCompleteSkinProgress);
             });
 
             giftButton.transform.localScale = Vector3.one;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System;
+using System.Linq;
 
 public class SkinProgress : MonoBehaviour
 {
@@ -16,9 +17,11 @@ public class SkinProgress : MonoBehaviour
     [SerializeField] Button skinGetButton;
     [SerializeField] Button continueButton;
     [SerializeField] Text titleText;
+    [SerializeField] GameObject radial;
     SkinController outlineSkin;
     SkinController maskSkin;
     SkinController defaultSkin;
+    bool isNotingSkin;
 
     public void OnStart()
     {
@@ -29,13 +32,22 @@ public class SkinProgress : MonoBehaviour
 
     public void OnOpen()
     {
-        SaveData.i.unlockingSkin.percentage = 0;
+        SetPercentage();
 
+        skinGetButton.enabled = true;
+        continueButton.enabled = true;
         rateText.gameObject.SetActive(true);
         skinGetButton.gameObject.SetActive(false);
         continueButton.gameObject.SetActive(false);
         titleText.gameObject.SetActive(false);
         modelsCenter.transform.localScale = Vector3.one;
+
+        if (isNotingSkin)
+        {
+            rateText.gameObject.SetActive(false);
+            radial.gameObject.SetActive(false);
+            return;
+        }
 
         outlineSkin = InstantiateSkin();
         outlineSkin.ChangeMaterial(outlineMaterial, true);
@@ -56,8 +68,38 @@ public class SkinProgress : MonoBehaviour
         rateText.text = SaveData.i.unlockingSkin.percentage.ToString();
     }
 
-    public void Anim(int startVal, int endVal, Action<bool> OnCompleteSkinProgress)
+
+    void SetPercentage()
     {
+
+        if (!SaveData.i.characterSkinSaveDatas[SaveData.i.unlockingSkin.index].isOwn) return;
+
+        SkinSaveData skinSaveData = SaveData.i.characterSkinSaveDatas.Where(_ => !_.isOwn).FirstOrDefault();
+        if (skinSaveData == null)
+        {
+            isNotingSkin = true;
+            return;
+        }
+
+        SaveData.i.unlockingSkin.index = SaveData.i.characterSkinSaveDatas.IndexOf(skinSaveData);
+        SaveData.i.unlockingSkin.percentage = 0;
+
+    }
+
+    public void Anim(Action<bool> OnCompleteSkinProgress)
+    {
+        int randomInt = UnityEngine.Random.Range(25, 35);
+        int startVal = SaveData.i.unlockingSkin.percentage;
+        int endVal = Mathf.Clamp(SaveData.i.unlockingSkin.percentage + randomInt, 0, 100);
+        SaveData.i.unlockingSkin.percentage = endVal < 100 ? endVal : 0;
+        SaveDataManager.i.Save();
+
+        if (isNotingSkin)
+        {
+            OnCompleteSkinProgress(false);
+            return;
+        }
+
         float duration = 2f;
         int nowNumber = startVal;
 
@@ -99,7 +141,7 @@ public class SkinProgress : MonoBehaviour
 
     SkinController InstantiateSkin()
     {
-        SkinController skin = Instantiate(SkinSettingSO.i.characterSkinDatas[1].prefab, Vector3.zero, Quaternion.identity, models);
+        SkinController skin = Instantiate(SkinSettingSO.i.characterSkinDatas[SaveData.i.unlockingSkin.index].prefab, Vector3.zero, Quaternion.identity, models);
         skin.RectTransform = skin.gameObject.AddComponent<RectTransform>();
         skin.OnInstantiate();
         skin.Animator.applyRootMotion = false;
@@ -121,6 +163,11 @@ public class SkinProgress : MonoBehaviour
                 maskSkin.Animator.SetTrigger("Cheer");
                 defaultSkin.Animator.SetTrigger("Cheer");
                 DOVirtual.DelayedCall(2f, () => OnClickContinueButton());
+                SaveData.i.characterSkinSaveDatas[SaveData.i.unlockingSkin.index].isOwn = true;
+                SaveData.i.selectedSkinIndex = SaveData.i.unlockingSkin.index;
+                SaveDataManager.i.Save();
+                skinGetButton.enabled = false;
+                continueButton.enabled = false;
             },
             onNotRewarded: () =>
             {
@@ -144,6 +191,7 @@ public class SkinProgress : MonoBehaviour
 
     public void OnClose()
     {
+        if (outlineSkin == null) return;
         DestroyImmediate(outlineSkin.gameObject);
         DestroyImmediate(maskSkin.gameObject);
         DestroyImmediate(defaultSkin.gameObject);
