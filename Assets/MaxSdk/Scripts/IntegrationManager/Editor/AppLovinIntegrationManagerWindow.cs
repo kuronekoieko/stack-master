@@ -479,39 +479,63 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 GUILayout.Space(5);
             }
 
-            // Custom integration for AdMob where the user can enter the Android and iOS App IDs.
-            if (network.Name.Equals("ADMOB_NETWORK") && isInstalled)
+            if (isInstalled)
             {
-                // Custom integration requires Google AdMob adapter version newer than android_19.0.1.0_ios_7.57.0.0.
-                if (MaxSdkUtils.CompareUnityMediationVersions(network.CurrentVersions.Unity, "android_19.0.1.0_ios_7.57.0.0") == VersionComparisonResult.Greater)
+                // Custom integration for AdMob where the user can enter the Android and iOS App IDs.
+                if (network.Name.Equals("ADMOB_NETWORK"))
+                {
+                    // Custom integration requires Google AdMob adapter version newer than android_19.0.1.0_ios_7.57.0.0.
+                    if (MaxSdkUtils.CompareUnityMediationVersions(network.CurrentVersions.Unity, "android_19.0.1.0_ios_7.57.0.0") == VersionComparisonResult.Greater)
+                    {
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Space(20);
+                        using (new EditorGUILayout.VerticalScope("box"))
+                        {
+                            string requiredVersion;
+                            string warningMessage;
+                            if (isPluginMoved)
+                            {
+                                requiredVersion = "android_19.6.0.1_ios_7.69.0.0";
+                                warningMessage = "Looks like the MAX plugin has been moved to a different directory. This requires Google adapter version newer than " + requiredVersion + " for auto-export of AdMob App ID to work correctly.";
+                            }
+                            else
+                            {
+                                requiredVersion = "android_19.2.0.0_ios_7.61.0.0";
+                                warningMessage = "The current version of AppLovin MAX plugin requires Google adapter version newer than " + requiredVersion + " to enable auto-export of AdMob App ID.";
+                            }
+
+                            GUILayout.Space(2);
+                            if (MaxSdkUtils.CompareUnityMediationVersions(network.CurrentVersions.Unity, requiredVersion) == VersionComparisonResult.Greater)
+                            {
+                                AppLovinSettings.Instance.AdMobAndroidAppId = DrawTextField("App ID (Android)", AppLovinSettings.Instance.AdMobAndroidAppId, networkWidthOption);
+                                AppLovinSettings.Instance.AdMobIosAppId = DrawTextField("App ID (iOS)", AppLovinSettings.Instance.AdMobIosAppId, networkWidthOption);
+                            }
+                            else
+                            {
+                                EditorGUILayout.HelpBox(warningMessage, MessageType.Warning);
+                            }
+                        }
+
+                        GUILayout.EndHorizontal();
+                    }
+                }
+                // Snap requires SCAppStoreAppID to be set starting adapter version 2.0.0.0 or newer. Show a text field for the publisher to input the App ID.
+                else if (network.Name.Equals("SNAP_NETWORK") &&
+                         MaxSdkUtils.CompareVersions(network.CurrentVersions.Ios, AppLovinSettings.SnapAppStoreAppIdMinVersion) != VersionComparisonResult.Lesser)
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Space(20);
                     using (new EditorGUILayout.VerticalScope("box"))
                     {
-                        string requiredVersion;
-                        string warningMessage;
-                        if (isPluginMoved)
-                        {
-                            requiredVersion = "android_19.6.0.1_ios_7.69.0.0";
-                            warningMessage = "Looks like the MAX plugin has been moved to a different directory. This requires Google adapter version newer than " + requiredVersion + " for auto-export of AdMob App ID to work correctly.";
-                        }
-                        else
-                        {
-                            requiredVersion = "android_19.2.0.0_ios_7.61.0.0";
-                            warningMessage = "The current version of AppLovin MAX plugin requires Google adapter version newer than " + requiredVersion + " to enable auto-export of AdMob App ID.";
-                        }
-
                         GUILayout.Space(2);
-                        if (MaxSdkUtils.CompareUnityMediationVersions(network.CurrentVersions.Unity, requiredVersion) == VersionComparisonResult.Greater)
-                        {
-                            AppLovinSettings.Instance.AdMobAndroidAppId = DrawTextField("App ID (Android)", AppLovinSettings.Instance.AdMobAndroidAppId, networkWidthOption);
-                            AppLovinSettings.Instance.AdMobIosAppId = DrawTextField("App ID (iOS)", AppLovinSettings.Instance.AdMobIosAppId, networkWidthOption);
-                        }
-                        else
-                        {
-                            EditorGUILayout.HelpBox(warningMessage, MessageType.Warning);
-                        }
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Space(4);
+                        EditorGUILayout.LabelField(new GUIContent("App Store App ID (iOS)"), networkWidthOption);
+                        GUILayout.Space(4);
+                        AppLovinSettings.Instance.SnapAppStoreAppId = EditorGUILayout.IntField(AppLovinSettings.Instance.SnapAppStoreAppId);
+                        GUILayout.Space(4);
+                        GUILayout.EndHorizontal();
+                        GUILayout.Space(2);
                     }
 
                     GUILayout.EndHorizontal();
