@@ -96,7 +96,7 @@ public class ClearCanvasManager : BaseCanvasManager
     void GemAnim()
     {
         Vector3 startOffset = Vector3.zero;
-        float width = 0.7f;
+        float width = 0.5f;
         for (int i = 0; i < gemImageAnims.Length; i++)
         {
             startOffset.x = UnityEngine.Random.Range(-width, width);
@@ -132,7 +132,6 @@ public class ClearCanvasManager : BaseCanvasManager
 
     void OnClickNextButton()
     {
-
         SoundManager.i.PlayOneShot(0);
         StageTransManager.i.LoadNextStage();
     }
