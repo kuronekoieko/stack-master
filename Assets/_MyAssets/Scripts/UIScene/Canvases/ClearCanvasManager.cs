@@ -13,6 +13,7 @@ public class ClearCanvasManager : BaseCanvasManager
     [SerializeField] Text titleText;
     [SerializeField] Image emojiImage;
     [SerializeField] Text currencyCountText;
+    [SerializeField] SkinProgress skinProgress;
     Sequence nextButtonSequence;
     Sequence giftButtonSequence;
     Tween emojiRotateTween;
@@ -27,6 +28,7 @@ public class ClearCanvasManager : BaseCanvasManager
         nextButton.onClick.AddListener(OnClickNextButton);
         giftButton.onClick.AddListener(OnClickGiftButton);
         gameObject.SetActive(false);
+        skinProgress.OnStart();
     }
 
     public override void OnSceneLoaded()
@@ -41,6 +43,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
+        skinProgress.OnOpen();
         bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
         // isNextGiftScreen = true; //デバッグ用
         nextButton.gameObject.SetActive(!isNextGiftScreen);
@@ -60,7 +63,16 @@ public class ClearCanvasManager : BaseCanvasManager
         {
             gameObject.SetActive(true);
             transform.localScale = Vector3.zero;
-            transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+            transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack)
+            .OnComplete(() =>
+            {
+                int randomInt = UnityEngine.Random.Range(25, 35);
+                int startVal = SaveData.i.unlockingSkin.percentage;
+                int endVal = Mathf.Clamp(SaveData.i.unlockingSkin.percentage + randomInt, 0, 100);
+                SaveData.i.unlockingSkin.percentage = endVal;
+                SaveDataManager.i.Save();
+                skinProgress.Anim(startVal, endVal);
+            });
 
             giftButton.transform.localScale = Vector3.one;
             giftButtonSequence = DOTween.Sequence()

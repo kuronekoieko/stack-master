@@ -25,8 +25,8 @@ public class SaveData
     public int selectedSkinIndex;
     public int selectedMaterialIndex;
     public List<SkinSaveData> characterSkinSaveDatas = new List<SkinSaveData>();
-
     public List<SkinSaveData> materialSkinSaveDatas = new List<SkinSaveData>();
+    public UnlockingSkin unlockingSkin = new UnlockingSkin();
 }
 
 /// <summary>
@@ -63,4 +63,12 @@ public class TestClass
 {
     public string name;
     public int num;
+}
+
+[System.Serializable]
+public class UnlockingSkin
+{
+    public int id;
+    public int index;
+    public int percentage;
 }
