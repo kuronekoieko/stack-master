@@ -30,7 +30,7 @@ public class StageTransManager
     public void LoadStageOnAppLaunch(int startDisplayStageNum)
     {
         CurrentDisplayStageNum = startDisplayStageNum;
-        stageLength = SceneManager.sceneCountInBuildSettings - 1;
+        stageLength = StageSettingsSO.i.stagePrefabs.Length;
     }
 
     /// <summary>
