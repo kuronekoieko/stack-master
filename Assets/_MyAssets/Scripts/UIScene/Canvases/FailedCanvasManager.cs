@@ -29,6 +29,8 @@ public class FailedCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
+        FirebaseAnalyticsManager.i.LogEvent_StageFailed(StageTransManager.i.CurrentDisplayStageNum);
+
         DOVirtual.DelayedCall(1.3f, () =>
         {
             gameObject.SetActive(true);
@@ -60,7 +62,7 @@ public class FailedCanvasManager : BaseCanvasManager
 
     void OnClickHomeButton()
     {
-       // Variables.screenState = ScreenState.Home;
+        // Variables.screenState = ScreenState.Home;
         SoundManager.i.PlayOneShot(0);
     }
 }

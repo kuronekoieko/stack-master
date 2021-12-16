@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System;
 
 public class StageTransManager
 {
@@ -37,8 +38,24 @@ public class StageTransManager
     /// </summary>
     public void LoadNextStage()
     {
-        CurrentDisplayStageNum++;
-        ReLoadStage();
+        Time.timeScale = 0;
+        ShowInterstitial(() =>
+        {
+            CurrentDisplayStageNum++;
+            ReLoadStage();
+            Time.timeScale = 1;
+        });
+    }
+
+    void ShowInterstitial(Action onHidden)
+    {
+        if (StageTransManager.i.CurrentDisplayStageNum % 3 != 0)
+        {
+            onHidden();
+            return;
+        }
+
+        MaxSdkInterstitial.i.Show(onHidden);
     }
 
     /// <summary>

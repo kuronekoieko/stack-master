@@ -118,7 +118,7 @@ public class ChestView : MonoBehaviour
                 {
                     startOffset.x = Random.Range(-width, width);
                     startOffset.y = Random.Range(-width, width);
-                    gemImageAnims[i].Anim(rectTransform.position + startOffset, CoinCountView.i.GemImagePos, 0);
+                    gemImageAnims[i].Anim(rectTransform.position, startOffset, CoinCountView.i.GemImagePos, 0);
                 }
 
                 gemCountText.text = gemCount.ToString();

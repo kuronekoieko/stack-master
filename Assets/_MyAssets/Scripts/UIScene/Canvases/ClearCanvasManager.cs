@@ -10,15 +10,18 @@ public class ClearCanvasManager : BaseCanvasManager
 {
     [SerializeField] Button nextButton;
     [SerializeField] Button giftButton;
-    [SerializeField] Text titleText;
-    [SerializeField] Image emojiImage;
+    [SerializeField] RectTransform gems;
+    [SerializeField] Image titleImage;
     [SerializeField] Text currencyCountText;
+    [SerializeField] SkinProgress skinProgress;
+    [SerializeField] GemImageAnim gemImageAnimPrefab;
+    [SerializeField] RectTransform gemImageRt;
     Sequence nextButtonSequence;
     Sequence giftButtonSequence;
     Tween emojiRotateTween;
     Tween emojiScaleTween;
     int currencyBaseCount = 15;
-
+    GemImageAnim[] gemImageAnims;
 
     public override void OnStart()
     {
@@ -27,6 +30,14 @@ public class ClearCanvasManager : BaseCanvasManager
         nextButton.onClick.AddListener(OnClickNextButton);
         giftButton.onClick.AddListener(OnClickGiftButton);
         gameObject.SetActive(false);
+        skinProgress.OnStart();
+
+        gemImageAnims = new GemImageAnim[20];
+        for (int i = 0; i < gemImageAnims.Length; i++)
+        {
+            gemImageAnims[i] = Instantiate(gemImageAnimPrefab, transform);
+            gemImageAnims[i].OnInstansiate();
+        }
     }
 
     public override void OnSceneLoaded()
@@ -41,13 +52,15 @@ public class ClearCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
-        bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
-        // isNextGiftScreen = true; //デバッグ用
-        nextButton.gameObject.SetActive(!isNextGiftScreen);
-        giftButton.gameObject.SetActive(isNextGiftScreen); ;
+        skinProgress.OnOpen();
+        nextButton.gameObject.SetActive(false);
+        giftButton.gameObject.SetActive(false);
+        titleImage.gameObject.SetActive(true);
+        gems.gameObject.SetActive(true);
 
         SoundManager.i.PlayOneShot(1);
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
+        FirebaseAnalyticsManager.i.LogEvent_StageClear(StageTransManager.i.CurrentDisplayStageNum);
 
         int curencyCount = Mathf.RoundToInt(Variables.goalRate * currencyBaseCount);
         SaveData.i.currencyCount += curencyCount;
@@ -59,7 +72,12 @@ public class ClearCanvasManager : BaseCanvasManager
         {
             gameObject.SetActive(true);
             transform.localScale = Vector3.zero;
-            transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+            transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack)
+            .OnComplete(() =>
+            {
+                skinProgress.Anim(OnCompleteSkinProgress);
+                GemAnim();
+            });
 
             giftButton.transform.localScale = Vector3.one;
             giftButtonSequence = DOTween.Sequence()
@@ -72,12 +90,34 @@ public class ClearCanvasManager : BaseCanvasManager
             .Append(nextButton.transform.DOScale(Vector3.one * 1.1f, 0.5f))
             .Append(nextButton.transform.DOScale(Vector3.one, 0.5f));
             nextButtonSequence.SetLoops(-1);
-
-            emojiImage.transform.eulerAngles = Vector3.forward * -40f;
-            emojiRotateTween = emojiImage.transform.DORotate(Vector3.forward * 40f, 1.5f).SetEase(Ease.InOutFlash, 2).SetLoops(-1);
-            emojiImage.transform.localScale = Vector3.one;
-            emojiScaleTween = emojiImage.transform.DOScale(Vector3.one * 1.1f, 1.5f).SetEase(Ease.InOutFlash, 4).SetLoops(-1);
         });
+    }
+
+    void GemAnim()
+    {
+        Vector3 startOffset = Vector3.zero;
+        float width = 0.7f;
+        for (int i = 0; i < gemImageAnims.Length; i++)
+        {
+            startOffset.x = UnityEngine.Random.Range(-width, width);
+            startOffset.y = UnityEngine.Random.Range(-width, width);
+            gemImageAnims[i].Anim(gemImageRt.position, startOffset, CoinCountView.i.GemImagePos, 0);
+        }
+    }
+
+    void OnCompleteSkinProgress(bool isMax)
+    {
+        if (isMax)
+        {
+            gems.gameObject.SetActive(false);
+            titleImage.gameObject.SetActive(false);
+            return;
+        }
+
+        bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
+        // isNextGiftScreen = true; //デバッグ用
+        nextButton.gameObject.SetActive(!isNextGiftScreen);
+        giftButton.gameObject.SetActive(isNextGiftScreen);
     }
 
     protected override void OnClose()
@@ -87,31 +127,17 @@ public class ClearCanvasManager : BaseCanvasManager
         giftButtonSequence.Kill();
         emojiRotateTween.Kill();
         emojiScaleTween.Kill();
+        skinProgress.OnClose();
     }
 
     void OnClickNextButton()
     {
 
         SoundManager.i.PlayOneShot(0);
-        Time.timeScale = 0;
-        ShowInterstitial(() =>
-        {
-            StageTransManager.i.LoadNextStage();
-            Time.timeScale = 1;
-        });
-
+        StageTransManager.i.LoadNextStage();
     }
 
-    void ShowInterstitial(Action onHidden)
-    {
-        if (StageTransManager.i.CurrentDisplayStageNum % 3 != 0)
-        {
-            onHidden();
-            return;
-        }
 
-        MaxSdkInterstitial.i.Show(onHidden);
-    }
 
     void OnClickHomeButton()
     {
@@ -122,11 +148,6 @@ public class ClearCanvasManager : BaseCanvasManager
     void OnClickGiftButton()
     {
         SoundManager.i.PlayOneShot(0);
-        Time.timeScale = 0;
-        ShowInterstitial(() =>
-        {
-            Variables.screenState = ScreenState.Gift;
-            Time.timeScale = 1;
-        });
+        Variables.screenState = ScreenState.Gift;
     }
 }
