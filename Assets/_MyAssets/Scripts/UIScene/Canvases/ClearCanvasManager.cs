@@ -10,8 +10,8 @@ public class ClearCanvasManager : BaseCanvasManager
 {
     [SerializeField] Button nextButton;
     [SerializeField] Button giftButton;
-    [SerializeField] Text titleText;
-    [SerializeField] Image emojiImage;
+    [SerializeField] GameObject gems;
+    [SerializeField] Image titleImage;
     [SerializeField] Text currencyCountText;
     [SerializeField] SkinProgress skinProgress;
     Sequence nextButtonSequence;
@@ -44,10 +44,10 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         skinProgress.OnOpen();
-        bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
-        // isNextGiftScreen = true; //デバッグ用
-        nextButton.gameObject.SetActive(!isNextGiftScreen);
-        giftButton.gameObject.SetActive(isNextGiftScreen); ;
+        nextButton.gameObject.SetActive(false);
+        giftButton.gameObject.SetActive(false);
+        titleImage.gameObject.SetActive(true);
+        gems.SetActive(true);
 
         SoundManager.i.PlayOneShot(1);
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
@@ -69,9 +69,10 @@ public class ClearCanvasManager : BaseCanvasManager
                 int randomInt = UnityEngine.Random.Range(25, 35);
                 int startVal = SaveData.i.unlockingSkin.percentage;
                 int endVal = Mathf.Clamp(SaveData.i.unlockingSkin.percentage + randomInt, 0, 100);
+                endVal = 100;
                 SaveData.i.unlockingSkin.percentage = endVal;
                 SaveDataManager.i.Save();
-                skinProgress.Anim(startVal, endVal);
+                skinProgress.Anim(startVal, endVal, OnCompleteSkinProgress);
             });
 
             giftButton.transform.localScale = Vector3.one;
@@ -85,12 +86,22 @@ public class ClearCanvasManager : BaseCanvasManager
             .Append(nextButton.transform.DOScale(Vector3.one * 1.1f, 0.5f))
             .Append(nextButton.transform.DOScale(Vector3.one, 0.5f));
             nextButtonSequence.SetLoops(-1);
-
-            emojiImage.transform.eulerAngles = Vector3.forward * -40f;
-            emojiRotateTween = emojiImage.transform.DORotate(Vector3.forward * 40f, 1.5f).SetEase(Ease.InOutFlash, 2).SetLoops(-1);
-            emojiImage.transform.localScale = Vector3.one;
-            emojiScaleTween = emojiImage.transform.DOScale(Vector3.one * 1.1f, 1.5f).SetEase(Ease.InOutFlash, 4).SetLoops(-1);
         });
+    }
+
+    void OnCompleteSkinProgress(bool isMax)
+    {
+        if (isMax)
+        {
+            gems.SetActive(false);
+            titleImage.gameObject.SetActive(false);
+            return;
+        }
+
+        bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
+        // isNextGiftScreen = true; //デバッグ用
+        nextButton.gameObject.SetActive(!isNextGiftScreen);
+        giftButton.gameObject.SetActive(isNextGiftScreen);
     }
 
     protected override void OnClose()
@@ -100,31 +111,17 @@ public class ClearCanvasManager : BaseCanvasManager
         giftButtonSequence.Kill();
         emojiRotateTween.Kill();
         emojiScaleTween.Kill();
+        skinProgress.OnClose();
     }
 
     void OnClickNextButton()
     {
 
         SoundManager.i.PlayOneShot(0);
-        Time.timeScale = 0;
-        ShowInterstitial(() =>
-        {
-            StageTransManager.i.LoadNextStage();
-            Time.timeScale = 1;
-        });
-
+        StageTransManager.i.LoadNextStage();
     }
 
-    void ShowInterstitial(Action onHidden)
-    {
-        if (StageTransManager.i.CurrentDisplayStageNum % 3 != 0)
-        {
-            onHidden();
-            return;
-        }
 
-        MaxSdkInterstitial.i.Show(onHidden);
-    }
 
     void OnClickHomeButton()
     {
@@ -135,11 +132,6 @@ public class ClearCanvasManager : BaseCanvasManager
     void OnClickGiftButton()
     {
         SoundManager.i.PlayOneShot(0);
-        Time.timeScale = 0;
-        ShowInterstitial(() =>
-        {
-            Variables.screenState = ScreenState.Gift;
-            Time.timeScale = 1;
-        });
+        Variables.screenState = ScreenState.Gift;
     }
 }
