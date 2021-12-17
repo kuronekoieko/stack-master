@@ -76,7 +76,7 @@ public class CharacterManager : MonoBehaviour
         switch (playerState)
         {
             case PlayerState.BeforeStart:
-
+                Stop();
                 if (Variables.isLaunchUIScene)
                 {
                     if (Variables.screenState != ScreenState.Game) return;
@@ -106,6 +106,11 @@ public class CharacterManager : MonoBehaviour
 
         if (pool.activelist.Count == 0) return;
         pool.activelist[0].VelocityControl(deltaX);
+
+        for (int i = 1; i < pool.activelist.Count; i++)
+        {
+            pool.activelist[i].Follow();
+        }
     }
 
     void GoalBonus()
@@ -118,14 +123,6 @@ public class CharacterManager : MonoBehaviour
         for (int i = 0; i < pool.activelist.Count; i++)
         {
             pool.activelist[i].Stop();
-        }
-    }
-
-    void FixedUpdate()
-    {
-        for (int i = 1; i < pool.activelist.Count; i++)
-        {
-            pool.activelist[i].Follow(pool.activelist[0].transform.position);
         }
     }
 

@@ -67,11 +67,10 @@ public class Character : MonoBehaviour
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
         rb.mass = 1f;
-        // gameObject.SetActive(true);
         capsuleCollider.enabled = false;
         boxCollider.enabled = false;
         transform.position = bottomPos;
-        transform.DOMoveY(targetPos.y, duration)
+        rb.DOMoveY(targetPos.y, duration)
         .OnComplete(() =>
         {
             capsuleCollider.enabled = true;
@@ -91,13 +90,26 @@ public class Character : MonoBehaviour
         rb.mass = 1000f;
     }
 
-    public void Follow(Vector3 bottomPos)
+    public void Follow()
     {
-        if (!gameObject.activeSelf) return;
-        var pos = bottomPos;
-        pos.y = rb.position.y;
-        rb.position = pos;
         animator.SetBool("IsFall", true);
+
+        var vel = characterManager.pool.activelist[0].rb.velocity;
+        vel.y = rb.velocity.y;
+        rb.velocity = vel;
+
+        // ズレ矯正
+        var bottomXZ = characterManager.pool.activelist[0].transform.position;
+        bottomXZ.y = 0;
+        var thisXZ = transform.position;
+        thisXZ.y = 0;
+        float distance = Vector3.Distance(bottomXZ, thisXZ);
+        if (distance > 0.1f)
+        {
+            thisXZ = bottomXZ;
+            thisXZ.y = transform.position.y;
+            transform.position = thisXZ;
+        }
     }
 
     public void Stop()
