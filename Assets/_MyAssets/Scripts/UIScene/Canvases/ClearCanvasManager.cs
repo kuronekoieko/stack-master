@@ -14,14 +14,14 @@ public class ClearCanvasManager : BaseCanvasManager
     [SerializeField] Image titleImage;
     [SerializeField] Text currencyCountText;
     [SerializeField] SkinProgress skinProgress;
-    [SerializeField] GemImageAnim gemImageAnimPrefab;
     [SerializeField] RectTransform gemImageRt;
+    [SerializeField] GemCollectAnimManager gemCollectAnimManager;
     Sequence nextButtonSequence;
     Sequence giftButtonSequence;
     Tween emojiRotateTween;
     Tween emojiScaleTween;
     int currencyBaseCount = 15;
-    GemImageAnim[] gemImageAnims;
+
 
     public override void OnStart()
     {
@@ -31,13 +31,8 @@ public class ClearCanvasManager : BaseCanvasManager
         giftButton.onClick.AddListener(OnClickGiftButton);
         gameObject.SetActive(false);
         skinProgress.OnStart();
+        gemCollectAnimManager.OnStart(20);
 
-        gemImageAnims = new GemImageAnim[20];
-        for (int i = 0; i < gemImageAnims.Length; i++)
-        {
-            gemImageAnims[i] = Instantiate(gemImageAnimPrefab, transform);
-            gemImageAnims[i].OnInstansiate();
-        }
     }
 
     public override void OnSceneLoaded()
@@ -75,8 +70,11 @@ public class ClearCanvasManager : BaseCanvasManager
             transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack)
             .OnComplete(() =>
             {
-                skinProgress.Anim(OnCompleteSkinProgress);
-                GemAnim();
+                skinProgress.Anim();
+                gemCollectAnimManager.Anim(gemImageRt.position, 0.5f, () =>
+                {
+                    OnCompleteSkinProgress(skinProgress.IsMax);
+                });
             });
 
             giftButton.transform.localScale = Vector3.one;
@@ -93,17 +91,7 @@ public class ClearCanvasManager : BaseCanvasManager
         });
     }
 
-    void GemAnim()
-    {
-        Vector3 startOffset = Vector3.zero;
-        float width = 0.5f;
-        for (int i = 0; i < gemImageAnims.Length; i++)
-        {
-            startOffset.x = UnityEngine.Random.Range(-width, width);
-            startOffset.y = UnityEngine.Random.Range(-width, width);
-            gemImageAnims[i].Anim(gemImageRt.position, startOffset, CoinCountView.i.GemImagePos, 0);
-        }
-    }
+
 
     void OnCompleteSkinProgress(bool isMax)
     {

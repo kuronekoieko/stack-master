@@ -22,6 +22,7 @@ public class SkinProgress : MonoBehaviour
     SkinController maskSkin;
     SkinController defaultSkin;
     bool isNotingSkin;
+    public bool IsMax { get; private set; }
 
     public void OnStart()
     {
@@ -86,17 +87,17 @@ public class SkinProgress : MonoBehaviour
 
     }
 
-    public void Anim(Action<bool> OnCompleteSkinProgress)
+    public void Anim()
     {
         int randomInt = UnityEngine.Random.Range(25, 35);
         int startVal = SaveData.i.unlockingSkin.percentage;
         int endVal = Mathf.Clamp(SaveData.i.unlockingSkin.percentage + randomInt, 0, 100);
         SaveData.i.unlockingSkin.percentage = endVal < 100 ? endVal : 0;
         SaveDataManager.i.Save();
+        IsMax = endVal == 100;
 
         if (isNotingSkin)
         {
-            OnCompleteSkinProgress(false);
             return;
         }
 
@@ -107,13 +108,8 @@ public class SkinProgress : MonoBehaviour
         .Append(rateMaskTf.transform.DOScaleY(1f - (float)endVal / 100f, duration).SetEase(Ease.Linear))
         .Join(DOTween.To(() => nowNumber, (n) => nowNumber = n, endVal, duration).OnUpdate(() => rateText.text = nowNumber.ToString()));
 
-        bool isMax = endVal == 100;
-        sequence.AppendCallback(() =>
-        {
-            OnCompleteSkinProgress(isMax);
-        });
 
-        if (!isMax) return;
+        if (!IsMax) return;
         sequence
         .AppendCallback(() =>
         {
