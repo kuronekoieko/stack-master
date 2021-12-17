@@ -16,15 +16,11 @@ public class CharacterManager : MonoBehaviour
 {
     [SerializeField] Character characterPrefab;
     [SerializeField] GameObject dummyGo;
-    public List<Character> Characters { get; set; } = new List<Character>();
     public Vector3 BottomCharacterPos
     {
         get
         {
-            if (Characters[0].gameObject.activeSelf)
-            {
-                bottomCharacterPos = Characters[0].transform.position;
-            }
+            bottomCharacterPos = pool.activelist[0].transform.position;
             return bottomCharacterPos;
         }
     }
@@ -33,29 +29,27 @@ public class CharacterManager : MonoBehaviour
     int activeCount;
     float deltaX;
     public PlayerState playerState { get; set; } = PlayerState.BeforeStart;
+    public ObjectPool pool;
 
     void Awake()
     {
         dummyGo.SetActive(false);
-        InstantiateCharacters(100);
-        // Application.targetFrameRate = 300;
-    }
-
-    void InstantiateCharacters(int count)
-    {
-        for (int i = 0; i < count; i++)
+        pool.CreateInstance(characterPrefab, 100, (character) =>
         {
-            var character = Instantiate(characterPrefab);
-            Characters.Add(character);
             character.OnInstantiate(this);
-        }
+        });
+        // Application.targetFrameRate = 300;
     }
 
     void Start()
     {
-        Characters[0].Appear(transform.position, transform.position, 0, false);
+        pool.ActivateReserves(1, out List<Character> additionalCharacters, (character) =>
+        {
+            character.OnInstantiate(this);
+        });
+        pool.activelist[0].Appear(transform.position, transform.position, 0, false);
 
-        this.ObserveEveryValueChanged(_ => Characters.Count(_ => _.gameObject.activeSelf))
+        this.ObserveEveryValueChanged(_ => pool.activelist.Count)
             .Subscribe(_ =>
             {
                 activeCount = _;
@@ -72,8 +66,7 @@ public class CharacterManager : MonoBehaviour
 
     void OnChangedStartHumanCount(int startHumanCount)
     {
-        var activeCharacters = Characters.Where(_ => _.gameObject.activeSelf).ToArray();
-        AppearToStack(startHumanCount - activeCharacters.Length, 0, false);
+        AppearToStack(startHumanCount - pool.activelist.Count, 0, false);
     }
 
 
@@ -111,48 +104,53 @@ public class CharacterManager : MonoBehaviour
             deltaX = 0;
         }
 
-        if (Characters.Count == 0) return;
-        Characters[0].VelocityControl(deltaX);
+        if (pool.activelist.Count == 0) return;
+        pool.activelist[0].VelocityControl(deltaX);
     }
 
     void GoalBonus()
     {
-        Characters[0].VelocityControl(-Characters[0].transform.position.x);
+        pool.activelist[0].VelocityControl(-pool.activelist[0].transform.position.x);
     }
 
     void Stop()
     {
-        for (int i = 0; i < Characters.Count; i++)
+        for (int i = 0; i < pool.activelist.Count; i++)
         {
-            Characters[i].Stop();
+            pool.activelist[i].Stop();
         }
     }
 
     void FixedUpdate()
     {
-        for (int i = 1; i < Characters.Count; i++)
+        for (int i = 1; i < pool.activelist.Count; i++)
         {
-            Characters[i].Follow(Characters[0].transform.position);
+            pool.activelist[i].Follow(pool.activelist[0].transform.position);
         }
     }
 
     public void Dance()
     {
         playerState = PlayerState.AfterFinishedGame;
-        for (int i = 0; i < Characters.Count; i++)
+        for (int i = 0; i < pool.activelist.Count; i++)
         {
-            Characters[i].Dance();
+            pool.activelist[i].Dance();
         }
     }
 
     public void AppearToStack(int addCount, float addDelay, bool isOnSound)
     {
-        var additionalCharacters = GetReserveCharacters(addCount);
-        Character topCharacter = Characters.Where(_ => _.gameObject.activeSelf).LastOrDefault();
+        pool.ActivateReserves(addCount, out List<Character> additionalCharacters, (character) =>
+        {
+            character.OnInstantiate(this);
+        });
+
+        Character topCharacter = pool.activelist.LastOrDefault();
 
         Vector3 pos = topCharacter ? topCharacter.transform.position : BottomCharacterPos;
+        Debug.Log(topCharacter.name);
         float delay = 0f;
-        for (int i = 0; i < additionalCharacters.Length; i++)
+        for (int i = 0; i < additionalCharacters.Count; i++)
         {
             pos.y += characterPrefab.Height;
             additionalCharacters[i].Appear(BottomCharacterPos, pos, delay, isOnSound);
@@ -160,25 +158,12 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 控えのキャラ取得、足りなかったら生成
-    /// </summary>
-    /// <param name="count"></param>
-    /// <returns></returns>
-    Character[] GetReserveCharacters(int count)
-    {
-        int lackCount = count - Characters.Count(_ => !_.gameObject.activeSelf);
-        if (lackCount > 0)
-        {
-            InstantiateCharacters(lackCount);
-        }
-        return Characters.Where(_ => !_.gameObject.activeSelf).Take(count).ToArray();
-    }
+
 
     public void Dead(int deadCount)
     {
         bool isKillTop = false;
-        var activeCharacters = Characters.Where(_ => _.gameObject.activeSelf).ToList();
+        var activeCharacters = pool.activelist;
         if (isKillTop)
         {
             activeCharacters = activeCharacters.Reverse<Character>().ToList();

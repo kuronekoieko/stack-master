@@ -59,7 +59,6 @@ public class Character : MonoBehaviour
 
     public void OnInstantiate(CharacterManager characterManager)
     {
-        gameObject.SetActive(false);
         this.characterManager = characterManager;
         capsuleCollider.enabled = false;
         boxCollider.enabled = false;
@@ -68,7 +67,9 @@ public class Character : MonoBehaviour
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
         rb.mass = 1f;
-        gameObject.SetActive(true);
+        // gameObject.SetActive(true);
+        capsuleCollider.enabled = false;
+        boxCollider.enabled = false;
         transform.position = bottomPos;
         transform.DOMoveY(targetPos.y, duration)
         .OnComplete(() =>
@@ -171,7 +172,7 @@ public class Character : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        characterManager.Characters.Remove(this);
+        characterManager.pool.Remove(this);
 
         bloodPs.transform.parent = null;
         var pos = transform.position;
@@ -192,7 +193,7 @@ public class Character : MonoBehaviour
 
     void Leave()
     {
-        characterManager.Characters.Remove(this);
+        characterManager.pool.Remove(this);
         rb.isKinematic = true;
         animator.SetBool("IsFall", false);
         animator.SetBool("IsRun", false);

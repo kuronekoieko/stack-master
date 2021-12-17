@@ -6774,6 +6774,7 @@ GameObject:
   m_Component:
   - component: {fileID: 609013179538621467}
   - component: {fileID: 609013179538621466}
+  - component: {fileID: 9062285746968912350}
   m_Layer: 0
   m_Name: CharacterManager
   m_TagString: Untagged
@@ -6810,6 +6811,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPrefab: {fileID: 793040985480188577, guid: 5245fa3f8a602e34280a911c8c70bc2f, type: 3}
   dummyGo: {fileID: 609013180672737308}
+  pool: {fileID: 9062285746968912350}
+--- !u!114 &9062285746968912350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609013179538621465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8327c92d1af1e04e81a0d4543053440, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activelist: []
 --- !u!1 &609013180300626898
 GameObject:
   m_ObjectHideFlags: 0
