@@ -26,7 +26,7 @@ public class GemCollectAnimManager : MonoBehaviour
             startOffset.x = UnityEngine.Random.Range(-width, width);
             startOffset.y = UnityEngine.Random.Range(-width, width);
             float delay = UnityEngine.Random.Range(0, 0.2f);
-
+           
             if (i == 0)
             {
                 gemCollectAnims[i].Anim(startPos, startOffset, CoinCountView.i.GemImagePos, delay, OnMoveEnd);

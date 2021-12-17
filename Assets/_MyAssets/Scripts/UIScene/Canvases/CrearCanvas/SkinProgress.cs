@@ -14,7 +14,7 @@ public class SkinProgress : MonoBehaviour
     [SerializeField] Material maskMaterial;
     [SerializeField] Transform rateMaskTf;
     [SerializeField] Text rateText;
-    [SerializeField] Button skinGetButton;
+    [SerializeField] MyButton skinGetButton;
     [SerializeField] Button continueButton;
     [SerializeField] Text titleText;
     [SerializeField] GameObject radial;
