@@ -140,21 +140,21 @@ public class CharacterManager : MonoBehaviour
 
     public void AppearToStack(int addCount, float addDelay, bool isOnSound)
     {
+        Character topCharacter = pool.activelist[pool.activelist.Count - 1];
+
         pool.ActivateReserves(addCount, out List<Character> additionalCharacters, (character) =>
         {
             character.OnInstantiate(this);
         });
 
-        Character topCharacter = pool.activelist.LastOrDefault();
-
         Vector3 pos = topCharacter ? topCharacter.transform.position : BottomCharacterPos;
-        Debug.Log(topCharacter.name);
+
         float delay = 0f;
         for (int i = 0; i < additionalCharacters.Count; i++)
         {
-            pos.y += characterPrefab.Height;
-            additionalCharacters[i].Appear(BottomCharacterPos, pos, delay, isOnSound);
+            pos.y += topCharacter.Height;
             delay += addDelay;
+            additionalCharacters[i].Appear(BottomCharacterPos, pos, delay, isOnSound);
         }
     }
 

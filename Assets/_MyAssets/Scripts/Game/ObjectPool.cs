@@ -17,7 +17,7 @@ public class ObjectPool : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             Character c = Instantiate(prefab);
-            c.gameObject.name = index.ToString();
+            c.gameObject.name = "character_" + index.ToString();
             index++;
             OnIntansiate(c);
             inActivelist.Add(c);
