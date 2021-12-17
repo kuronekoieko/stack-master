@@ -73,15 +73,17 @@ public class SkinProgress : MonoBehaviour
     void SetPercentage()
     {
 
-        if (!SaveData.i.characterSkinSaveDatas[SaveData.i.unlockingSkin.index].isOwn) return;
+        if (SaveData.i.unlockingSkin.percentage > 0) return;
 
-        SkinSaveData skinSaveData = SaveData.i.characterSkinSaveDatas.Where(_ => !_.isOwn).FirstOrDefault();
-        if (skinSaveData == null)
+        SkinSaveData[] notOwns = SaveData.i.characterSkinSaveDatas.Where(_ => !_.isOwn).ToArray();
+
+        if (notOwns.Length == 0)
         {
             isNotingSkin = true;
             return;
         }
 
+        SkinSaveData skinSaveData = notOwns[UnityEngine.Random.Range(0, notOwns.Length)];
         SaveData.i.unlockingSkin.index = SaveData.i.characterSkinSaveDatas.IndexOf(skinSaveData);
         SaveData.i.unlockingSkin.percentage = 0;
 
@@ -106,7 +108,11 @@ public class SkinProgress : MonoBehaviour
 
         Sequence sequence = DOTween.Sequence()
         .Append(rateMaskTf.transform.DOScaleY(1f - (float)endVal / 100f, duration).SetEase(Ease.Linear))
-        .Join(DOTween.To(() => nowNumber, (n) => nowNumber = n, endVal, duration).OnUpdate(() => rateText.text = nowNumber.ToString()));
+        .Join(
+            DOTween.To(() => nowNumber, (n) => nowNumber = n, endVal, duration)
+            .OnUpdate(() => rateText.text = nowNumber.ToString())
+            .SetEase(Ease.Linear)
+            );
 
 
         if (!IsMax) return;
