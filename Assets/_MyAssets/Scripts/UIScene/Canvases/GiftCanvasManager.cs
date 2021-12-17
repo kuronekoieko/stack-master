@@ -8,15 +8,12 @@ using DG.Tweening;
 public class GiftCanvasManager : BaseCanvasManager
 {
     [SerializeField] GameObject chests;
-    [SerializeField] Button rewardedVideoButton;
-    [SerializeField] Button closeButton;
-    [SerializeField] Image closeButtonImage;
+    [SerializeField] MyButton rewardedVideoButton;
+    [SerializeField] MyButton closeButton;
     ChestView[] chestViews;
-    Tween rewardedVideoButtonTween;
 
     public bool CanClickChest => ClickedChestCount < 3;
     public int ClickedChestCount { get; set; }
-    Tween showCloseButtonTween;
 
     public override void OnStart()
     {
@@ -80,9 +77,8 @@ public class GiftCanvasManager : BaseCanvasManager
         {
             item.OnScreenOpen();
         }
-        rewardedVideoButton.gameObject.SetActive(false);
-        closeButton.gameObject.SetActive(false);
-        if (showCloseButtonTween != null) showCloseButtonTween.Kill();
+        rewardedVideoButton.Hide();
+        closeButton.Hide();
     }
 
     void OnClickRewardedVideoButton()
@@ -105,24 +101,8 @@ public class GiftCanvasManager : BaseCanvasManager
 
     void ShowRewardedVideoButtonAnim()
     {
-        if (rewardedVideoButtonTween != null) rewardedVideoButtonTween.Kill();
-        rewardedVideoButton.gameObject.SetActive(true);
-        rewardedVideoButton.transform.localScale = Vector3.zero;
-        rewardedVideoButton.transform.DOScale(Vector3.one, 1f).SetEase(Ease.OutBack)
-        .OnComplete(() =>
-        {
-            rewardedVideoButtonTween = rewardedVideoButton.transform.DOScale(Vector3.one * 1.1f, 1f).SetEase(Ease.Flash, 2).SetLoops(-1);
-        });
-
-
-        showCloseButtonTween = DOVirtual.DelayedCall(1.0f, () =>
-        {
-            closeButton.gameObject.SetActive(true);
-            Color color = closeButtonImage.color;
-            color.a = 0;
-            closeButtonImage.color = color;
-            closeButtonImage.DOFade(1, 1.5f);
-        });
+        rewardedVideoButton.Show_ScaleAnim();
+        closeButton.Show_FadeAnim(1.5f);
     }
 
     void OnClickCloseButton()

@@ -17,13 +17,11 @@ public class SkinSelectButtonManager : MonoBehaviour
     [SerializeField] Transform indicatorParent;
     [SerializeField] Sprite activeIndicatorSprite;
     [SerializeField] Sprite inActiveIndicatorSprite;
-    [SerializeField] Button scrollButton_Right;
-    [SerializeField] Button scrollButton_Left;
+    [SerializeField] MyButton scrollButton_Right;
+    [SerializeField] MyButton scrollButton_Left;
     [SerializeField] GameObject skinMasks;
-    [SerializeField] Button unlockButton;
-    [SerializeField] Text unlockButtonText;
-    [SerializeField] Button rewardedButton;
-    [SerializeField] Text rewardedButtonText;
+    [SerializeField] MyButton unlockButton;
+    [SerializeField] MyButton rewardedButton;
     Image[] indicators;
     SkinSelectButtonController[] skinSelectControllers = new SkinSelectButtonController[0];//初期化時nullのため
     int contentsCountPerPage = 9;
@@ -48,8 +46,8 @@ public class SkinSelectButtonManager : MonoBehaviour
         this.ObserveEveryValueChanged(_ => EnableUnlockRandom)
             .Subscribe(_ => unlockButton.interactable = _);
 
-        unlockButtonText.text = unlockRandomCurrency.ToString();
-        rewardedButtonText.text = "+" + rewardedCurrency;
+        unlockButton.Text.text = unlockRandomCurrency.ToString();
+        rewardedButton.Text.text = "+" + rewardedCurrency;
     }
 
     public void Generator<T>(int buttonCount, bool isCharacterSkin) where T : MonoBehaviour

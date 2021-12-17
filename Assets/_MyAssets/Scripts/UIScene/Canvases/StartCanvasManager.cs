@@ -8,9 +8,9 @@ public class StartCanvasManager : BaseCanvasManager
 {
     [SerializeField] TutrialController tutrialController;
     [SerializeField] LevelProgressionManager levelProgressionManager;
-    [SerializeField] Button skinButton;
-    [SerializeField] Button levelUpButton;
-    [SerializeField] Button offlineIncomeButton;
+    [SerializeField] MyButton skinButton;
+    [SerializeField] MyButton levelUpButton;
+    [SerializeField] MyButton offlineIncomeButton;
 
     public override void OnStart()
     {

@@ -15,7 +15,7 @@ public enum SkinSelectState
 
 public class SkinSelectButtonController : MonoBehaviour
 {
-    [SerializeField] Button selectbutton;
+    [SerializeField] MyButton selectbutton;
     [SerializeField] Sprite unlockSprite;
     [SerializeField] Sprite lockSprite;
     [SerializeField] Sprite selectedSprite;

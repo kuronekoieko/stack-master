@@ -7,9 +7,8 @@ using DG.Tweening;
 
 public class FailedCanvasManager : BaseCanvasManager
 {
-    [SerializeField] Button restartButton;
+    [SerializeField] MyButton restartButton;
     [SerializeField] Image emojiImage;
-    Sequence retryButtonSequence;
 
     public override void OnStart()
     {
@@ -37,11 +36,7 @@ public class FailedCanvasManager : BaseCanvasManager
             transform.localScale = Vector3.zero;
             transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
 
-            restartButton.transform.localScale = Vector3.one;
-            retryButtonSequence = DOTween.Sequence()
-            .Append(restartButton.transform.DOScale(Vector3.one * 1.1f, 0.5f))
-            .Append(restartButton.transform.DOScale(Vector3.one, 0.5f));
-            retryButtonSequence.SetLoops(-1);
+            restartButton.Show_ScaleAnim();
 
             emojiImage.transform.localScale = Vector3.one;
             emojiImage.transform.DOScale(Vector3.one * 1.1f, 1.5f).SetEase(Ease.InOutFlash, 4).SetLoops(-1);
@@ -51,7 +46,6 @@ public class FailedCanvasManager : BaseCanvasManager
     protected override void OnClose()
     {
         gameObject.SetActive(false);
-        retryButtonSequence.Kill();
     }
 
     void OnClickRestartButton()

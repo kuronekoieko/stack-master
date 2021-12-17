@@ -8,18 +8,14 @@ using System;
 
 public class ClearCanvasManager : BaseCanvasManager
 {
-    [SerializeField] Button nextButton;
-    [SerializeField] Button giftButton;
+    [SerializeField] MyButton nextButton;
+    [SerializeField] MyButton giftButton;
     [SerializeField] RectTransform gems;
     [SerializeField] Image titleImage;
     [SerializeField] Text currencyCountText;
     [SerializeField] SkinProgress skinProgress;
     [SerializeField] RectTransform gemImageRt;
     [SerializeField] GemCollectAnimManager gemCollectAnimManager;
-    Sequence nextButtonSequence;
-    Sequence giftButtonSequence;
-    Tween emojiRotateTween;
-    Tween emojiScaleTween;
     int currencyBaseCount = 15;
 
 
@@ -48,8 +44,8 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         skinProgress.OnOpen();
-        nextButton.gameObject.SetActive(false);
-        giftButton.gameObject.SetActive(false);
+        giftButton.Hide();
+        nextButton.Hide();
         titleImage.gameObject.SetActive(true);
         gems.gameObject.SetActive(true);
 
@@ -77,17 +73,6 @@ public class ClearCanvasManager : BaseCanvasManager
                 });
             });
 
-            giftButton.transform.localScale = Vector3.one;
-            giftButtonSequence = DOTween.Sequence()
-            .Append(giftButton.transform.DOScale(Vector3.one * 1.1f, 0.5f))
-            .Append(giftButton.transform.DOScale(Vector3.one, 0.5f));
-            giftButtonSequence.SetLoops(-1);
-
-            nextButton.transform.localScale = Vector3.one;
-            nextButtonSequence = DOTween.Sequence()
-            .Append(nextButton.transform.DOScale(Vector3.one * 1.1f, 0.5f))
-            .Append(nextButton.transform.DOScale(Vector3.one, 0.5f));
-            nextButtonSequence.SetLoops(-1);
         });
     }
 
@@ -104,17 +89,20 @@ public class ClearCanvasManager : BaseCanvasManager
 
         bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
         // isNextGiftScreen = true; //デバッグ用
-        nextButton.gameObject.SetActive(!isNextGiftScreen);
-        giftButton.gameObject.SetActive(isNextGiftScreen);
+
+        if (isNextGiftScreen)
+        {
+            giftButton.Show_ScaleAnim();
+        }
+        else
+        {
+            nextButton.Show_ScaleAnim();
+        }
     }
 
     protected override void OnClose()
     {
         gameObject.SetActive(false);
-        nextButtonSequence.Kill();
-        giftButtonSequence.Kill();
-        emojiRotateTween.Kill();
-        emojiScaleTween.Kill();
         skinProgress.OnClose();
     }
 

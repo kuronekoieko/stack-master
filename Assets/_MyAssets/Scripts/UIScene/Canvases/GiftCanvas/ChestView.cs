@@ -15,7 +15,7 @@ public enum ChestState
 
 public class ChestView : MonoBehaviour
 {
-    [SerializeField] Button button;
+    [SerializeField] MyButton button;
     [SerializeField] Text gemCountText;
     [SerializeField] Image gemImage;
     [SerializeField] AnimationCurve chestOpeningScaleEasing;

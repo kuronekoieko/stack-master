@@ -15,7 +15,7 @@ public class SkinProgress : MonoBehaviour
     [SerializeField] Transform rateMaskTf;
     [SerializeField] Text rateText;
     [SerializeField] MyButton skinGetButton;
-    [SerializeField] Button continueButton;
+    [SerializeField] MyButton continueButton;
     [SerializeField] Text titleText;
     [SerializeField] GameObject radial;
     SkinController outlineSkin;
@@ -38,8 +38,8 @@ public class SkinProgress : MonoBehaviour
         skinGetButton.enabled = true;
         continueButton.enabled = true;
         rateText.gameObject.SetActive(true);
-        skinGetButton.gameObject.SetActive(false);
-        continueButton.gameObject.SetActive(false);
+        skinGetButton.Hide();
+        continueButton.Hide();
         titleText.gameObject.SetActive(false);
         modelsCenter.transform.localScale = Vector3.one;
 
@@ -122,16 +122,12 @@ public class SkinProgress : MonoBehaviour
             outlineSkin.Animator.SetBool("IsDance", true);
             maskSkin.Animator.SetBool("IsDance", true);
             defaultSkin.Animator.SetBool("IsDance", true);
-            skinGetButton.gameObject.SetActive(true);
+            skinGetButton.Show_ScaleAnim();
         })
         .AppendInterval(1.5f)
         .AppendCallback(() =>
         {
-            continueButton.gameObject.SetActive(true);
-            Color color = continueButton.image.color;
-            color.a = 0;
-            continueButton.image.color = color;
-            continueButton.image.DOFade(1, 1.5f);
+            continueButton.Show_FadeAnim();
         });
     }
 

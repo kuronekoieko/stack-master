@@ -6,17 +6,17 @@ using UnityEngine.UI;
 public class DebugCanvasManager : BaseCanvasManager
 {
     [Header("バナー")]
-    [SerializeField] Button clearButton;
-    [SerializeField] Button failButton;
-    [SerializeField] Button hideBannerButton;
-    [SerializeField] Button debugButton;
+    [SerializeField] MyButton clearButton;
+    [SerializeField] MyButton failButton;
+    [SerializeField] MyButton hideBannerButton;
+    [SerializeField] MyButton debugButton;
     [SerializeField] Image bannerImage;
-    [SerializeField] Button restartButton;
+    [SerializeField] MyButton restartButton;
 
     [Header("デバッグ画面")]
     [SerializeField] Image debugPanel;
-    [SerializeField] Button applyButton;
-    [SerializeField] Button cancelButton;
+    [SerializeField] MyButton applyButton;
+    [SerializeField] MyButton cancelButton;
     [SerializeField] InputField speedXIF;
     [SerializeField] InputField smoothTimeXIF;
 
