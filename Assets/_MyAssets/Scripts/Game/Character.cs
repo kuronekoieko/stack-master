@@ -36,7 +36,7 @@ public class Character : MonoBehaviour
     {
         SkinController skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
         skinController.OnInstantiate();
-        DestroyImmediate(animator.gameObject);
+        Destroy(animator.gameObject);
         animator = skinController.Animator;
     }
 
@@ -65,7 +65,7 @@ public class Character : MonoBehaviour
         boxCollider.enabled = false;
     }
 
-    public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration)
+    public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
         rb.mass = 1f;
         gameObject.SetActive(true);
@@ -75,7 +75,7 @@ public class Character : MonoBehaviour
         {
             capsuleCollider.enabled = true;
             boxCollider.enabled = true;
-            if (characterManager.Characters[0] != this) SoundManager.i?.PlayOneShot(0);
+            if (isOnSound) SoundManager.i?.PlayOneShot(0);
         });
     }
 
@@ -131,7 +131,7 @@ public class Character : MonoBehaviour
         if (isIncrease)
         {
             int addCount = gate.ArithmeticOperator == ArithmeticOperator.Plus ? gate.Count : characterManager.ActiveCount * (gate.Count - 1);
-            characterManager.AppearToStack(addCount);
+            characterManager.AppearToStack(addCount, 0.05f, true);
         }
         else
         {

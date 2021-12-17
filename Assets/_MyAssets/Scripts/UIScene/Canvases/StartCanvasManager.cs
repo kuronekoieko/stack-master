@@ -16,6 +16,8 @@ public class StartCanvasManager : BaseCanvasManager
     {
         base.SetScreenAction(thisScreen: ScreenState.Start);
         skinButton.onClick.AddListener(() => Variables.screenState = ScreenState.Skin);
+        levelUpButton.onClick.AddListener(OnClickLevelUpButton);
+        offlineIncomeButton.onClick.AddListener(OnClickOfflineIncomeButton);
     }
 
     protected override void OnOpen()
@@ -41,6 +43,17 @@ public class StartCanvasManager : BaseCanvasManager
     }
 
     public override void OnSceneLoaded()
+    {
+
+    }
+
+
+    void OnClickLevelUpButton()
+    {
+        SaveData.i.startHumanCount++;
+    }
+
+    void OnClickOfflineIncomeButton()
     {
 
     }

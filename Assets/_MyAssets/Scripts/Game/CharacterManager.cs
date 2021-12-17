@@ -53,7 +53,7 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
-        Characters[0].Appear(transform.position, transform.position, 0f);
+        Characters[0].Appear(transform.position, transform.position, 0, false);
 
         this.ObserveEveryValueChanged(_ => Characters.Count(_ => _.gameObject.activeSelf))
             .Subscribe(_ =>
@@ -64,8 +64,16 @@ public class CharacterManager : MonoBehaviour
                 if (playerState != PlayerState.Playing) return;
                 Variables.screenState = ScreenState.Failed;
                 playerState = PlayerState.AfterFinishedGame;
-            })
-            .AddTo(this.gameObject);
+            });
+
+        this.ObserveEveryValueChanged(_ => SaveData.i.startHumanCount)
+        .Subscribe(_ => OnChangedStartHumanCount(_));
+    }
+
+    void OnChangedStartHumanCount(int startHumanCount)
+    {
+        var activeCharacters = Characters.Where(_ => _.gameObject.activeSelf).ToArray();
+        AppearToStack(startHumanCount - activeCharacters.Length, 0, false);
     }
 
 
@@ -137,24 +145,34 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
-    public void AppearToStack(int addCount)
+    public void AppearToStack(int addCount, float addDelay, bool isOnSound)
     {
-        int lackCount = addCount - Characters.Count(_ => !_.gameObject.activeSelf);
+        var additionalCharacters = GetReserveCharacters(addCount);
+        Character topCharacter = Characters.Where(_ => _.gameObject.activeSelf).LastOrDefault();
+
+        Vector3 pos = topCharacter ? topCharacter.transform.position : BottomCharacterPos;
+        float delay = 0f;
+        for (int i = 0; i < additionalCharacters.Length; i++)
+        {
+            pos.y += characterPrefab.Height;
+            additionalCharacters[i].Appear(BottomCharacterPos, pos, delay, isOnSound);
+            delay += addDelay;
+        }
+    }
+
+    /// <summary>
+    /// 控えのキャラ取得、足りなかったら生成
+    /// </summary>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    Character[] GetReserveCharacters(int count)
+    {
+        int lackCount = count - Characters.Count(_ => !_.gameObject.activeSelf);
         if (lackCount > 0)
         {
             InstantiateCharacters(lackCount);
         }
-        var additionalCharacters = Characters.Where(_ => !_.gameObject.activeSelf).Take(addCount).ToArray();
-        Character topCharacter = Characters.Where(_ => _.gameObject.activeSelf).LastOrDefault();
-
-        Vector3 pos = topCharacter.transform.position;
-        float delay = 0f;
-        for (int i = 0; i < additionalCharacters.Length; i++)
-        {
-            pos.y += topCharacter.Height;
-            additionalCharacters[i].Appear(Characters[0].transform.position, pos, delay);
-            delay += 0.05f;
-        }
+        return Characters.Where(_ => !_.gameObject.activeSelf).Take(count).ToArray();
     }
 
     public void Dead(int deadCount)
