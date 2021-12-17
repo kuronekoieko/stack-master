@@ -119,6 +119,10 @@ public class Character : MonoBehaviour
         {
             Dead(other.ClosestPoint(transform.position), false);
         }
+        if (other.CompareTag("Needle"))
+        {
+            Dead(other.ClosestPoint(transform.position), true);
+        }
     }
 
     void OnTriggerEnterGate(Collider other)
