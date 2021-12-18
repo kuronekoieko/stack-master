@@ -119,7 +119,7 @@ public class Character : MonoBehaviour
         {
             Dead(other.ClosestPoint(transform.position), false);
         }
-        if (other.CompareTag("Needle"))
+        if (other.CompareTag("Obstacle_noink"))
         {
             Dead(other.ClosestPoint(transform.position), true);
         }
