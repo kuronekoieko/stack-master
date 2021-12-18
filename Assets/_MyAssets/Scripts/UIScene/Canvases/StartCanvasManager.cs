@@ -65,10 +65,17 @@ public class StartCanvasManager : BaseCanvasManager
     /// <returns></returns>
     bool IsTapUI()
     {
-#if UNITY_EDITOR
-        return EventSystem.current.IsPointerOverGameObject();
-#else
-        return EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
-#endif
+        int tcount = Input.touchCount;
+        if (tcount > 0)
+        {
+            for (int i = 0; i < tcount; i++)
+            {
+                if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(i).fingerId))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
