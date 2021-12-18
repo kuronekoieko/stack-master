@@ -23,16 +23,17 @@ public class MaxSdkBanner : MonoBehaviour
 
         // Set background or background color for banners to be fully functional
         MaxSdk.SetBannerBackgroundColor(bannerAdUnitId, Color.white);
-        Show();
     }
 
     public void Show()
     {
+        if (Debug.isDebugBuild) return;
         MaxSdk.ShowBanner(bannerAdUnitId);
     }
 
     public void Hide()
     {
+        if (Debug.isDebugBuild) return;
         MaxSdk.HideBanner(bannerAdUnitId);
     }
 }
