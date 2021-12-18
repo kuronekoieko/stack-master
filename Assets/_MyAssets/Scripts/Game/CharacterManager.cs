@@ -115,7 +115,12 @@ public class CharacterManager : MonoBehaviour
 
     void GoalBonus()
     {
-        pool.activelist[0].VelocityControl(-pool.activelist[0].transform.position.x);
+        if (pool.activelist.Count == 0) return;
+        // pool.activelist[0].VelocityControl(-pool.activelist[0].transform.position.x);
+        for (int i = 0; i < pool.activelist.Count; i++)
+        {
+            pool.activelist[i].Stair(i);
+        }
     }
 
     void Stop()

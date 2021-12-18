@@ -112,6 +112,19 @@ public class Character : MonoBehaviour
         }
     }
 
+    public void Stair(int index)
+    {
+        var vel = rb.velocity;
+        vel.x = -transform.position.x * Variables.speedX;
+        vel.z = speedZ;
+        vel.y = 0;
+        rb.velocity = vel;
+
+        var pos = transform.position;
+        pos.y = characterManager.pool.activelist[0].transform.position.y + index * Height;
+        transform.position = pos;
+    }
+
     public void Stop()
     {
         rb.velocity = Vector3.zero;
@@ -205,7 +218,8 @@ public class Character : MonoBehaviour
 
     void Leave()
     {
-        characterManager.pool.Remove(this);
+        // 階段で止まったときに例外的にアクティブにしたいから
+        characterManager.pool.activelist.Remove(this);
         rb.isKinematic = true;
         animator.SetBool("IsFall", false);
         animator.SetBool("IsRun", false);
