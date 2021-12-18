@@ -11,6 +11,8 @@ public class MaxSdkRewardedAds : MonoBehaviour
     Action onRewarded = () => { };
     Action onNotRewarded = () => { };
     public static MaxSdkRewardedAds i;
+    bool isCompletedInitialize;
+    public bool IsRewardedAdReady => isCompletedInitialize ? MaxSdk.IsRewardedAdReady(adUnitId) : false;
 
     void Awake()
     {
@@ -28,6 +30,7 @@ public class MaxSdkRewardedAds : MonoBehaviour
         MaxSdkCallbacks.Rewarded.OnAdHiddenEvent += OnRewardedAdHiddenEvent;
         MaxSdkCallbacks.Rewarded.OnAdDisplayFailedEvent += OnRewardedAdFailedToDisplayEvent;
         MaxSdkCallbacks.Rewarded.OnAdReceivedRewardEvent += OnRewardedAdReceivedRewardEvent;
+        isCompletedInitialize = true;
 
         // Load the first rewarded ad
         LoadRewardedAd();
@@ -58,7 +61,7 @@ public class MaxSdkRewardedAds : MonoBehaviour
         MaxSdk.ShowRewardedAd(adUnitId);
     }
 
-    public bool IsRewardedAdReady => MaxSdk.IsRewardedAdReady(adUnitId);
+
 
     private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
