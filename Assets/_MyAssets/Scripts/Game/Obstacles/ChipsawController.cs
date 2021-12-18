@@ -32,7 +32,6 @@ public class ChipsawController : MonoBehaviour
             isRightMove = true;
             Vector3 pos = saw_transform.localPosition;
             pos.x = -moveWidth / 2;
-            Debug.Log($"left {pos}");
             saw_transform.localPosition = pos;
         }
         else if (saw_transform.localPosition.x > moveWidth / 2)//右端に着いたら方向転換
@@ -40,7 +39,6 @@ public class ChipsawController : MonoBehaviour
             isRightMove = false;
             Vector3 pos = saw_transform.localPosition;
             pos.x = moveWidth / 2;
-            Debug.Log($"right {pos}");
             saw_transform.localPosition = pos;
         }
 
