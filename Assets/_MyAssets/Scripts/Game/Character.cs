@@ -100,7 +100,7 @@ public class Character : MonoBehaviour
         vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX);
         if (float.IsNaN(vel.x)) vel.x = 0;
         rb.velocity = vel;
-        
+
         rb.mass = characterManager.pool.activelist.Count - index;
 
         if (characterManager.pool.activelist[0] == this)
@@ -140,13 +140,9 @@ public class Character : MonoBehaviour
     {
         var vel = rb.velocity;
         vel.x = -transform.position.x * Variables.speedX;
-        vel.z = speedZ;
+        vel.z = speedZ * 2.0f;
         vel.y = 0;
         rb.velocity = vel;
-
-        var pos = transform.position;
-        pos.y = characterManager.pool.activelist[0].transform.position.y + index * Height;
-        transform.position = pos;
     }
 
     public void Stop()
@@ -203,7 +199,6 @@ public class Character : MonoBehaviour
         // cameraController.IsFollow = false;
         characterManager.playerState = PlayerState.GoalBonus;
         cameraController.CameraState = CameraState.ClimbingStairs;
-        speedZ *= 1.5f;
     }
 
     void OnTriggerEnterGoalStair(Collider other)

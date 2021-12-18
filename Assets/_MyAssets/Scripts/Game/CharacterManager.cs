@@ -18,7 +18,19 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] Character characterPrefab;
     [SerializeField] GameObject dummyGo;
     [Inject] CameraController cameraController;
-    public Vector3 BottomCharacterPos => pool.activelist[0].transform.position;
+    public Vector3 BottomCharacterPos
+    {
+        get
+        {
+            if (pool.activelist.Count > 0)
+            {
+                bottomCharacterPos = pool.activelist[0].transform.position;
+            }
+
+            return bottomCharacterPos;
+        }
+    }
+    Vector3 bottomCharacterPos;
     public int ActiveCount => activeCount;
     int activeCount;
     float deltaX;
@@ -107,8 +119,6 @@ public class CharacterManager : MonoBehaviour
 
     void GoalBonus()
     {
-        if (pool.activelist.Count == 0) return;
-        // pool.activelist[0].VelocityControl(-pool.activelist[0].transform.position.x);
         for (int i = 0; i < pool.activelist.Count; i++)
         {
             pool.activelist[i].Stair(i);
