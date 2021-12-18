@@ -99,12 +99,9 @@ public class CharacterManager : MonoBehaviour
             deltaX = 0;
         }
 
-        if (pool.activelist.Count == 0) return;
-        pool.activelist[0].VelocityControl(deltaX);
-
-        for (int i = 1; i < pool.activelist.Count; i++)
+        for (int i = 0; i < pool.activelist.Count; i++)
         {
-            pool.activelist[i].Follow();
+            pool.activelist[i].Move(deltaX, i);
         }
     }
 

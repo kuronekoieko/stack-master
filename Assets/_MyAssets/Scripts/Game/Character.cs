@@ -21,6 +21,7 @@ public class Character : MonoBehaviour
     public float Height => capsuleCollider.height;
     Vector3 inkScale;
     ParticleSystem[] bloodPsChildren;
+    bool isMovingAppear;
 
 
     /// <summary>
@@ -77,6 +78,7 @@ public class Character : MonoBehaviour
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
+        isMovingAppear = true;
         rb.mass = 1f;
         capsuleCollider.enabled = false;
         boxCollider.enabled = false;
@@ -84,42 +86,53 @@ public class Character : MonoBehaviour
         rb.DOMoveY(targetPos.y, duration)
         .OnComplete(() =>
         {
+            isMovingAppear = false;
             capsuleCollider.enabled = true;
             boxCollider.enabled = true;
             if (isOnSound) SoundManager.i?.PlayOneShot(0);
         });
     }
 
-    public void VelocityControl(float deltax)
+    public void Move(float deltax, int index)
     {
         vel = rb.velocity;
         vel.z = speedZ;
         vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX);
         if (float.IsNaN(vel.x)) vel.x = 0;
         rb.velocity = vel;
-        animator.SetBool("IsRun", rb.velocity.z > 0.1f);
-        rb.mass = 1000f;
+        
+        rb.mass = characterManager.pool.activelist.Count - index;
+
+        if (characterManager.pool.activelist[0] == this)
+        {
+            animator.SetBool("IsRun", true);
+            rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
+        }
+        else
+        {
+            animator.SetBool("IsFall", true);
+            PosCorrect();
+
+            float distance = rb.position.y - characterManager.pool.activelist[index - 1].rb.position.y;
+            if (distance / Height < 1.1f) return;
+            rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
+        }
+
     }
 
-    public void Follow()
+    void PosCorrect()
     {
-        animator.SetBool("IsFall", true);
-
-        var vel = characterManager.pool.activelist[0].rb.velocity;
-        vel.y = rb.velocity.y;
-        rb.velocity = vel;
-
         // ズレ矯正
-        var bottomXZ = characterManager.pool.activelist[0].transform.position;
+        var bottomXZ = characterManager.pool.activelist[0].rb.position;
         bottomXZ.y = 0;
-        var thisXZ = transform.position;
+        var thisXZ = rb.position;
         thisXZ.y = 0;
         float distance = Vector3.Distance(bottomXZ, thisXZ);
         if (distance > 0.1f)
         {
             thisXZ = bottomXZ;
-            thisXZ.y = transform.position.y;
-            transform.position = thisXZ;
+            thisXZ.y = rb.position.y;
+            rb.position = thisXZ;
         }
     }
 
