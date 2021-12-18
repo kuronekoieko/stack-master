@@ -86,7 +86,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
 
         public override int GetHashCode()
         {
-            return new {Unity, Android, Ios}.GetHashCode();
+            return new { Unity, Android, Ios }.GetHashCode();
         }
 
         private static string AdapterSdkVersion(string adapterVersion)
@@ -650,7 +650,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             // We only need to set the labels if they changed.
             if (!didAddLabels) return;
 
-            AssetDatabase.SetLabels(asset, labelsToAdd.ToArray());
+            // AssetDatabase.SetLabels(asset, labelsToAdd.ToArray());
         }
 
         /// <summary>
