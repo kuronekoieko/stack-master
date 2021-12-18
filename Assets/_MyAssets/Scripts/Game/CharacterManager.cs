@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UniRx;
+using Zenject;
 
 public enum PlayerState
 {
@@ -16,15 +17,8 @@ public class CharacterManager : MonoBehaviour
 {
     [SerializeField] Character characterPrefab;
     [SerializeField] GameObject dummyGo;
-    public Vector3 BottomCharacterPos
-    {
-        get
-        {
-            bottomCharacterPos = pool.activelist[0].transform.position;
-            return bottomCharacterPos;
-        }
-    }
-    Vector3 bottomCharacterPos;
+    [Inject] CameraController cameraController;
+    public Vector3 BottomCharacterPos => pool.activelist[0].transform.position;
     public int ActiveCount => activeCount;
     int activeCount;
     float deltaX;
@@ -48,6 +42,7 @@ public class CharacterManager : MonoBehaviour
             character.OnInstantiate(this);
         });
         pool.activelist[0].Appear(transform.position, transform.position, 0, false);
+        cameraController.SetOffset(pool.activelist[0].transform.position);
 
         this.ObserveEveryValueChanged(_ => pool.activelist.Count)
             .Subscribe(_ =>
