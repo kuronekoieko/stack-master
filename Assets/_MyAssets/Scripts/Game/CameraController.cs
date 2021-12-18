@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
         offset = transform.position - startPos;
     }
 
-    void LateUpdate()
+    public void OnLateUpdate()
     {
 
         switch (CameraState)

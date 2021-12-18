@@ -22,7 +22,12 @@ public class Character : MonoBehaviour
     Vector3 inkScale;
     ParticleSystem[] bloodPsChildren;
 
-    void Awake()
+
+    /// <summary>
+    /// startより先
+    /// </summary>
+    /// <param name="characterManager"></param>
+    public void OnInstantiate(CharacterManager characterManager)
     {
         bloodPsChildren = bloodPs.GetComponentsInChildren<ParticleSystem>();
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
@@ -30,7 +35,24 @@ public class Character : MonoBehaviour
 
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
             .Subscribe(_ => OnChangedMaterial(_));
+
+        inkScale = inkSr.transform.lossyScale;
+        inkSr.gameObject.SetActive(false);
+
+        this.characterManager = characterManager;
+        capsuleCollider.enabled = false;
+        boxCollider.enabled = false;
     }
+
+    /// <summary>
+    /// OnInstantiateの次
+    /// </summary>
+    void Start()
+    {
+        // awake.OnInstantiate,プレハブに手動アタッチはだめだった
+        gameObject.AddComponent<ZenAutoInjecter>();
+    }
+
 
     void OnChangedSkin(int selectedSkinIndex)
     {
@@ -50,19 +72,8 @@ public class Character : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        inkScale = inkSr.transform.lossyScale;
-        inkSr.gameObject.SetActive(false);
-        gameObject.AddComponent<ZenAutoInjecter>();// awakeはだめっぽい
-    }
 
-    public void OnInstantiate(CharacterManager characterManager)
-    {
-        this.characterManager = characterManager;
-        capsuleCollider.enabled = false;
-        boxCollider.enabled = false;
-    }
+
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {

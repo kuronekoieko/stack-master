@@ -9,6 +9,10 @@ public class GateManager : MonoBehaviour
     void Awake()
     {
         gates = GetComponentsInChildren<GateController>();
+        for (int i = 0; i < gates.Length; i++)
+        {
+            gates[i].OnAwake(this);
+        }
     }
 
     public void EnableGatesCollider(bool enabled)

@@ -25,7 +25,7 @@ public class CharacterManager : MonoBehaviour
     public PlayerState playerState { get; set; } = PlayerState.BeforeStart;
     public ObjectPool pool;
 
-    void Awake()
+    public void OnAwake()
     {
         dummyGo.SetActive(false);
         pool.CreateInstance(characterPrefab, 100, (character) =>
@@ -35,7 +35,7 @@ public class CharacterManager : MonoBehaviour
         // Application.targetFrameRate = 300;
     }
 
-    void Start()
+    public void OnStart()
     {
         pool.ActivateReserves(1, out List<Character> additionalCharacters, (character) =>
         {
@@ -65,7 +65,7 @@ public class CharacterManager : MonoBehaviour
     }
 
 
-    void Update()
+    public void OnUpdate()
     {
         deltaX = Input.GetAxis("Mouse X") * Time.fixedDeltaTime / Time.deltaTime * (float)Screen.width / 750f;
         switch (playerState)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StageManager : MonoBehaviour
 {
-    void Awake()
+    public void OnAwake()
     {
         if (!Variables.isLaunchUIScene) return;
         int stageIndex = StageTransManager.i.CurrentStageNum - 1;

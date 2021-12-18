@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 public class BackgroundManager : MonoBehaviour
 {
@@ -22,12 +21,12 @@ public class BackgroundManager : MonoBehaviour
         bgControllers[bgIndex].Activate(cam);
     }
 
-    void Awake()
+    public void OnAwake()
     {
         bgControllers = GetComponentsInChildren<BackgroundController>(true);
     }
 
-    void Start()
+    public void OnStart()
     {
         foreach (var bg in bgControllers)
         {
