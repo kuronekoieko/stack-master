@@ -133,15 +133,6 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
-    public void Dance()
-    {
-        playerState = PlayerState.AfterFinishedGame;
-        for (int i = 0; i < pool.activelist.Count; i++)
-        {
-            pool.activelist[i].Dance();
-        }
-    }
-
     public void AppearToStack(int addCount, float addDelay, bool isOnSound)
     {
         Character topCharacter = pool.activelist[pool.activelist.Count - 1];

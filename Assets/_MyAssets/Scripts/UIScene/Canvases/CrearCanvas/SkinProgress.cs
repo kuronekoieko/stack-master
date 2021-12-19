@@ -125,9 +125,9 @@ public class SkinProgress : MonoBehaviour
         .Append(modelsCenter.transform.DOScale(1.5f, 0.5f).SetEase(Ease.OutBack))
         .AppendCallback(() =>
         {
-            outlineSkin.Animator.SetBool("IsDance", true);
-            maskSkin.Animator.SetBool("IsDance", true);
-            defaultSkin.Animator.SetBool("IsDance", true);
+            outlineSkin.Animator.SetTrigger("Dance");
+            maskSkin.Animator.SetTrigger("Dance");
+            defaultSkin.Animator.SetTrigger("Dance");
             skinGetButton.Show_ScaleAnim();
         })
         .AppendInterval(1.5f)

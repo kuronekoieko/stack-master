@@ -84,12 +84,13 @@ public class Character : MonoBehaviour
 
         if (characterManager.pool.activelist[0] == this)
         {
-            animator.SetBool("IsRun", true);
+            animator.SetTrigger("Run");
             rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
         }
         else
         {
-            animator.SetBool("IsFall", true);
+            animator.SetTrigger("Fall");
+
             PosCorrect();
 
             float distance = rb.position.y - characterManager.pool.activelist[index - 1].rb.position.y;
@@ -127,12 +128,6 @@ public class Character : MonoBehaviour
     public void Stop()
     {
         rb.velocity = Vector3.zero;
-    }
-
-    public void Dance()
-    {
-        transform.forward = -transform.forward;
-        animator.SetBool("IsDance", true);
     }
 
     void OnTriggerEnter(Collider other)
@@ -188,7 +183,7 @@ public class Character : MonoBehaviour
     {
         var goalStair = other.gameObject.GetComponent<GoalStairController>();
         if (goalStair == null) return;
-        Leave();
+        Leave(goalStair);
     }
 
     public void Dead(Vector3 hitPos, bool isHitGate)
@@ -209,7 +204,7 @@ public class Character : MonoBehaviour
     }
 
     bool isLeft;
-    void Leave()
+    void Leave(GoalStairController goalStairController)
     {
         // 1フレームに複数回判定するため
         if (isLeft) return;
@@ -218,15 +213,27 @@ public class Character : MonoBehaviour
         // 階段で止まったときに例外的にアクティブにしたいから
         characterManager.pool.activelist.Remove(this);
         rb.isKinematic = true;
-        animator.SetBool("IsFall", false);
-        animator.SetBool("IsRun", false);
+        animator.ResetTrigger("Fall");
+        animator.SetTrigger("Idle");
 
+        if (goalStairController.isLast)
+        {
+            GoalLastCharacter();
+            return;
+        }
         // removeしてもこのタイミングでは数は減らない
         if (characterManager.ActiveCount > 1) return;
-        animator.SetBool("IsDance", true);
+        GoalLastCharacter();
+    }
+
+    void GoalLastCharacter()
+    {
+
+        animator.SetTrigger("Dance");
         transform.forward = Vector3.back;
         cameraController.CameraState = CameraState.Rotate;
         Variables.screenState = ScreenState.Clear;
+        characterManager.playerState = PlayerState.AfterFinishedGame;
 
         Variables.goalRate = 1.0f;
 
