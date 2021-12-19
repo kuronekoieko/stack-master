@@ -9,15 +9,15 @@ public class StartCanvasManager : BaseCanvasManager
     [SerializeField] TutrialController tutrialController;
     [SerializeField] LevelProgressionManager levelProgressionManager;
     [SerializeField] MyButton skinButton;
-    [SerializeField] MyButton levelUpButton;
+    [SerializeField] StartTowerButton startTowerButton;
     [SerializeField] MyButton offlineIncomeButton;
 
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.Start);
         skinButton.onClick.AddListener(() => Variables.screenState = ScreenState.Skin);
-        levelUpButton.onClick.AddListener(OnClickLevelUpButton);
         offlineIncomeButton.onClick.AddListener(OnClickOfflineIncomeButton);
+        startTowerButton.OnStart();
     }
 
     protected override void OnOpen()
@@ -25,6 +25,7 @@ public class StartCanvasManager : BaseCanvasManager
         gameObject.SetActive(true);
         tutrialController.OnOpen();
         levelProgressionManager.OnOpen();
+        startTowerButton.OnOpen();
     }
 
     public override void OnUpdate()
@@ -48,10 +49,7 @@ public class StartCanvasManager : BaseCanvasManager
     }
 
 
-    void OnClickLevelUpButton()
-    {
-        SaveData.i.startHumanCount++;
-    }
+
 
     void OnClickOfflineIncomeButton()
     {
@@ -65,6 +63,11 @@ public class StartCanvasManager : BaseCanvasManager
     /// <returns></returns>
     bool IsTapUI()
     {
+        if (Application.isEditor)
+        {
+            return EventSystem.current.IsPointerOverGameObject();
+        }
+
         int tcount = Input.touchCount;
         if (tcount > 0)
         {
