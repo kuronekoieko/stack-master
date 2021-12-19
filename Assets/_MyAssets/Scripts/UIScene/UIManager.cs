@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 30;
         DontDestroyOnLoad(gameObject);
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
         FirebaseAnalyticsManager.i.Initialize();

@@ -239,15 +239,21 @@ public class Character : MonoBehaviour
         inkSr.transform.DOScale(inkScale, 0.5f);
     }
 
+    bool isLeft;
     void Leave()
     {
+        // 1フレームに複数回判定するため
+        if (isLeft) return;
+        isLeft = true;
+
         // 階段で止まったときに例外的にアクティブにしたいから
         characterManager.pool.activelist.Remove(this);
         rb.isKinematic = true;
         animator.SetBool("IsFall", false);
         animator.SetBool("IsRun", false);
 
-        if (characterManager.ActiveCount > 0) return;
+        // removeしてもこのタイミングでは数は減らない
+        if (characterManager.ActiveCount > 1) return;
         animator.SetBool("IsDance", true);
         transform.forward = Vector3.back;
         cameraController.CameraState = CameraState.Rotate;
