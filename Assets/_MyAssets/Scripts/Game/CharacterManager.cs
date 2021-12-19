@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UniRx;
+using Zenject;
 
 public enum PlayerState
 {
@@ -16,15 +17,16 @@ public class CharacterManager : MonoBehaviour
 {
     [SerializeField] Character characterPrefab;
     [SerializeField] GameObject dummyGo;
-    public List<Character> Characters { get; set; } = new List<Character>();
+    [Inject] CameraController cameraController;
     public Vector3 BottomCharacterPos
     {
         get
         {
-            if (Characters[0].gameObject.activeSelf)
+            if (pool.activelist.Count > 0)
             {
-                bottomCharacterPos = Characters[0].transform.position;
+                bottomCharacterPos = pool.activelist[0].transform.position;
             }
+
             return bottomCharacterPos;
         }
     }
@@ -33,29 +35,28 @@ public class CharacterManager : MonoBehaviour
     int activeCount;
     float deltaX;
     public PlayerState playerState { get; set; } = PlayerState.BeforeStart;
+    public ObjectPool pool;
 
-    void Awake()
+    public void OnAwake()
     {
         dummyGo.SetActive(false);
-        InstantiateCharacters(100);
+        pool.CreateInstance(characterPrefab, 100, (character) =>
+        {
+            character.OnInstantiate(this);
+        });
         // Application.targetFrameRate = 300;
     }
 
-    void InstantiateCharacters(int count)
+    public void OnStart()
     {
-        for (int i = 0; i < count; i++)
+        pool.ActivateReserves(1, out List<Character> additionalCharacters, (character) =>
         {
-            var character = Instantiate(characterPrefab);
-            Characters.Add(character);
             character.OnInstantiate(this);
-        }
-    }
+        });
+        pool.activelist[0].Appear(transform.position, transform.position, 0, false);
+        cameraController.SetOffset(pool.activelist[0].transform.position);
 
-    void Start()
-    {
-        Characters[0].Appear(transform.position, transform.position, 0f);
-
-        this.ObserveEveryValueChanged(_ => Characters.Count(_ => _.gameObject.activeSelf))
+        this.ObserveEveryValueChanged(_ => pool.activelist.Count)
             .Subscribe(_ =>
             {
                 activeCount = _;
@@ -64,18 +65,25 @@ public class CharacterManager : MonoBehaviour
                 if (playerState != PlayerState.Playing) return;
                 Variables.screenState = ScreenState.Failed;
                 playerState = PlayerState.AfterFinishedGame;
-            })
-            .AddTo(this.gameObject);
+            });
+
+        this.ObserveEveryValueChanged(_ => SaveData.i.startHumanCount)
+        .Subscribe(_ => OnChangedStartHumanCount(_));
+    }
+
+    void OnChangedStartHumanCount(int startHumanCount)
+    {
+        AppearToStack(startHumanCount - pool.activelist.Count, 0, false);
     }
 
 
-    void Update()
+    public void OnUpdate()
     {
         deltaX = Input.GetAxis("Mouse X") * Time.fixedDeltaTime / Time.deltaTime * (float)Screen.width / 750f;
         switch (playerState)
         {
             case PlayerState.BeforeStart:
-
+                Stop();
                 if (Variables.isLaunchUIScene)
                 {
                     if (Variables.screenState != ScreenState.Game) return;
@@ -103,64 +111,63 @@ public class CharacterManager : MonoBehaviour
             deltaX = 0;
         }
 
-        if (Characters.Count == 0) return;
-        Characters[0].VelocityControl(deltaX);
+        for (int i = 0; i < pool.activelist.Count; i++)
+        {
+            pool.activelist[i].Move(deltaX, i);
+        }
     }
 
     void GoalBonus()
     {
-        Characters[0].VelocityControl(-Characters[0].transform.position.x);
+        for (int i = 0; i < pool.activelist.Count; i++)
+        {
+            pool.activelist[i].Stair(i);
+        }
     }
 
     void Stop()
     {
-        for (int i = 0; i < Characters.Count; i++)
+        for (int i = 0; i < pool.activelist.Count; i++)
         {
-            Characters[i].Stop();
-        }
-    }
-
-    void FixedUpdate()
-    {
-        for (int i = 1; i < Characters.Count; i++)
-        {
-            Characters[i].Follow(Characters[0].transform.position);
+            pool.activelist[i].Stop();
         }
     }
 
     public void Dance()
     {
         playerState = PlayerState.AfterFinishedGame;
-        for (int i = 0; i < Characters.Count; i++)
+        for (int i = 0; i < pool.activelist.Count; i++)
         {
-            Characters[i].Dance();
+            pool.activelist[i].Dance();
         }
     }
 
-    public void AppearToStack(int addCount)
+    public void AppearToStack(int addCount, float addDelay, bool isOnSound)
     {
-        int lackCount = addCount - Characters.Count(_ => !_.gameObject.activeSelf);
-        if (lackCount > 0)
-        {
-            InstantiateCharacters(lackCount);
-        }
-        var additionalCharacters = Characters.Where(_ => !_.gameObject.activeSelf).Take(addCount).ToArray();
-        Character topCharacter = Characters.Where(_ => _.gameObject.activeSelf).LastOrDefault();
+        Character topCharacter = pool.activelist[pool.activelist.Count - 1];
 
-        Vector3 pos = topCharacter.transform.position;
+        pool.ActivateReserves(addCount, out List<Character> additionalCharacters, (character) =>
+        {
+            character.OnInstantiate(this);
+        });
+
+        Vector3 pos = topCharacter ? topCharacter.transform.position : BottomCharacterPos;
+
         float delay = 0f;
-        for (int i = 0; i < additionalCharacters.Length; i++)
+        for (int i = 0; i < additionalCharacters.Count; i++)
         {
             pos.y += topCharacter.Height;
-            additionalCharacters[i].Appear(Characters[0].transform.position, pos, delay);
-            delay += 0.05f;
+            delay += addDelay;
+            additionalCharacters[i].Appear(BottomCharacterPos, pos, delay, isOnSound);
         }
     }
+
+
 
     public void Dead(int deadCount)
     {
         bool isKillTop = false;
-        var activeCharacters = Characters.Where(_ => _.gameObject.activeSelf).ToList();
+        var activeCharacters = pool.activelist;
         if (isKillTop)
         {
             activeCharacters = activeCharacters.Reverse<Character>().ToList();

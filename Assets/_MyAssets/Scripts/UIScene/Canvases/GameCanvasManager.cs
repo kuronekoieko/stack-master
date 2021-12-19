@@ -13,7 +13,7 @@ using UniRx;
 public class GameCanvasManager : BaseCanvasManager
 {
     [SerializeField] Text levelNumText;
-    [SerializeField] Button retryButton;
+    [SerializeField] MyButton retryButton;
 
     public override void OnStart()
     {

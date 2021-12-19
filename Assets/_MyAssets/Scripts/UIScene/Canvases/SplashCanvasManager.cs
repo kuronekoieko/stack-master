@@ -54,6 +54,7 @@ public class SplashCanvasManager : BaseCanvasManager
     protected override void OnClose()
     {
         gameObject.SetActive(false);
+        MaxSdkBanner.i.Show();
     }
 
     public override void OnSceneLoaded()

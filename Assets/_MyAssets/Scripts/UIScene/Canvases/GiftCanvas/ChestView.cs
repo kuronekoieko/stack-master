@@ -15,13 +15,12 @@ public enum ChestState
 
 public class ChestView : MonoBehaviour
 {
-    [SerializeField] Button button;
+    [SerializeField] MyButton button;
     [SerializeField] Text gemCountText;
     [SerializeField] Image gemImage;
     [SerializeField] AnimationCurve chestOpeningScaleEasing;
-    [SerializeField] GemImageAnim gemImageAnimPrefab;
+    [SerializeField] GemCollectAnimManager gemCollectAnimManager;
     [SerializeField] RectTransform rectTransform;
-    GemImageAnim[] gemImageAnims;
     public ChestState ChestState { get; set; }
     Sequence chestSeq;
     GiftCanvasManager giftCanvasManager;
@@ -35,12 +34,7 @@ public class ChestView : MonoBehaviour
         this.ObserveEveryValueChanged(_ => ChestState)
             .Subscribe(_ => OnChangeState());
 
-        gemImageAnims = new GemImageAnim[7];
-        for (int i = 0; i < gemImageAnims.Length; i++)
-        {
-            gemImageAnims[i] = Instantiate(gemImageAnimPrefab, transform.parent);
-            gemImageAnims[i].OnInstansiate();
-        }
+        gemCollectAnimManager.OnStart(7);
     }
 
     public void OnScreenOpen()
@@ -112,14 +106,8 @@ public class ChestView : MonoBehaviour
                 gemImage.gameObject.SetActive(true);
                 button.gameObject.SetActive(false);
                 button.interactable = true;
-                Vector3 startOffset = Vector3.zero;
-                float width = 0.5f;
-                for (int i = 0; i < gemImageAnims.Length; i++)
-                {
-                    startOffset.x = Random.Range(-width, width);
-                    startOffset.y = Random.Range(-width, width);
-                    gemImageAnims[i].Anim(rectTransform.position, startOffset, CoinCountView.i.GemImagePos, 0);
-                }
+
+                gemCollectAnimManager.Anim(rectTransform.position, 0.5f);
 
                 gemCountText.text = gemCount.ToString();
                 SaveData.i.currencyCount += gemCount;

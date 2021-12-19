@@ -78,3 +78,8 @@ crashlytics-build.properties
 # 各自が好きにいじる用のファイルにするため
 DebugSettingSO.asset
 DebugSettingSO.asset.meta
+
+# 除外条件にあるけど、追跡したいやつ
+!/Assets/Plugins/Zenject/OptionalExtras/Signals/Zenject-Signals.csproj
+!/Assets/Plugins/Zenject/OptionalExtras/ReflectionBaking/Zenject-ReflectionBaking.csproj
+!/Assets/Plugins/Zenject/Source/Zenject.csproj

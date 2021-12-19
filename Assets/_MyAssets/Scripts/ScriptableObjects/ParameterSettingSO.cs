@@ -13,6 +13,9 @@ public class ParameterSettingSO : ScriptableObject
 
     [Header("===ギフト画面===")]
     public GiftRewardData[] giftRewardDatas;
+    [Header("===スタート画面===")]
+    public int addStartTowerPrice;
+
 
     private static ParameterSettingSO _i;
     public static ParameterSettingSO i

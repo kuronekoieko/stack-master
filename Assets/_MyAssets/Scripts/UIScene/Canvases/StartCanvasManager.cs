@@ -8,14 +8,16 @@ public class StartCanvasManager : BaseCanvasManager
 {
     [SerializeField] TutrialController tutrialController;
     [SerializeField] LevelProgressionManager levelProgressionManager;
-    [SerializeField] Button skinButton;
-    [SerializeField] Button levelUpButton;
-    [SerializeField] Button offlineIncomeButton;
+    [SerializeField] MyButton skinButton;
+    [SerializeField] StartTowerButton startTowerButton;
+    [SerializeField] MyButton offlineIncomeButton;
 
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.Start);
         skinButton.onClick.AddListener(() => Variables.screenState = ScreenState.Skin);
+        offlineIncomeButton.onClick.AddListener(OnClickOfflineIncomeButton);
+        startTowerButton.OnStart();
     }
 
     protected override void OnOpen()
@@ -23,6 +25,7 @@ public class StartCanvasManager : BaseCanvasManager
         gameObject.SetActive(true);
         tutrialController.OnOpen();
         levelProgressionManager.OnOpen();
+        startTowerButton.OnOpen();
     }
 
     public override void OnUpdate()
@@ -45,6 +48,14 @@ public class StartCanvasManager : BaseCanvasManager
 
     }
 
+
+
+
+    void OnClickOfflineIncomeButton()
+    {
+
+    }
+
     /// <summary>
     /// 【Unity】ボタンを押したときに画面クリックは無視する
     /// https://nn-hokuson.hatenablog.com/entry/2017/07/12/220302
@@ -52,10 +63,22 @@ public class StartCanvasManager : BaseCanvasManager
     /// <returns></returns>
     bool IsTapUI()
     {
-#if UNITY_EDITOR
-        return EventSystem.current.IsPointerOverGameObject();
-#else
-        return EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
-#endif
+        if (Application.isEditor)
+        {
+            return EventSystem.current.IsPointerOverGameObject();
+        }
+
+        int tcount = Input.touchCount;
+        if (tcount > 0)
+        {
+            for (int i = 0; i < tcount; i++)
+            {
+                if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(i).fingerId))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

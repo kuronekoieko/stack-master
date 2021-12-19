@@ -40,9 +40,9 @@ public class GateController : MonoBehaviour
         wallPs_Red.gameObject.SetActive(arithmeticOperator == ArithmeticOperator.Minus || arithmeticOperator == ArithmeticOperator.Divided);
     }
 
-    void Awake()
+    public void OnAwake(GateManager gateManager)
     {
-        gateManager = GetComponentInParent<GateManager>();
+        this.gateManager = gateManager;
     }
 
     public void OnHitCharacter()

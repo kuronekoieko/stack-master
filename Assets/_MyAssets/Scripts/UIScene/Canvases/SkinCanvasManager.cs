@@ -6,8 +6,8 @@ using UniRx;
 
 public class SkinCanvasManager : BaseCanvasManager
 {
-    [SerializeField] Button closeButton_arrow;
-    [SerializeField] Button closeButton_x;
+    [SerializeField] MyButton closeButton_arrow;
+    [SerializeField] MyButton closeButton_x;
     [SerializeField] TabController_Skin tabController_Skin;
     [SerializeField] TabController_Material tabController_Material;
     [SerializeField] Transform skinPreviewParent;

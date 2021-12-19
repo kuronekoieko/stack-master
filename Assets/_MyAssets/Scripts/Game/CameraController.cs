@@ -18,12 +18,12 @@ public class CameraController : MonoBehaviour
     Vector3 currentVelocity;
     public CameraState CameraState { get; set; } = CameraState.Following;
 
-    void Start()
+    public void SetOffset(Vector3 startPos)
     {
-        offset = transform.position - characterManager.BottomCharacterPos;
+        offset = transform.position - startPos;
     }
 
-    void LateUpdate()
+    public void OnLateUpdate()
     {
 
         switch (CameraState)

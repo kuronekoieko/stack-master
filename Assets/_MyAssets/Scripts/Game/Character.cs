@@ -21,8 +21,14 @@ public class Character : MonoBehaviour
     public float Height => capsuleCollider.height;
     Vector3 inkScale;
     ParticleSystem[] bloodPsChildren;
+    bool isMovingAppear;
 
-    void Awake()
+
+    /// <summary>
+    /// startより先
+    /// </summary>
+    /// <param name="characterManager"></param>
+    public void OnInstantiate(CharacterManager characterManager)
     {
         bloodPsChildren = bloodPs.GetComponentsInChildren<ParticleSystem>();
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
@@ -30,13 +36,30 @@ public class Character : MonoBehaviour
 
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
             .Subscribe(_ => OnChangedMaterial(_));
+
+        inkScale = inkSr.transform.lossyScale;
+        inkSr.gameObject.SetActive(false);
+
+        this.characterManager = characterManager;
+        capsuleCollider.enabled = false;
+        boxCollider.enabled = false;
     }
+
+    /// <summary>
+    /// OnInstantiateの次
+    /// </summary>
+    void Start()
+    {
+        // awake.OnInstantiate,プレハブに手動アタッチはだめだった
+        gameObject.AddComponent<ZenAutoInjecter>();
+    }
+
 
     void OnChangedSkin(int selectedSkinIndex)
     {
         SkinController skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
         skinController.OnInstantiate();
-        DestroyImmediate(animator.gameObject);
+        Destroy(animator.gameObject);
         animator = skinController.Animator;
     }
 
@@ -50,53 +73,76 @@ public class Character : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        inkScale = inkSr.transform.lossyScale;
-        inkSr.gameObject.SetActive(false);
-        gameObject.AddComponent<ZenAutoInjecter>();// awakeはだめっぽい
-    }
 
-    public void OnInstantiate(CharacterManager characterManager)
+
+
+    public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
-        gameObject.SetActive(false);
-        this.characterManager = characterManager;
+        isMovingAppear = true;
+        rb.mass = 1f;
         capsuleCollider.enabled = false;
         boxCollider.enabled = false;
-    }
-
-    public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration)
-    {
-        rb.mass = 1f;
-        gameObject.SetActive(true);
         transform.position = bottomPos;
-        transform.DOMoveY(targetPos.y, duration)
+        rb.DOMoveY(targetPos.y, duration)
         .OnComplete(() =>
         {
+            isMovingAppear = false;
             capsuleCollider.enabled = true;
             boxCollider.enabled = true;
-            if (characterManager.Characters[0] != this) SoundManager.i?.PlayOneShot(0);
+            if (isOnSound) SoundManager.i?.PlayOneShot(0);
         });
     }
 
-    public void VelocityControl(float deltax)
+    public void Move(float deltax, int index)
     {
         vel = rb.velocity;
         vel.z = speedZ;
         vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX);
         if (float.IsNaN(vel.x)) vel.x = 0;
         rb.velocity = vel;
-        animator.SetBool("IsRun", rb.velocity.z > 0.1f);
-        rb.mass = 1000f;
+
+        rb.mass = characterManager.pool.activelist.Count - index;
+
+        if (characterManager.pool.activelist[0] == this)
+        {
+            animator.SetBool("IsRun", true);
+            rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
+        }
+        else
+        {
+            animator.SetBool("IsFall", true);
+            PosCorrect();
+
+            float distance = rb.position.y - characterManager.pool.activelist[index - 1].rb.position.y;
+            if (distance / Height < 1.1f) return;
+            rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
+        }
+
     }
 
-    public void Follow(Vector3 bottomPos)
+    void PosCorrect()
     {
-        if (!gameObject.activeSelf) return;
-        var pos = bottomPos;
-        pos.y = rb.position.y;
-        rb.position = pos;
-        animator.SetBool("IsFall", true);
+        // ズレ矯正
+        var bottomXZ = characterManager.pool.activelist[0].rb.position;
+        bottomXZ.y = 0;
+        var thisXZ = rb.position;
+        thisXZ.y = 0;
+        float distance = Vector3.Distance(bottomXZ, thisXZ);
+        if (distance > 0.1f)
+        {
+            thisXZ = bottomXZ;
+            thisXZ.y = rb.position.y;
+            rb.position = thisXZ;
+        }
+    }
+
+    public void Stair(int index)
+    {
+        var vel = rb.velocity;
+        vel.x = -transform.position.x * Variables.speedX;
+        vel.z = speedZ * 2.0f;
+        vel.y = 0;
+        rb.velocity = vel;
     }
 
     public void Stop()
@@ -135,7 +181,7 @@ public class Character : MonoBehaviour
         if (isIncrease)
         {
             int addCount = gate.ArithmeticOperator == ArithmeticOperator.Plus ? gate.Count : characterManager.ActiveCount * (gate.Count - 1);
-            characterManager.AppearToStack(addCount);
+            characterManager.AppearToStack(addCount, 0.05f, true);
         }
         else
         {
@@ -157,7 +203,6 @@ public class Character : MonoBehaviour
         // cameraController.IsFollow = false;
         characterManager.playerState = PlayerState.GoalBonus;
         cameraController.CameraState = CameraState.ClimbingStairs;
-        speedZ *= 1.5f;
     }
 
     void OnTriggerEnterGoalStair(Collider other)
@@ -175,7 +220,7 @@ public class Character : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        characterManager.Characters.Remove(this);
+        characterManager.pool.Remove(this);
 
         bloodPs.transform.parent = null;
         var pos = transform.position;
@@ -196,7 +241,8 @@ public class Character : MonoBehaviour
 
     void Leave()
     {
-        characterManager.Characters.Remove(this);
+        // 階段で止まったときに例外的にアクティブにしたいから
+        characterManager.pool.activelist.Remove(this);
         rb.isKinematic = true;
         animator.SetBool("IsFall", false);
         animator.SetBool("IsRun", false);

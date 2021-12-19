@@ -14,14 +14,15 @@ public class SkinProgress : MonoBehaviour
     [SerializeField] Material maskMaterial;
     [SerializeField] Transform rateMaskTf;
     [SerializeField] Text rateText;
-    [SerializeField] Button skinGetButton;
-    [SerializeField] Button continueButton;
+    [SerializeField] MyButton skinGetButton;
+    [SerializeField] MyButton continueButton;
     [SerializeField] Text titleText;
     [SerializeField] GameObject radial;
     SkinController outlineSkin;
     SkinController maskSkin;
     SkinController defaultSkin;
     bool isNotingSkin;
+    public bool IsMax { get; private set; }
 
     public void OnStart()
     {
@@ -37,8 +38,8 @@ public class SkinProgress : MonoBehaviour
         skinGetButton.enabled = true;
         continueButton.enabled = true;
         rateText.gameObject.SetActive(true);
-        skinGetButton.gameObject.SetActive(false);
-        continueButton.gameObject.SetActive(false);
+        skinGetButton.Hide();
+        continueButton.Hide();
         titleText.gameObject.SetActive(false);
         modelsCenter.transform.localScale = Vector3.one;
 
@@ -72,31 +73,33 @@ public class SkinProgress : MonoBehaviour
     void SetPercentage()
     {
 
-        if (!SaveData.i.characterSkinSaveDatas[SaveData.i.unlockingSkin.index].isOwn) return;
+        if (SaveData.i.unlockingSkin.percentage > 0) return;
 
-        SkinSaveData skinSaveData = SaveData.i.characterSkinSaveDatas.Where(_ => !_.isOwn).FirstOrDefault();
-        if (skinSaveData == null)
+        SkinSaveData[] notOwns = SaveData.i.characterSkinSaveDatas.Where(_ => !_.isOwn).ToArray();
+
+        if (notOwns.Length == 0)
         {
             isNotingSkin = true;
             return;
         }
 
+        SkinSaveData skinSaveData = notOwns[UnityEngine.Random.Range(0, notOwns.Length)];
         SaveData.i.unlockingSkin.index = SaveData.i.characterSkinSaveDatas.IndexOf(skinSaveData);
         SaveData.i.unlockingSkin.percentage = 0;
 
     }
 
-    public void Anim(Action<bool> OnCompleteSkinProgress)
+    public void Anim()
     {
         int randomInt = UnityEngine.Random.Range(25, 35);
         int startVal = SaveData.i.unlockingSkin.percentage;
         int endVal = Mathf.Clamp(SaveData.i.unlockingSkin.percentage + randomInt, 0, 100);
         SaveData.i.unlockingSkin.percentage = endVal < 100 ? endVal : 0;
         SaveDataManager.i.Save();
+        IsMax = endVal == 100;
 
         if (isNotingSkin)
         {
-            OnCompleteSkinProgress(false);
             return;
         }
 
@@ -105,15 +108,14 @@ public class SkinProgress : MonoBehaviour
 
         Sequence sequence = DOTween.Sequence()
         .Append(rateMaskTf.transform.DOScaleY(1f - (float)endVal / 100f, duration).SetEase(Ease.Linear))
-        .Join(DOTween.To(() => nowNumber, (n) => nowNumber = n, endVal, duration).OnUpdate(() => rateText.text = nowNumber.ToString()));
+        .Join(
+            DOTween.To(() => nowNumber, (n) => nowNumber = n, endVal, duration)
+            .OnUpdate(() => rateText.text = nowNumber.ToString())
+            .SetEase(Ease.Linear)
+            );
 
-        bool isMax = endVal == 100;
-        sequence.AppendCallback(() =>
-        {
-            OnCompleteSkinProgress(isMax);
-        });
 
-        if (!isMax) return;
+        if (!IsMax) return;
         sequence
         .AppendCallback(() =>
         {
@@ -126,16 +128,12 @@ public class SkinProgress : MonoBehaviour
             outlineSkin.Animator.SetBool("IsDance", true);
             maskSkin.Animator.SetBool("IsDance", true);
             defaultSkin.Animator.SetBool("IsDance", true);
-            skinGetButton.gameObject.SetActive(true);
+            skinGetButton.Show_ScaleAnim();
         })
         .AppendInterval(1.5f)
         .AppendCallback(() =>
         {
-            continueButton.gameObject.SetActive(true);
-            Color color = continueButton.image.color;
-            color.a = 0;
-            continueButton.image.color = color;
-            continueButton.image.DOFade(1, 1.5f);
+            continueButton.Show_FadeAnim();
         });
     }
 

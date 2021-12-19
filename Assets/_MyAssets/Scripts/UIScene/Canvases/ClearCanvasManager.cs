@@ -8,20 +8,16 @@ using System;
 
 public class ClearCanvasManager : BaseCanvasManager
 {
-    [SerializeField] Button nextButton;
-    [SerializeField] Button giftButton;
+    [SerializeField] MyButton nextButton;
+    [SerializeField] MyButton giftButton;
     [SerializeField] RectTransform gems;
     [SerializeField] Image titleImage;
     [SerializeField] Text currencyCountText;
     [SerializeField] SkinProgress skinProgress;
-    [SerializeField] GemImageAnim gemImageAnimPrefab;
     [SerializeField] RectTransform gemImageRt;
-    Sequence nextButtonSequence;
-    Sequence giftButtonSequence;
-    Tween emojiRotateTween;
-    Tween emojiScaleTween;
+    [SerializeField] GemCollectAnimManager gemCollectAnimManager;
     int currencyBaseCount = 15;
-    GemImageAnim[] gemImageAnims;
+
 
     public override void OnStart()
     {
@@ -31,13 +27,8 @@ public class ClearCanvasManager : BaseCanvasManager
         giftButton.onClick.AddListener(OnClickGiftButton);
         gameObject.SetActive(false);
         skinProgress.OnStart();
+        gemCollectAnimManager.OnStart(20);
 
-        gemImageAnims = new GemImageAnim[20];
-        for (int i = 0; i < gemImageAnims.Length; i++)
-        {
-            gemImageAnims[i] = Instantiate(gemImageAnimPrefab, transform);
-            gemImageAnims[i].OnInstansiate();
-        }
     }
 
     public override void OnSceneLoaded()
@@ -53,8 +44,8 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         skinProgress.OnOpen();
-        nextButton.gameObject.SetActive(false);
-        giftButton.gameObject.SetActive(false);
+        giftButton.Hide();
+        nextButton.Hide();
         titleImage.gameObject.SetActive(true);
         gems.gameObject.SetActive(true);
 
@@ -75,35 +66,17 @@ public class ClearCanvasManager : BaseCanvasManager
             transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack)
             .OnComplete(() =>
             {
-                skinProgress.Anim(OnCompleteSkinProgress);
-                GemAnim();
+                skinProgress.Anim();
+                gemCollectAnimManager.Anim(gemImageRt.position, 0.5f, () =>
+                {
+                    OnCompleteSkinProgress(skinProgress.IsMax);
+                });
             });
 
-            giftButton.transform.localScale = Vector3.one;
-            giftButtonSequence = DOTween.Sequence()
-            .Append(giftButton.transform.DOScale(Vector3.one * 1.1f, 0.5f))
-            .Append(giftButton.transform.DOScale(Vector3.one, 0.5f));
-            giftButtonSequence.SetLoops(-1);
-
-            nextButton.transform.localScale = Vector3.one;
-            nextButtonSequence = DOTween.Sequence()
-            .Append(nextButton.transform.DOScale(Vector3.one * 1.1f, 0.5f))
-            .Append(nextButton.transform.DOScale(Vector3.one, 0.5f));
-            nextButtonSequence.SetLoops(-1);
         });
     }
 
-    void GemAnim()
-    {
-        Vector3 startOffset = Vector3.zero;
-        float width = 0.5f;
-        for (int i = 0; i < gemImageAnims.Length; i++)
-        {
-            startOffset.x = UnityEngine.Random.Range(-width, width);
-            startOffset.y = UnityEngine.Random.Range(-width, width);
-            gemImageAnims[i].Anim(gemImageRt.position, startOffset, CoinCountView.i.GemImagePos, 0);
-        }
-    }
+
 
     void OnCompleteSkinProgress(bool isMax)
     {
@@ -116,17 +89,20 @@ public class ClearCanvasManager : BaseCanvasManager
 
         bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
         // isNextGiftScreen = true; //デバッグ用
-        nextButton.gameObject.SetActive(!isNextGiftScreen);
-        giftButton.gameObject.SetActive(isNextGiftScreen);
+
+        if (isNextGiftScreen)
+        {
+            giftButton.Show_ScaleAnim();
+        }
+        else
+        {
+            nextButton.Show_ScaleAnim();
+        }
     }
 
     protected override void OnClose()
     {
         gameObject.SetActive(false);
-        nextButtonSequence.Kill();
-        giftButtonSequence.Kill();
-        emojiRotateTween.Kill();
-        emojiScaleTween.Kill();
         skinProgress.OnClose();
     }
 
