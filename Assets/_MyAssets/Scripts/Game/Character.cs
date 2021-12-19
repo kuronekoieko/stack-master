@@ -10,17 +10,14 @@ public class Character : MonoBehaviour
     [SerializeField] Rigidbody rb;
     [SerializeField] CapsuleCollider capsuleCollider;
     [SerializeField] BoxCollider boxCollider;
-    [SerializeField] ParticleSystem bloodPs;
-    [SerializeField] SpriteRenderer inkSr;
     [SerializeField] Animator animator;
+    [SerializeField] IncEffectController inkEffectController;
     [Inject] CameraController cameraController;
     float speedZ = 15f;
     Vector3 vel;
     float currentVelocity;
     CharacterManager characterManager;
     public float Height => capsuleCollider.height;
-    Vector3 inkScale;
-    ParticleSystem[] bloodPsChildren;
     bool isMovingAppear;
 
 
@@ -30,15 +27,10 @@ public class Character : MonoBehaviour
     /// <param name="characterManager"></param>
     public void OnInstantiate(CharacterManager characterManager)
     {
-        bloodPsChildren = bloodPs.GetComponentsInChildren<ParticleSystem>();
+        inkEffectController.OnInstantiate();
+
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
             .Subscribe(_ => OnChangedSkin(_));
-
-        this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
-            .Subscribe(_ => OnChangedMaterial(_));
-
-        inkScale = inkSr.transform.lossyScale;
-        inkSr.gameObject.SetActive(false);
 
         this.characterManager = characterManager;
         capsuleCollider.enabled = false;
@@ -62,19 +54,6 @@ public class Character : MonoBehaviour
         Destroy(animator.gameObject);
         animator = skinController.Animator;
     }
-
-    void OnChangedMaterial(int selectedIndex)
-    {
-        inkSr.material = new Material(SkinSettingSO.i.characterMaterialDatas[selectedIndex].material);
-        for (int i = 0; i < bloodPsChildren.Length; i++)
-        {
-            ParticleSystem.MainModule main = bloodPsChildren[i].main;
-            main.startColor = inkSr.material.color;
-        }
-    }
-
-
-
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
@@ -222,21 +201,11 @@ public class Character : MonoBehaviour
         gameObject.SetActive(false);
         characterManager.pool.Remove(this);
 
-        bloodPs.transform.parent = null;
-        var pos = transform.position;
-        pos.y += Height / 2f;
-        bloodPs.transform.position = pos;
-        bloodPs.Play();
+        inkEffectController.PlayBloodParticle(Height);
 
         if (isHitGate) return;
 
-        inkSr.gameObject.SetActive(true);
-        inkSr.transform.parent = null;
-        inkSr.transform.localScale = Vector3.zero;
-        hitPos.z -= 0.1f;
-        hitPos.y += Height / 2f;
-        inkSr.transform.position = hitPos;
-        inkSr.transform.DOScale(inkScale, 0.5f);
+        inkEffectController.ShowInkSprite(hitPos, Height);
     }
 
     bool isLeft;
