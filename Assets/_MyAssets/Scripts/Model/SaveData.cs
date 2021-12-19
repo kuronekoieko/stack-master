@@ -28,6 +28,7 @@ public class SaveData
     public List<SkinSaveData> materialSkinSaveDatas = new List<SkinSaveData>();
     public UnlockingSkin unlockingSkin = new UnlockingSkin();
     public int startHumanCount = 2;
+    public int offlineIncomeLevel = 2;
 }
 
 /// <summary>

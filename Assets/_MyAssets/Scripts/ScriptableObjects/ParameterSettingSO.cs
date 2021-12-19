@@ -16,6 +16,7 @@ public class ParameterSettingSO : ScriptableObject
     [Header("===スタート画面===")]
     public int addStartTowerPrice;
 
+    public int offlineIncomePrice;
 
     private static ParameterSettingSO _i;
     public static ParameterSettingSO i

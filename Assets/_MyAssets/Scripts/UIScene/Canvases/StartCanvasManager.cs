@@ -10,13 +10,13 @@ public class StartCanvasManager : BaseCanvasManager
     [SerializeField] LevelProgressionManager levelProgressionManager;
     [SerializeField] MyButton skinButton;
     [SerializeField] StartTowerButton startTowerButton;
-    [SerializeField] MyButton offlineIncomeButton;
+    [SerializeField] OfflineIncomeButton offlineIncomeButton;
 
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.Start);
         skinButton.onClick.AddListener(() => Variables.screenState = ScreenState.Skin);
-        offlineIncomeButton.onClick.AddListener(OnClickOfflineIncomeButton);
+        offlineIncomeButton.OnStart();
         startTowerButton.OnStart();
     }
 
@@ -26,6 +26,7 @@ public class StartCanvasManager : BaseCanvasManager
         tutrialController.OnOpen();
         levelProgressionManager.OnOpen();
         startTowerButton.OnOpen();
+        offlineIncomeButton.OnOpen();
     }
 
     public override void OnUpdate()
@@ -44,14 +45,6 @@ public class StartCanvasManager : BaseCanvasManager
     }
 
     public override void OnSceneLoaded()
-    {
-
-    }
-
-
-
-
-    void OnClickOfflineIncomeButton()
     {
 
     }
