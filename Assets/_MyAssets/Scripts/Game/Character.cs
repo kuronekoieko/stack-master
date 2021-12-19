@@ -215,6 +215,7 @@ public class Character : MonoBehaviour
         // 階段で止まったときに例外的にアクティブにしたいから
         characterManager.pool.activelist.Remove(this);
         rb.isKinematic = true;
+        animator.ResetTrigger("Run");
         animator.ResetTrigger("Fall");
         animator.SetTrigger("Idle");
 
