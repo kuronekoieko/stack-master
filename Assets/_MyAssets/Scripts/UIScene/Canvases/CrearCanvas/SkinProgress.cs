@@ -66,7 +66,7 @@ public class SkinProgress : MonoBehaviour
         defaultSkin.RectTransform.anchoredPosition3D = Vector3.forward * -2f;
 
         rateMaskTf.transform.localScale = new Vector3(1, 1f - (float)SaveData.i.unlockingSkin.percentage / 100f, 1);
-        rateText.text = SaveData.i.unlockingSkin.percentage.ToString();
+        rateText.text = SaveData.i.unlockingSkin.percentage + " %";
     }
 
 
@@ -110,7 +110,7 @@ public class SkinProgress : MonoBehaviour
         .Append(rateMaskTf.transform.DOScaleY(1f - (float)endVal / 100f, duration).SetEase(Ease.Linear))
         .Join(
             DOTween.To(() => nowNumber, (n) => nowNumber = n, endVal, duration)
-            .OnUpdate(() => rateText.text = nowNumber.ToString())
+            .OnUpdate(() => rateText.text = nowNumber + " %")
             .SetEase(Ease.Linear)
             );
 
