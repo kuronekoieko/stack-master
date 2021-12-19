@@ -168,7 +168,7 @@ public class CharacterManager : MonoBehaviour
 
         for (int i = 0; i < killedCharacters.Length; i++)
         {
-            killedCharacters[i].Dead(Vector3.zero, true);
+            killedCharacters[i].Dead(killedCharacters[i].transform.position, true);
         }
     }
 }

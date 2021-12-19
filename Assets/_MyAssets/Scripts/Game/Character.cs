@@ -123,6 +123,8 @@ public class Character : MonoBehaviour
         vel.z = speedZ * 2.0f;
         vel.y = 0;
         rb.velocity = vel;
+
+        PosCorrect();
     }
 
     public void Stop()
@@ -196,7 +198,7 @@ public class Character : MonoBehaviour
         gameObject.SetActive(false);
         characterManager.pool.Remove(this);
 
-        inkEffectController.PlayBloodParticle(Height);
+        inkEffectController.PlayBloodParticle(hitPos, Height);
 
         if (isHitGate) return;
 

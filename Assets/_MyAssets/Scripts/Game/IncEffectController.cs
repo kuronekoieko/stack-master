@@ -25,7 +25,7 @@ public class IncEffectController : MonoBehaviour
 
     void OnChangedMaterial(int selectedIndex)
     {
-        inkSr.material = new Material(SkinSettingSO.i.characterMaterialDatas[selectedIndex].material);
+        inkSr.material.color = SkinSettingSO.i.characterMaterialDatas[selectedIndex].material.color;
         for (int i = 0; i < bloodPsChildren.Length; i++)
         {
             ParticleSystem.MainModule main = bloodPsChildren[i].main;
@@ -33,14 +33,15 @@ public class IncEffectController : MonoBehaviour
         }
     }
 
-    public void PlayBloodParticle(float characterHeight)
+    public void PlayBloodParticle(Vector3 hitPos, float characterHeight)
     {
         if (bloodPsTween != null) bloodPsTween.Kill();
         bloodPs.gameObject.SetActive(true);
         transform.parent = null;
-        var pos = transform.position;
+        var pos = hitPos;
         pos.y += characterHeight / 2f;
         bloodPs.transform.position = pos;
+        bloodPs.Play();
         bloodPsTween = DOVirtual.DelayedCall(3, () =>
         {
             bloodPs.gameObject.SetActive(false);
