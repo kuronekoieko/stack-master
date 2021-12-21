@@ -33,9 +33,10 @@ public class SkinSelectButtonController : MonoBehaviour
     {
         this.skinIndex = skinIndex;
 
-        Vector3 pos = rectTransform.anchoredPosition3D;
-        pos.z = 0;
-        rectTransform.anchoredPosition3D = pos;
+        // Vector3 pos = rectTransform.anchoredPosition3D;
+        //  pos.z = 0;
+        // rectTransform.anchoredPosition3D = pos;
+        rectTransform.SetAnchoredPosition3DZ(0);
         if (isDummy)
         {
             SelectState = SkinSelectState.Dummy;

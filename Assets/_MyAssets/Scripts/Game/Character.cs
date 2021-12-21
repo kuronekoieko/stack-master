@@ -14,7 +14,6 @@ public class Character : MonoBehaviour
     [SerializeField] IncEffectController inkEffectController;
     [Inject] CameraController cameraController;
     float speedZ = 15f;
-    Vector3 vel;
     float currentVelocity;
     CharacterManager characterManager;
     public float Height => capsuleCollider.height;
@@ -74,11 +73,13 @@ public class Character : MonoBehaviour
 
     public void Move(float deltax, int index)
     {
-        vel = rb.velocity;
-        vel.z = speedZ;
-        vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX);
-        if (float.IsNaN(vel.x)) vel.x = 0;
-        rb.velocity = vel;
+        // vel = rb.velocity;
+        rb.SetVelocityZ(speedZ);
+        // vel.z = speedZ;
+        rb.SetVelocityX(Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX));
+        //vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX);
+        // if (float.IsNaN(vel.x)) vel.x = 0;
+        // rb.velocity = vel;
 
         rb.mass = characterManager.pool.activelist.Count - index;
 
@@ -118,11 +119,9 @@ public class Character : MonoBehaviour
 
     public void Stair(int index)
     {
-        var vel = rb.velocity;
-        vel.x = -transform.position.x * Variables.speedX;
-        vel.z = speedZ * 2.0f;
-        vel.y = 0;
-        rb.velocity = vel;
+        rb.SetVelocityX(-transform.position.x * Variables.speedX);
+        rb.SetVelocityY(0);
+        rb.SetVelocityZ(speedZ * 2.0f);
 
         PosCorrect();
     }
