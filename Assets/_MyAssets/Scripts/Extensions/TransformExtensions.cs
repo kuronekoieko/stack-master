@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public static class TransformExtensions
 {
@@ -32,5 +33,10 @@ public static class TransformExtensions
     public static void AddPosZ(this Transform transform, float z)
     {
         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + z);
+    }
+
+    [Obsolete("Find禁止", true)]
+    public static void Find(this Transform transform)
+    {
     }
 }

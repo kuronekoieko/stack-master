@@ -66,4 +66,26 @@ public static class ListExtentions
     {
         return index < 0 || self.Count <= index;
     }
+
+    /// <summary>
+    /// インデックスが要素数を超えていたらクランプする
+    /// </summary>
+    /// <param name="self"></param>
+    /// <param name="index"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T ClampIndex<T>(this List<T> self, int index)
+    {
+        if (index < 0)
+        {
+            return self[0];
+        }
+
+        if (self.Count <= index)
+        {
+            return self[self.Count - 1];
+        }
+
+        return self[index];
+    }
 }

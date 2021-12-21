@@ -65,12 +65,12 @@ public class LevelReward : ICSVData<LevelReward>
 
 public class SkinPrice : ICSVData<SkinPrice>
 {
-    public int numberOfPurchase;
+    public int purchasedCount;
     public int price;
 
     public void SetParsedInstance(string[] strColumn)
     {
-        int.TryParse(strColumn[0], out numberOfPurchase);
+        int.TryParse(strColumn[0], out purchasedCount);
         int.TryParse(strColumn[1], out price);
     }
 }
