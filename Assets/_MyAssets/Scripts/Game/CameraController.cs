@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
     {
         offset = transform.position - startPos;
 
-        float towerCenterHeight = characterManager.characterHeight / 2f * 0.2f;
+        float towerCenterHeight = characterManager.ActiveCount * characterManager.characterHeight / 2f * 0.2f;
         camTarget = characterManager.BottomCharacterPos;
         camTarget.y += towerCenterHeight;
         transform.LookAt(camTarget);

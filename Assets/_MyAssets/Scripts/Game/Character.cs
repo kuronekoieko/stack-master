@@ -223,8 +223,8 @@ public class Character : MonoBehaviour
             GoalLastCharacter();
             return;
         }
-        // removeしてもこのタイミングでは数は減らない
-        if (characterManager.ActiveCount > 1) return;
+  
+        if (characterManager.ActiveCount > 0) return;
         GoalLastCharacter();
     }
 
