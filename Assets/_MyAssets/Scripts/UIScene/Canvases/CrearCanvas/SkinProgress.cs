@@ -83,8 +83,8 @@ public class SkinProgress : MonoBehaviour
             return;
         }
 
-        SkinSaveData skinSaveData = notOwns[UnityEngine.Random.Range(0, notOwns.Length)];
-        SaveData.i.unlockingSkin.index = SaveData.i.characterSkinSaveDatas.IndexOf(skinSaveData);
+        notOwns.GetRandom<SkinSaveData>(out int index);
+        SaveData.i.unlockingSkin.index = index;
         SaveData.i.unlockingSkin.percentage = 0;
 
     }

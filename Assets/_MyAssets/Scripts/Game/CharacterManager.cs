@@ -31,8 +31,7 @@ public class CharacterManager : MonoBehaviour
         }
     }
     Vector3 bottomCharacterPos;
-    public int ActiveCount => activeCount;
-    int activeCount;
+    public int ActiveCount => pool.activelist.Count;
     float deltaX;
     public PlayerState playerState { get; set; } = PlayerState.BeforeStart;
     public ObjectPool pool;
@@ -59,7 +58,6 @@ public class CharacterManager : MonoBehaviour
         this.ObserveEveryValueChanged(_ => pool.activelist.Count)
             .Subscribe(_ =>
             {
-                activeCount = _;
                 if (_ > 0) return;
                 if (Variables.screenState != ScreenState.Game) return;
                 if (playerState != PlayerState.Playing) return;

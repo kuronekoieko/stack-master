@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
         FirebaseAnalyticsManager.i.Initialize();
         Variables.isLaunchUIScene = true;
+        CSVManager.i.ParseCSV();
     }
 
     void Start()
