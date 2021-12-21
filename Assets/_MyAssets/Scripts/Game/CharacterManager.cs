@@ -35,6 +35,7 @@ public class CharacterManager : MonoBehaviour
     float deltaX;
     public PlayerState playerState { get; set; } = PlayerState.BeforeStart;
     public ObjectPool pool;
+    public float characterHeight => characterPrefab.Height;
 
     public void OnAwake()
     {
