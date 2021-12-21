@@ -5,9 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "MyGame/Create ParameterSettingSO", fileName = "ParameterSettingSO")]
 public class ParameterSettingSO : ScriptableObject
 {
-    [Header("===スタート画面===")]
-    public int addStartTowerPrice;
-    public int offlineIncomePrice;
+
 
     private static ParameterSettingSO _i;
     public static ParameterSettingSO i

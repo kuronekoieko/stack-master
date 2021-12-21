@@ -10,6 +10,7 @@ public class OfflineIncomeButton : MonoBehaviour
     {
         Buy,
         RewardedAds,
+        Max,
     }
 
     [SerializeField] MyButton button;
@@ -23,12 +24,18 @@ public class OfflineIncomeButton : MonoBehaviour
     {
         get
         {
+            if (CSVManager.i.PlayerLevelPriceTable.IsLast(SaveData.i.offlineIncomeLevel - 1))
+            {
+                state = State.Max;
+                return false;
+            }
+
             if (isViewedRewardedAds)
             {
                 return false;
             }
 
-            if (SaveData.i.currencyCount >= ParameterSettingSO.i.offlineIncomePrice)
+            if (SaveData.i.currencyCount >= Price)
             {
                 state = State.Buy;
                 return true;
@@ -38,6 +45,7 @@ public class OfflineIncomeButton : MonoBehaviour
             return MaxSdkRewardedAds.i.IsRewardedAdReady;
         }
     }
+    int Price => CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.offlineIncomeLevel - 1).offlineIncomePrice;
 
     State state;
     bool isViewedRewardedAds;
@@ -51,6 +59,8 @@ public class OfflineIncomeButton : MonoBehaviour
             .Subscribe(_ => ChangeButtonView(_));
         this.ObserveEveryValueChanged(_ => SaveData.i.offlineIncomeLevel)
             .Subscribe(_ => levelText.text = _.ToString());
+        this.ObserveEveryValueChanged(_ => Price)
+            .Subscribe(_ => priceText.text = _.ToString());
     }
 
     public void OnOpen()
@@ -67,7 +77,7 @@ public class OfflineIncomeButton : MonoBehaviour
         switch (state)
         {
             case State.Buy:
-                SaveData.i.currencyCount -= ParameterSettingSO.i.offlineIncomePrice;
+                SaveData.i.currencyCount -= Price;
                 SaveData.i.offlineIncomeLevel++;
                 SaveDataManager.i.Save();
                 break;
@@ -101,6 +111,10 @@ public class OfflineIncomeButton : MonoBehaviour
         freeText.gameObject.SetActive(state == State.RewardedAds);
         videoImage.gameObject.SetActive(state == State.RewardedAds);
 
-        priceText.text = ParameterSettingSO.i.offlineIncomePrice.ToString();
+        if (state == State.Max)
+        {
+            freeText.gameObject.SetActive(true);
+            freeText.text = "MAX";
+        }
     }
 }

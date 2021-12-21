@@ -8,16 +8,19 @@ public class CSVManager : SingletonMonoBehaviour<CSVManager>
     [SerializeField] TextAsset level_reward_table;
     [SerializeField] TextAsset character_skin_price_table;
     [SerializeField] TextAsset material_skin_price_table;
+    [SerializeField] TextAsset player_level_price_table;
 
     public List<LevelReward> LevelRewardTable;
     public List<SkinPrice> CharacterSkinPrices;
     public List<SkinPrice> MaterialSkinPrices;
+    public List<PlayerLevelPrice> PlayerLevelPriceTable;
 
     public void ParseCSV()
     {
         LevelRewardTable = GetTableFromCSV<LevelReward>(level_reward_table);
         CharacterSkinPrices = GetTableFromCSV<SkinPrice>(character_skin_price_table);
         MaterialSkinPrices = GetTableFromCSV<SkinPrice>(material_skin_price_table);
+        PlayerLevelPriceTable = GetTableFromCSV<PlayerLevelPrice>(player_level_price_table);
     }
 
     List<T> GetTableFromCSV<T>(TextAsset csvFile) where T : ICSVData<T>, new()
@@ -72,6 +75,20 @@ public class SkinPrice : ICSVData<SkinPrice>
     {
         int.TryParse(strColumn[0], out purchasedCount);
         int.TryParse(strColumn[1], out price);
+    }
+}
+
+public class PlayerLevelPrice : ICSVData<PlayerLevelPrice>
+{
+    public int playerLevel;
+    public int startTowerPrice;
+    public int offlineIncomePrice;
+
+    public void SetParsedInstance(string[] strColumn)
+    {
+        int.TryParse(strColumn[0], out playerLevel);
+        int.TryParse(strColumn[1], out startTowerPrice);
+        int.TryParse(strColumn[2], out offlineIncomePrice);
     }
 }
 

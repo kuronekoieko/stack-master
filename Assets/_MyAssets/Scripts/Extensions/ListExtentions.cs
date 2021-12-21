@@ -88,4 +88,9 @@ public static class ListExtentions
 
         return self[index];
     }
+
+    public static bool IsLast<T>(this List<T> self, int index)
+    {
+        return self.Count - 1 == index;
+    }
 }
