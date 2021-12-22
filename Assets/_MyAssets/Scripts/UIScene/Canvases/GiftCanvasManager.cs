@@ -39,6 +39,7 @@ public class GiftCanvasManager : BaseCanvasManager
     {
         gameObject.SetActive(true);
         ClickedChestCount = 0;
+        InitializeChests();
     }
 
     public override void OnUpdate()
