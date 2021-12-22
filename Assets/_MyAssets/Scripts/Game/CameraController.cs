@@ -19,16 +19,36 @@ public class CameraController : MonoBehaviour
     Vector3 currentVelocity;
     Vector3 angleCurrentVelocity;
     Vector3 camTarget;
+    Vector3 startLookTargetOffset;
     public CameraState CameraState { get; set; } = CameraState.Following;
 
     public void SetOffset(Vector3 startPos)
     {
         offset = transform.position - startPos;
-
-        float towerCenterHeight = characterManager.ActiveCount * characterManager.characterHeight / 2f * 0.2f;
-        camTarget = characterManager.BottomCharacterPos;
-        camTarget.y += towerCenterHeight;
+        startLookTargetOffset = GetStartLookTarget() - characterManager.BottomCharacterPos;
+        camTarget = GetLookTarget();
         transform.LookAt(camTarget);
+    }
+
+
+    Vector3 GetStartLookTarget()
+    {
+        // 平面を定義
+        var plane = new Plane(Vector3.right, Vector3.zero);
+        // レイを定義
+        var ray = new Ray(transform.position, transform.forward);
+
+        // レイと平面との当たり判定
+        // ヒットした場合はenterに平面までの距離が格納される
+        var isHit = plane.Raycast(ray, out var enter);
+
+        if (isHit)
+        {
+            Debug.Log(ray.GetPoint(enter));
+            // ヒットした場合は平面の位置に点を移動
+            return ray.GetPoint(enter);
+        }
+        return Vector3.zero;
     }
 
     public void OnLateUpdate()
@@ -67,7 +87,6 @@ public class CameraController : MonoBehaviour
         Vector3 bottomPos = characterManager.BottomCharacterPos;
         bottomPos.x = 0;
         transform.position = Vector3.SmoothDamp(transform.position, bottomPos + followOffset, ref currentVelocity, 0.2f);
-
 
         float maxCount = 5 ^ 2;
         float currentCount = (float)(characterManager.ActiveCount ^ 2);
@@ -128,9 +147,9 @@ public class CameraController : MonoBehaviour
 
         // float rate = Mathf.Clamp(1 / (float)characterManager.ActiveCount * 2f, 1f, 3.5f);
         //distance = distance * Mathf.Clamp(rate, 1f, 3.5f);
-        float max = 20;
+        float max = 15;
         followOffset.x *= Mathf.Clamp(characterManager.ActiveCount * 0.15f, 1f, max * 0.15f);
-        followOffset.y *= Mathf.Clamp(characterManager.ActiveCount * 0.3f, 1f, max * 0.3f);
+        followOffset.y *= Mathf.Clamp(characterManager.ActiveCount * 0.3f, 1f, (max + 10) * 0.3f);
         followOffset.z *= Mathf.Clamp(characterManager.ActiveCount * 0.15f, 1f, max * 0.15f);
         //followOffset += followOffset * rate;
 
@@ -141,17 +160,28 @@ public class CameraController : MonoBehaviour
         Vector3 bottomPos = characterManager.BottomCharacterPos;
         bottomPos.x = 0;
         transform.position = Vector3.SmoothDamp(transform.position, bottomPos + followOffset, ref currentVelocity, 0.4f);
+        //transform.SetPosX((bottomPos + followOffset).x);
+        //  transform.SetPosZ((bottomPos + followOffset).z);
 
 
-        float maxCount = 10;
-        float currentCount = characterManager.ActiveCount;
-        float towerCenterHeight = Mathf.Clamp(currentCount, 1f, maxCount) * characterManager.characterHeight / 2f * 0.2f;
+        camTarget = Vector3.SmoothDamp(camTarget, GetLookTarget(), ref angleCurrentVelocity, 0.4f);
 
-
-        camTarget = Vector3.SmoothDamp(camTarget, bottomPos + Vector3.up * towerCenterHeight, ref angleCurrentVelocity, 0.4f);
-        camTarget.z = bottomPos.z;
         transform.LookAt(camTarget);
     }
+
+
+    Vector3 GetLookTarget()
+    {
+        float maxCount = 10;
+        float currentCount = characterManager.ActiveCount;
+        float towerCenterHeight = Mathf.Clamp(currentCount, 1f, maxCount) * characterManager.characterHeight / 2f;
+        //startLookTargetOffset.y = towerCenterHeight;
+        var target = characterManager.BottomCharacterPos + startLookTargetOffset.normalized * towerCenterHeight;
+        target.x = 0;
+        return target;
+    }
+
+
 
     void ClimbingStairs()
     {
