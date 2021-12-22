@@ -45,7 +45,15 @@ public class OfflineIncomeButton : MonoBehaviour
             return MaxSdkRewardedAds.i.IsRewardedAdReady;
         }
     }
-    int Price => CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.offlineIncomeLevel - 1).offlineIncomePrice;
+    int Price
+    {
+        get
+        {
+            PlayerLevelPrice playerLevelPrice = CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.offlineIncomeLevel - 1);
+            if (playerLevelPrice == null) return 0;
+            return playerLevelPrice.offlineIncomePrice;
+        }
+    }
 
     State state;
     bool isViewedRewardedAds;

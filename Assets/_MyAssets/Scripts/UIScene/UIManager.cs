@@ -11,7 +11,6 @@ using UniRx;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] Transform canvasesParentTf;
-    [SerializeField] bool isSkipSplash;
     BaseCanvasManager[] baseCanvasManagers;
 
     void Awake()
@@ -20,32 +19,15 @@ public class UIManager : MonoBehaviour
         Application.targetFrameRate = 30;
         DontDestroyOnLoad(gameObject);
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
-        FirebaseAnalyticsManager.i.Initialize();
         Variables.isLaunchUIScene = true;
-        CSVManager.i.ParseCSV();
     }
 
     void Start()
     {
-        SaveDataManager.i.LoadSaveData();
-        StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
         SetCanvases();
         // イベントにイベントハンドラーを追加
         SceneManager.sceneLoaded += SceneLoaded;
-
-        if (!Application.isEditor)
-        {
-            Variables.screenState = ScreenState.Splash;
-            return;
-        }
-
-        if (!isSkipSplash)
-        {
-            Variables.screenState = ScreenState.Splash;
-            return;
-        }
-        StageTransManager.i.ReLoadStage();
-
+        Variables.screenState = ScreenState.Splash;
     }
 
     void SetCanvases()

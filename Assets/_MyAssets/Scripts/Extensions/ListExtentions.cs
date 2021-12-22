@@ -76,7 +76,9 @@ public static class ListExtentions
     /// <returns></returns>
     public static T ClampIndex<T>(this List<T> self, int index)
     {
-        if (index < 0)
+        if (self.Count == 0) return default;
+
+        if (index <= 0)
         {
             return self[0];
         }

@@ -46,8 +46,15 @@ public class StartTowerButton : MonoBehaviour
         }
     }
 
-    int Price => CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.startHumanCount - 1).startTowerPrice;
-
+    int Price
+    {
+        get
+        {
+            PlayerLevelPrice playerLevelPrice = CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.startHumanCount - 1);
+            if (playerLevelPrice == null) return 0;
+            return playerLevelPrice.startTowerPrice;
+        }
+    }
     State state;
     bool isViewedRewardedAds;
 

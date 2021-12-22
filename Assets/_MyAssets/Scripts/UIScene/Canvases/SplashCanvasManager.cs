@@ -31,6 +31,20 @@ public class SplashCanvasManager : BaseCanvasManager
             StageTransManager.i.ReLoadStage();
             // StartCoroutine(WaitFirebaseInitialize());
         });
+
+        SaveDataManager.i.LoadSaveData();
+        StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
+        FirebaseAnalyticsManager.i.Initialize();
+        // 処理重い
+        CSVManager.i.ParseCSV();
+
+
+        if (Application.isEditor)
+        {
+            StageTransManager.i.ReLoadStage();
+            sequence.Kill();
+            return;
+        }
     }
 
     /*   private IEnumerator WaitFirebaseInitialize()
