@@ -8,6 +8,7 @@ using System;
 public class LoadingScreenController : MonoBehaviour
 {
     [SerializeField] Image bgImage;
+    [SerializeField] Image loadingImage;
     Sequence sequence;
     public bool IsCompleteAnim { get; set; }
     public static LoadingScreenController i { get; private set; }
@@ -17,6 +18,11 @@ public class LoadingScreenController : MonoBehaviour
     {
         i = this;
         gameObject.SetActive(false);
+    }
+
+    void FixedUpdate()
+    {
+        loadingImage.transform.Rotate(Vector3.forward * 2f);
     }
 
 
