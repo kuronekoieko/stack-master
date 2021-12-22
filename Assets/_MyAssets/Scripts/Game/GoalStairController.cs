@@ -12,6 +12,8 @@ public class GoalStairController : MonoBehaviour
     [SerializeField] TextMeshPro textMeshPro;
     [SerializeField] ParticleSystem confetti_L;
     [SerializeField] ParticleSystem confetti_R;
+    [SerializeField] ParticleSystem confettiDirectional_L;
+    [SerializeField] ParticleSystem confettiDirectional_R;
 
     public float StepHeight => stepMr.transform.localScale.y;
     public float StepDepth => stepMr.transform.localScale.z;
@@ -38,5 +40,11 @@ public class GoalStairController : MonoBehaviour
         textMeshPro.DOFade(0, 1f).SetEase(Ease.InOutFlash, 2).SetLoops(-1);
         confetti_L.Play();
         confetti_R.Play();
+    }
+
+    public void Passed()
+    {
+        confettiDirectional_L.Play();
+        confettiDirectional_R.Play();
     }
 }

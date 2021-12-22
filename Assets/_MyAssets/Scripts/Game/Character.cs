@@ -223,7 +223,11 @@ public class Character : MonoBehaviour
             GoalLastCharacter();
             return;
         }
-  
+        else
+        {
+            goalStairController.Passed();
+        }
+
         if (characterManager.ActiveCount > 0) return;
         GoalLastCharacter();
     }
