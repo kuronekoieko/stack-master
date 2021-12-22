@@ -26,6 +26,7 @@ public class CameraController : MonoBehaviour
     {
         offset = transform.position - startPos;
         startLookTargetOffset = GetStartLookTarget() - characterManager.BottomCharacterPos;
+        transform.position = GetFollowPos();
         camTarget = GetLookTarget();
         transform.LookAt(camTarget);
     }
@@ -44,7 +45,6 @@ public class CameraController : MonoBehaviour
 
         if (isHit)
         {
-            Debug.Log(ray.GetPoint(enter));
             // ヒットした場合は平面の位置に点を移動
             return ray.GetPoint(enter);
         }
@@ -138,35 +138,27 @@ public class CameraController : MonoBehaviour
     void Follow2()
     {
         if (characterManager.ActiveCount == 0) return;
+        transform.position = Vector3.SmoothDamp(transform.position, GetFollowPos(), ref currentVelocity, 0.4f);
+        camTarget = Vector3.SmoothDamp(camTarget, GetLookTarget(), ref angleCurrentVelocity, 0.4f);
+        transform.LookAt(camTarget);
+    }
 
-        // float distance = Vector3.Distance(offset, Vector3.zero);
+    Vector3 GetFollowPos()
+    {
         Vector3 followOffset = offset;
 
-        // if (6 < characterManager.ActiveCount)
-        // {
-
-        // float rate = Mathf.Clamp(1 / (float)characterManager.ActiveCount * 2f, 1f, 3.5f);
-        //distance = distance * Mathf.Clamp(rate, 1f, 3.5f);
         float max = 15;
         followOffset.x *= Mathf.Clamp(characterManager.ActiveCount * 0.15f, 1f, max * 0.15f);
         followOffset.y *= Mathf.Clamp(characterManager.ActiveCount * 0.3f, 1f, (max + 10) * 0.3f);
         followOffset.z *= Mathf.Clamp(characterManager.ActiveCount * 0.15f, 1f, max * 0.15f);
-        //followOffset += followOffset * rate;
 
         RenderSettings.fogStartDistance = Mathf.Lerp(RenderSettings.fogStartDistance, 100f + (float)characterManager.ActiveCount * 1.5f, 0.5f * Time.deltaTime);
         RenderSettings.fogEndDistance = Mathf.Lerp(RenderSettings.fogEndDistance, 300f + RenderSettings.fogStartDistance, 0.5f * Time.deltaTime);
-        // }
 
         Vector3 bottomPos = characterManager.BottomCharacterPos;
         bottomPos.x = 0;
-        transform.position = Vector3.SmoothDamp(transform.position, bottomPos + followOffset, ref currentVelocity, 0.4f);
-        //transform.SetPosX((bottomPos + followOffset).x);
-        //  transform.SetPosZ((bottomPos + followOffset).z);
 
-
-        camTarget = Vector3.SmoothDamp(camTarget, GetLookTarget(), ref angleCurrentVelocity, 0.4f);
-
-        transform.LookAt(camTarget);
+        return bottomPos + followOffset;
     }
 
 
@@ -175,7 +167,6 @@ public class CameraController : MonoBehaviour
         float maxCount = 10;
         float currentCount = characterManager.ActiveCount;
         float towerCenterHeight = Mathf.Clamp(currentCount, 1f, maxCount) * characterManager.characterHeight / 2f;
-        //startLookTargetOffset.y = towerCenterHeight;
         var target = characterManager.BottomCharacterPos + startLookTargetOffset.normalized * towerCenterHeight;
         target.x = 0;
         return target;
