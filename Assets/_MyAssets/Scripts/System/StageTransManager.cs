@@ -49,11 +49,12 @@ public class StageTransManager
 
     void ShowInterstitial(Action onHidden)
     {
-        if (StageTransManager.i.CurrentDisplayStageNum % 3 != 0)
+        /*        if (StageTransManager.i.CurrentDisplayStageNum % 3 != 0)
         {
             onHidden();
             return;
-        }
+        }*/
+
 
         MaxSdkInterstitial.i.Show(onHidden);
     }
