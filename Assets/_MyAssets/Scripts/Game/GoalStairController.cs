@@ -16,9 +16,11 @@ public class GoalStairController : MonoBehaviour
     public float StepHeight => stepMr.transform.localScale.y;
     public float StepDepth => stepMr.transform.localScale.z;
     float goalRate;
+    public bool isLast { get; private set; }
 
-    public void OnInstansiate(float rate, Vector3 pos, float height, Color stepColor)
+    public void OnInstansiate(bool isLast, float rate, Vector3 pos, float height, Color stepColor)
     {
+        this.isLast = isLast;
         transform.position = pos;
         stepMr.material.color = stepColor;
         stepBaseMr.transform.localPosition -= Vector3.up * (height + StepHeight / 2f) / 2f;

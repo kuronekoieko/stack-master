@@ -21,9 +21,7 @@ public class SplashCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         gameObject.SetActive(true);
-        Color c = splashImage.color;
-        c.a = 0;
-        splashImage.color = c;
+        splashImage.SetAlpha(0);
         Sequence sequence = DOTween.Sequence()
         .Append(DOTween.ToAlpha(() => splashImage.color, color => splashImage.color = color, 1f, 0.5f).SetEase(Ease.InSine))
         .AppendInterval(2f)

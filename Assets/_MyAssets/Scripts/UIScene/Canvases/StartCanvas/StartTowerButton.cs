@@ -10,6 +10,7 @@ public class StartTowerButton : MonoBehaviour
     {
         Buy,
         RewardedAds,
+        Max,
     }
 
     [SerializeField] MyButton button;
@@ -23,12 +24,18 @@ public class StartTowerButton : MonoBehaviour
     {
         get
         {
+            if (CSVManager.i.PlayerLevelPriceTable.IsLast(SaveData.i.startHumanCount - 1))
+            {
+                state = State.Max;
+                return false;
+            }
+
             if (isViewedRewardedAds)
             {
                 return false;
             }
 
-            if (SaveData.i.currencyCount >= ParameterSettingSO.i.addStartTowerPrice)
+            if (SaveData.i.currencyCount >= Price)
             {
                 state = State.Buy;
                 return true;
@@ -38,6 +45,8 @@ public class StartTowerButton : MonoBehaviour
             return MaxSdkRewardedAds.i.IsRewardedAdReady;
         }
     }
+
+    int Price => CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.startHumanCount - 1).startTowerPrice;
 
     State state;
     bool isViewedRewardedAds;
@@ -51,6 +60,8 @@ public class StartTowerButton : MonoBehaviour
             .Subscribe(_ => ChangeButtonView(_));
         this.ObserveEveryValueChanged(_ => SaveData.i.startHumanCount)
             .Subscribe(_ => levelText.text = _.ToString());
+        this.ObserveEveryValueChanged(_ => Price)
+            .Subscribe(_ => priceText.text = _.ToString());
     }
 
     public void OnOpen()
@@ -67,7 +78,7 @@ public class StartTowerButton : MonoBehaviour
         switch (state)
         {
             case State.Buy:
-                SaveData.i.currencyCount -= ParameterSettingSO.i.addStartTowerPrice;
+                SaveData.i.currencyCount -= Price;
                 SaveData.i.startHumanCount++;
                 SaveDataManager.i.Save();
                 break;
@@ -101,7 +112,12 @@ public class StartTowerButton : MonoBehaviour
         freeText.gameObject.SetActive(state == State.RewardedAds);
         videoImage.gameObject.SetActive(state == State.RewardedAds);
 
-        priceText.text = ParameterSettingSO.i.addStartTowerPrice.ToString();
+        if (state == State.Max)
+        {
+            freeText.gameObject.SetActive(true);
+            freeText.text = "MAX";
+        }
+
     }
 
 }

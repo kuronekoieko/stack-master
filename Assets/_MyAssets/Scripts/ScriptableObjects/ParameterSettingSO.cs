@@ -5,16 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "MyGame/Create ParameterSettingSO", fileName = "ParameterSettingSO")]
 public class ParameterSettingSO : ScriptableObject
 {
-    [Header("アンロックボタンの値段")]
-    [Header("===スキン変更画面===")]
-    public int SkinUnlockRandomCurrency;
-    [Header("リワードボタンの報酬額")]
-    public int SkinRewardedCurrency;
-
-    [Header("===ギフト画面===")]
-    public GiftRewardData[] giftRewardDatas;
-    [Header("===スタート画面===")]
-    public int addStartTowerPrice;
 
 
     private static ParameterSettingSO _i;
