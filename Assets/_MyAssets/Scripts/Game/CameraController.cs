@@ -149,7 +149,7 @@ public class CameraController : MonoBehaviour
 
         float max = 15;
         followOffset.x *= Mathf.Clamp(characterManager.ActiveCount * 0.15f, 1f, max * 0.15f);
-        followOffset.y *= Mathf.Clamp(characterManager.ActiveCount * 0.3f, 1f, (max + 10) * 0.3f);
+        followOffset.y *= Mathf.Clamp(characterManager.ActiveCount * 0.3f, 1f, (max + 5) * 0.3f);
         followOffset.z *= Mathf.Clamp(characterManager.ActiveCount * 0.15f, 1f, max * 0.15f);
 
         RenderSettings.fogStartDistance = Mathf.Lerp(RenderSettings.fogStartDistance, 100f + (float)characterManager.ActiveCount * 1.5f, 0.5f * Time.deltaTime);

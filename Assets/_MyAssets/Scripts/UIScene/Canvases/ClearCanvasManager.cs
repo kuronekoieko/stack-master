@@ -33,7 +33,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
     public override void OnSceneLoaded()
     {
-       
+
     }
 
     public override void OnUpdate()
@@ -59,7 +59,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
         SaveDataManager.i.Save();
 
-        DOVirtual.DelayedCall(1.0f, () =>
+        DOVirtual.DelayedCall(2.0f, () =>
         {
             gameObject.SetActive(true);
             transform.localScale = Vector3.zero;
