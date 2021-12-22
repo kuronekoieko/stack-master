@@ -12,10 +12,16 @@ public class SplashController : MonoBehaviour
 
     public void ShowSplash()
     {
+
+        if (Application.isEditor)
+        {
+            IsCompleteAnim = true;
+            return;
+        }
+
         sequence = DOTween.Sequence()
         .AppendCallback(() =>
         {
-            Debug.Log("テスト スプラッシュ開始");
             gameObject.SetActive(true);
             splashImage.SetAlpha(0);
             IsCompleteAnim = false;
@@ -23,23 +29,23 @@ public class SplashController : MonoBehaviour
         .Append(DOTween.ToAlpha(() => splashImage.color, color => splashImage.color = color, 1f, 0.5f).SetEase(Ease.InSine))
         .OnComplete(() =>
         {
-            Debug.Log("テスト スプラッシュフェードイン終了");
             IsCompleteAnim = true;
         });
-
     }
 
 
     public void HideSplash()
     {
+        if (Application.isEditor)
+        {
+            return;
+        }
+
         sequence = DOTween.Sequence()
         .Append(DOTween.ToAlpha(() => splashImage.color, color => splashImage.color = color, 0f, 0.5f).SetEase(Ease.OutSine))
         .OnComplete(() =>
         {
-            // StageTransManager.i.ReLoadStage();
-            // StartCoroutine(WaitFirebaseInitialize());
             gameObject.SetActive(false);
-            Debug.Log("テスト スプラッシュおわり");
         });
     }
 }

@@ -9,7 +9,7 @@ public class StageSettingsSO : ScriptableObject
 {
     public GameObject[] stagePrefabs;
 
-    public static StageSettingsSO i;
+    public static StageSettingsSO i { get; set; }
 }
 
 [Serializable]

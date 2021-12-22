@@ -70,7 +70,7 @@ public class SkinSelectButtonManager : MonoBehaviour
         unlockButton.interactable = interactable;
     }
 
-    public void Generator<T>(int buttonCount, bool isCharacterSkin) where T : MonoBehaviour
+    public void Generator<T>(int buttonCount, bool isCharacterSkin) where T : MonoBehaviour, ISkinSelectButtonController
     {
         if (skinSelectControllers.Length > 0) { return; }
 
@@ -79,9 +79,10 @@ public class SkinSelectButtonManager : MonoBehaviour
         for (int i = 0; i < skinSelectControllers.Length; i++)
         {
             skinSelectControllers[i] = Instantiate(skinSelectPrefab, scrollViewContent);
-            skinSelectControllers[i].gameObject.AddComponent<T>();
-            skinSelectControllers[i].OnInstantiate(i, false);
 
+            skinSelectControllers[i].OnInstantiate(i, false);
+            T t = skinSelectControllers[i].gameObject.AddComponent<T>();
+            t.OnInstantiate();
         }
 
         int dummyButtonCount = skinSelectControllers.Length - skinSelectControllers.Length % contentsCountPerPage;
