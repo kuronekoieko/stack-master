@@ -18,7 +18,7 @@ public class Character : MonoBehaviour
     CharacterManager characterManager;
     public float Height => capsuleCollider.height;
     bool isMovingAppear;
-
+    SkinController skinController;
 
     /// <summary>
     /// startより先
@@ -48,7 +48,7 @@ public class Character : MonoBehaviour
 
     void OnChangedSkin(int selectedSkinIndex)
     {
-        SkinController skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
+        skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
         skinController.OnInstantiate();
         Destroy(animator.gameObject);
         animator = skinController.Animator;
@@ -73,6 +73,7 @@ public class Character : MonoBehaviour
 
     public void Move(float deltax, int index)
     {
+        skinController.EnableMesh(index < 24);
         // vel = rb.velocity;
         rb.SetVelocityZ(speedZ);
         // vel.z = speedZ;
@@ -119,6 +120,7 @@ public class Character : MonoBehaviour
 
     public void Stair(int index)
     {
+        skinController.EnableMesh(index < 24);
         rb.SetVelocityX(-transform.position.x * Variables.speedX);
         rb.SetVelocityY(0);
         rb.SetVelocityZ(speedZ * 2.0f);
