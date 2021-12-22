@@ -61,10 +61,10 @@ public class StageTransManager
     /// <summary>
     /// 現在のステージを再読み込みする
     /// </summary>
-    public void ReLoadStage()
+    public AsyncOperation ReLoadStage()
     {
         int sceneBuildIndex = 1;
-        SceneManager.LoadScene(sceneBuildIndex);
+        return SceneManager.LoadSceneAsync(sceneBuildIndex);
     }
 
     /// <summary>

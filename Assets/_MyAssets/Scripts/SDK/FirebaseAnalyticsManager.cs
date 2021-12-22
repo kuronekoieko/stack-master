@@ -10,17 +10,15 @@ using Firebase.Analytics;
 /// </summary>
 public class FirebaseAnalyticsManager : MonoBehaviour
 {
-    public static FirebaseAnalyticsManager i
-    {
-        get
-        {
-            if (_i == null) _i = FindObjectOfType<FirebaseAnalyticsManager>(true);
-            return _i;
-        }
-    }
+    public static FirebaseAnalyticsManager i => _i;
     private static FirebaseAnalyticsManager _i;
 
     bool isAvailable;
+
+    void Awake()
+    {
+        _i = this;
+    }
 
 
     public void Initialize()

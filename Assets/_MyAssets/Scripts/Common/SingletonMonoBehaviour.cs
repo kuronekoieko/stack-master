@@ -12,5 +12,5 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
             return _i;
         }
     }
-    private static T _i;
+    static T _i;
 }

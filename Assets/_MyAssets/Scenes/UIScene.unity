@@ -8955,7 +8955,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1369462038}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5cbbc05467609b46a5c6c5efc8edff6, type: 3}
+  m_Script: {fileID: 11500000, guid: e400f60f48b6d70458283bc5ff7ef181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   splashImage: {fileID: 761599576}
@@ -12956,7 +12956,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00012207031, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1859047142
@@ -14393,7 +14393,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasesParentTf: {fileID: 233245274872573424}
-  isSkipSplash: 1
+  splashController: {fileID: 1369462040}
+  stageSettingsSO: {fileID: 11400000, guid: 8c31c45d188ab7440901fed15c2f649e, type: 2}
 --- !u!114 &233245274573030856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15989,7 +15990,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.025146484}
+  m_AnchoredPosition: {x: 0, y: -0.024902344}
   m_SizeDelta: {x: 0, y: 0.049987793}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4124718550461269884
@@ -17384,7 +17385,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00024414062}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0.00097656}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &8049883988729086650
