@@ -61,10 +61,13 @@ public class StageTransManager
     /// <summary>
     /// 現在のステージを再読み込みする
     /// </summary>
-    public AsyncOperation ReLoadStage()
+    public AsyncOperation ReLoadStage(bool isSplash = false)
     {
         int sceneBuildIndex = 1;
-        return SceneManager.LoadSceneAsync(sceneBuildIndex);
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneBuildIndex);
+        asyncOperation.allowSceneActivation = false;
+        if (!isSplash) LoadingScreenController.i.Show(() => asyncOperation.allowSceneActivation = true);
+        return asyncOperation;
     }
 
     /// <summary>

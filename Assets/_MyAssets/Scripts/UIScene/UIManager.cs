@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UniRx;
 
 /// <summary>
 /// 画面UIの一括管理
@@ -12,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Transform canvasesParentTf;
     [SerializeField] SplashController splashController;
     [SerializeField] StageSettingsSO stageSettingsSO;
+    [SerializeField] LoadingScreenController loadingScreenController;
     BaseCanvasManager[] baseCanvasManagers;
     void Awake()
     {
@@ -19,7 +21,7 @@ public class UIManager : MonoBehaviour
         Application.targetFrameRate = 30;
         Variables.isLaunchUIScene = true;
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
-        SceneManager.sceneLoaded += SceneLoaded;
+        loadingScreenController.OnAwake();
     }
 
 
@@ -39,7 +41,7 @@ public class UIManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
-       
+        SceneManager.sceneLoaded += SceneLoaded;
         CSVManager.i.ParseCSV();
         SaveDataManager.i.LoadSaveData();
         StartCanvases();
@@ -54,7 +56,7 @@ public class UIManager : MonoBehaviour
         {
             yield return 0;
         }
-
+        asyncOperation.allowSceneActivation = true;
         splashController.HideSplash();
     }
 
@@ -82,5 +84,9 @@ public class UIManager : MonoBehaviour
             baseCanvasManager.OnSceneLoaded();
         }
         Variables.screenState = ScreenState.Start;
+
+        // 同じフレームだと、シーン生成でカクつくため
+        Observable.TimerFrame(1)
+            .Subscribe(_ => LoadingScreenController.i.Hide());
     }
 }

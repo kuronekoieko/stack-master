@@ -9,11 +9,12 @@ public class SplashController : MonoBehaviour
     [SerializeField] Image splashImage;
     Sequence sequence;
     public bool IsCompleteAnim { get; set; }
+    bool isShowSplash = false;
 
     public void ShowSplash()
     {
 
-        if (Application.isEditor)
+        if (Application.isEditor && !isShowSplash)
         {
             IsCompleteAnim = true;
             return;
@@ -36,7 +37,7 @@ public class SplashController : MonoBehaviour
 
     public void HideSplash()
     {
-        if (Application.isEditor)
+        if (Application.isEditor && !isShowSplash)
         {
             return;
         }
