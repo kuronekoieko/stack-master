@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System;
 using System.Linq;
+using UniRx;
 
 public class SkinProgress : MonoBehaviour
 {
@@ -29,6 +30,13 @@ public class SkinProgress : MonoBehaviour
         rateMaskTf.gameObject.SetActive(true);
         skinGetButton.onClick.AddListener(OnClickSkinGetButton);
         continueButton.onClick.AddListener(OnClickContinueButton);
+        this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
+            .Subscribe(_ => OnChangedRewardedAdReady(_));
+    }
+
+    void OnChangedRewardedAdReady(bool isRewardedAdReady)
+    {
+        skinGetButton.interactable = isRewardedAdReady;
     }
 
     public void OnOpen()
