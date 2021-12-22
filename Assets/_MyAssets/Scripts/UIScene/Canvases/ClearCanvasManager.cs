@@ -59,7 +59,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
         SaveDataManager.i.Save();
 
-        DOVirtual.DelayedCall(2.0f, () =>
+        DOVirtual.DelayedCall(2.5f, () =>
         {
             gameObject.SetActive(true);
             transform.localScale = Vector3.zero;
