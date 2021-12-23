@@ -14,7 +14,7 @@ public class LevelProgressIcon : MonoBehaviour
     public void Show(int level, bool isSelected, bool isCleared)
     {
         notSelectedImage.gameObject.SetActive(!isSelected);
-        selectedImage.gameObject.SetActive(isSelected);
+        selectedImage.gameObject.SetActive(isSelected || isCleared);
         arrowImage.gameObject.SetActive(isSelected);
         levelText.text = level.ToString();
         clearedImage.gameObject.SetActive(isCleared);
