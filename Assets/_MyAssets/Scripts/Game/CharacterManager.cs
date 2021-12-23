@@ -165,7 +165,7 @@ public class CharacterManager : MonoBehaviour
         }
 
         var killedCharacters = activeCharacters.Take(deadCount).ToArray();
-
+     
         for (int i = 0; i < killedCharacters.Length; i++)
         {
             killedCharacters[i].Dead(killedCharacters[i].transform.position, true);

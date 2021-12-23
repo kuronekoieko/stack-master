@@ -1,21 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using System;
 
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager i;
-    AudioSource audioSource;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioSource deadAudioSource;
+    bool isInterval;
 
     void Awake()
     {
-        if (i == null) i = this;
-        audioSource = GetComponent<AudioSource>();
+        i = this;
     }
 
-    public void OnStart()
-    {
-    }
 
     public void PlayOneShot(int resourceIndex)
     {
@@ -26,6 +26,16 @@ public class SoundManager : MonoBehaviour
         audioSource.PlayOneShot(clip);
     }
 
-    public bool IsPlaying => audioSource.isPlaying;
+
+    public void PlayOneShotDead()
+    {
+        if (isInterval) return;
+        deadAudioSource.PlayOneShot(SoundResourceSO.i.resources[2].audioClip);
+        isInterval = true;
+        Observable.Timer(TimeSpan.FromSeconds(0.1f)).Subscribe(_ =>
+        {
+            isInterval = false;
+        });
+    }
 
 }
