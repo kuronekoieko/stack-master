@@ -7,6 +7,7 @@ using System.Linq;
 public class TabController_Skin : MonoBehaviour
 {
     [SerializeField] SkinSelectButtonManager skinSelectButtonManager;
+    [SerializeField] NoticeImageController noticeImageController;
     bool EnableUnlockRandom => SaveData.i.currencyCount >= Price && skinSelectButtonManager.NotOwnIndexes.Count > 0;
     int Price
     {
@@ -36,7 +37,11 @@ public class TabController_Skin : MonoBehaviour
         };
 
         this.ObserveEveryValueChanged(_ => EnableUnlockRandom)
-            .Subscribe(_ => skinSelectButtonManager.OnChangedUnlockButtonInteractable(_));
+            .Subscribe(_ =>
+            {
+                noticeImageController.gameObject.SetActive(_);
+                skinSelectButtonManager.OnChangedUnlockButtonInteractable(_);
+            });
 
         this.ObserveEveryValueChanged(_ => Price)
             .Subscribe(_ => skinSelectButtonManager.OnChangedPrice(_));

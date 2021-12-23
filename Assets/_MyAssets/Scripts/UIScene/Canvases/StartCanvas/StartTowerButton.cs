@@ -19,6 +19,7 @@ public class StartTowerButton : MonoBehaviour
     [SerializeField] Image gemImage;
     [SerializeField] Image videoImage;
     [SerializeField] Text levelText;
+    [SerializeField] NoticeImageController noticeImageController;
 
     bool Interactive
     {
@@ -69,6 +70,8 @@ public class StartTowerButton : MonoBehaviour
             .Subscribe(_ => levelText.text = _.ToString());
         this.ObserveEveryValueChanged(_ => Price)
             .Subscribe(_ => priceText.text = _.ToString());
+        this.ObserveEveryValueChanged(_ => Interactive)
+            .Subscribe(_ => noticeImageController.gameObject.SetActive(_));
     }
 
     public void OnOpen()
