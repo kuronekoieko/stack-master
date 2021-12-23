@@ -13,6 +13,11 @@ public enum SkinSelectState
     Dummy = 3,
 }
 
+public interface ISkinSelectButtonController
+{
+    void OnInstantiate();
+}
+
 public class SkinSelectButtonController : MonoBehaviour
 {
     [SerializeField] MyButton selectbutton;

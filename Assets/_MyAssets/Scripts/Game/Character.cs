@@ -18,7 +18,7 @@ public class Character : MonoBehaviour
     CharacterManager characterManager;
     public float Height => capsuleCollider.height;
     bool isMovingAppear;
-
+    SkinController skinController;
 
     /// <summary>
     /// startより先
@@ -48,7 +48,7 @@ public class Character : MonoBehaviour
 
     void OnChangedSkin(int selectedSkinIndex)
     {
-        SkinController skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
+        skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
         skinController.OnInstantiate();
         Destroy(animator.gameObject);
         animator = skinController.Animator;
@@ -67,12 +67,17 @@ public class Character : MonoBehaviour
             isMovingAppear = false;
             capsuleCollider.enabled = true;
             boxCollider.enabled = true;
-            if (isOnSound) SoundManager.i?.PlayOneShot(0);
+            if (isOnSound)
+            {
+                SoundManager.i?.PlayOneShot(0);
+                //   VibrateManager.Play();
+            }
         });
     }
 
     public void Move(float deltax, int index)
     {
+        skinController.EnableMesh(index < 24);
         // vel = rb.velocity;
         rb.SetVelocityZ(speedZ);
         // vel.z = speedZ;
@@ -119,6 +124,7 @@ public class Character : MonoBehaviour
 
     public void Stair(int index)
     {
+        skinController.EnableMesh(index < 24);
         rb.SetVelocityX(-transform.position.x * Variables.speedX);
         rb.SetVelocityY(0);
         rb.SetVelocityZ(speedZ * 2.0f);
@@ -189,11 +195,7 @@ public class Character : MonoBehaviour
 
     public void Dead(Vector3 hitPos, bool isHitGate)
     {
-        if (SoundManager.i)
-        {
-            if (!SoundManager.i.IsPlaying) SoundManager.i.PlayOneShot(2);
-        }
-
+        SoundManager.i?.PlayOneShotDead();
         gameObject.SetActive(false);
         characterManager.pool.Remove(this);
 
@@ -223,7 +225,11 @@ public class Character : MonoBehaviour
             GoalLastCharacter();
             return;
         }
-  
+        else
+        {
+            goalStairController.Passed();
+        }
+
         if (characterManager.ActiveCount > 0) return;
         GoalLastCharacter();
     }

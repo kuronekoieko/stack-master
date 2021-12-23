@@ -10,10 +10,10 @@ public class CSVManager : SingletonMonoBehaviour<CSVManager>
     [SerializeField] TextAsset material_skin_price_table;
     [SerializeField] TextAsset player_level_price_table;
 
-    public List<LevelReward> LevelRewardTable;
-    public List<SkinPrice> CharacterSkinPrices;
-    public List<SkinPrice> MaterialSkinPrices;
-    public List<PlayerLevelPrice> PlayerLevelPriceTable;
+    public List<LevelReward> LevelRewardTable = new List<LevelReward>();
+    public List<SkinPrice> CharacterSkinPrices = new List<SkinPrice>();
+    public List<SkinPrice> MaterialSkinPrices = new List<SkinPrice>();
+    public List<PlayerLevelPrice> PlayerLevelPriceTable = new List<PlayerLevelPrice>();
 
     public void ParseCSV()
     {

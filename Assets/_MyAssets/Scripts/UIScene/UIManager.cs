@@ -11,44 +11,53 @@ using UniRx;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] Transform canvasesParentTf;
-    [SerializeField] bool isSkipSplash;
+    [SerializeField] SplashController splashController;
+    [SerializeField] LoadingScreenController loadingScreenController;
     BaseCanvasManager[] baseCanvasManagers;
-
     void Awake()
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
-        DontDestroyOnLoad(gameObject);
-        baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
-        FirebaseAnalyticsManager.i.Initialize();
         Variables.isLaunchUIScene = true;
-        CSVManager.i.ParseCSV();
+        baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
+        loadingScreenController.OnAwake();
+        DontDestroyOnLoad(gameObject);
     }
+
 
     void Start()
     {
-        SaveDataManager.i.LoadSaveData();
-        StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
-        SetCanvases();
-        // イベントにイベントハンドラーを追加
-        SceneManager.sceneLoaded += SceneLoaded;
-
-        if (!Application.isEditor)
-        {
-            Variables.screenState = ScreenState.Splash;
-            return;
-        }
-
-        if (!isSkipSplash)
-        {
-            Variables.screenState = ScreenState.Splash;
-            return;
-        }
-        StageTransManager.i.ReLoadStage();
-
+        StartCoroutine(LoadAsync());
     }
 
-    void SetCanvases()
+
+    private IEnumerator LoadAsync()
+    {
+        splashController.ShowSplash();
+
+        while (!splashController.IsCompleteAnim)
+        {
+            yield return 0;
+        }
+
+        SceneManager.sceneLoaded += SceneLoaded;
+        CSVManager.i.ParseCSV();
+        SaveDataManager.i.LoadSaveData();
+        StartCanvases();
+
+        FirebaseAnalyticsManager.i.Initialize();
+        StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
+        AsyncOperation asyncOperation = StageTransManager.i.ReLoadStage();
+
+        while (!asyncOperation.isDone)
+        {
+            yield return 0;
+        }
+        asyncOperation.allowSceneActivation = true;
+        splashController.HideSplash();
+    }
+
+    void StartCanvases()
     {
         foreach (var baseCanvasManager in baseCanvasManagers)
         {
@@ -72,5 +81,11 @@ public class UIManager : MonoBehaviour
             baseCanvasManager.OnSceneLoaded();
         }
         Variables.screenState = ScreenState.Start;
+
+        // 同じフレームだと、シーン生成でカクつくため
+        Observable.TimerFrame(1)
+            .Subscribe(_ => LoadingScreenController.i.Hide());
+
+        MaxSdkBanner.i.Show();
     }
 }

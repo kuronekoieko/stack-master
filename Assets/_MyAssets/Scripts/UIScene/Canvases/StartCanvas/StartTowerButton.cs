@@ -19,6 +19,7 @@ public class StartTowerButton : MonoBehaviour
     [SerializeField] Image gemImage;
     [SerializeField] Image videoImage;
     [SerializeField] Text levelText;
+    [SerializeField] NoticeImageController noticeImageController;
 
     bool Interactive
     {
@@ -46,8 +47,15 @@ public class StartTowerButton : MonoBehaviour
         }
     }
 
-    int Price => CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.startHumanCount - 1).startTowerPrice;
-
+    int Price
+    {
+        get
+        {
+            PlayerLevelPrice playerLevelPrice = CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.startHumanCount - 1);
+            if (playerLevelPrice == null) return 0;
+            return playerLevelPrice.startTowerPrice;
+        }
+    }
     State state;
     bool isViewedRewardedAds;
 
@@ -62,6 +70,8 @@ public class StartTowerButton : MonoBehaviour
             .Subscribe(_ => levelText.text = _.ToString());
         this.ObserveEveryValueChanged(_ => Price)
             .Subscribe(_ => priceText.text = _.ToString());
+        this.ObserveEveryValueChanged(_ => Interactive)
+            .Subscribe(_ => noticeImageController.gameObject.SetActive(_));
     }
 
     public void OnOpen()

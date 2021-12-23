@@ -19,6 +19,7 @@ public class OfflineIncomeButton : MonoBehaviour
     [SerializeField] Image gemImage;
     [SerializeField] Image videoImage;
     [SerializeField] Text levelText;
+    [SerializeField] NoticeImageController noticeImageController;
 
     bool Interactive
     {
@@ -45,7 +46,15 @@ public class OfflineIncomeButton : MonoBehaviour
             return MaxSdkRewardedAds.i.IsRewardedAdReady;
         }
     }
-    int Price => CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.offlineIncomeLevel - 1).offlineIncomePrice;
+    int Price
+    {
+        get
+        {
+            PlayerLevelPrice playerLevelPrice = CSVManager.i.PlayerLevelPriceTable.ClampIndex(SaveData.i.offlineIncomeLevel - 1);
+            if (playerLevelPrice == null) return 0;
+            return playerLevelPrice.offlineIncomePrice;
+        }
+    }
 
     State state;
     bool isViewedRewardedAds;
@@ -61,6 +70,8 @@ public class OfflineIncomeButton : MonoBehaviour
             .Subscribe(_ => levelText.text = _.ToString());
         this.ObserveEveryValueChanged(_ => Price)
             .Subscribe(_ => priceText.text = _.ToString());
+        this.ObserveEveryValueChanged(_ => Interactive)
+            .Subscribe(_ => noticeImageController.gameObject.SetActive(_));
     }
 
     public void OnOpen()

@@ -8,7 +8,15 @@ public class TabController_Material : MonoBehaviour
 {
     [SerializeField] SkinSelectButtonManager skinSelectButtonManager;
     bool EnableUnlockRandom => SaveData.i.currencyCount >= Price && skinSelectButtonManager.NotOwnIndexes.Count > 0;
-    int Price => CSVManager.i.MaterialSkinPrices.ClampIndex<SkinPrice>(PurchasedCount - 1).price;
+    int Price
+    {
+        get
+        {
+            SkinPrice skinPrice = CSVManager.i.MaterialSkinPrices.ClampIndex<SkinPrice>(PurchasedCount - 1);
+            if (skinPrice == null) return 0;
+            return skinPrice.price;
+        }
+    }
     int PurchasedCount => SaveData.i.materialSkinSaveDatas.Count(_ => _.isOwn);
 
     public void OnStart()

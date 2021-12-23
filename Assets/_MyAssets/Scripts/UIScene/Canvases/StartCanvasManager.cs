@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UniRx;
+using System.Linq;
 
 public class StartCanvasManager : BaseCanvasManager
 {
@@ -11,6 +13,18 @@ public class StartCanvasManager : BaseCanvasManager
     [SerializeField] MyButton skinButton;
     [SerializeField] StartTowerButton startTowerButton;
     [SerializeField] OfflineIncomeButton offlineIncomeButton;
+    [SerializeField] NoticeImageController skinButtonNotice;
+
+    bool EnableUnlockRandom => SaveData.i.currencyCount >= Price;
+    int Price
+    {
+        get
+        {
+            SkinPrice skinPrice = CSVManager.i.CharacterSkinPrices.ClampIndex<SkinPrice>(SaveData.i.characterSkinSaveDatas.Count(_ => _.isOwn) - 1);
+            if (skinPrice == null) return 0;
+            return skinPrice.price;
+        }
+    }
 
     public override void OnStart()
     {
@@ -18,6 +32,9 @@ public class StartCanvasManager : BaseCanvasManager
         skinButton.onClick.AddListener(() => Variables.screenState = ScreenState.Skin);
         offlineIncomeButton.OnStart();
         startTowerButton.OnStart();
+
+        this.ObserveEveryValueChanged(_ => EnableUnlockRandom)
+            .Subscribe(_ => skinButtonNotice.gameObject.SetActive(_));
     }
 
     protected override void OnOpen()
