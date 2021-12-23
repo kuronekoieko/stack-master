@@ -30,7 +30,6 @@ public class UIManager : MonoBehaviour
         StartCoroutine(LoadAsync());
     }
 
-
     private IEnumerator LoadAsync()
     {
         splashController.ShowSplash();
@@ -43,6 +42,7 @@ public class UIManager : MonoBehaviour
         SceneManager.sceneLoaded += SceneLoaded;
         CSVManager.i.ParseCSV();
         SaveDataManager.i.LoadSaveData();
+        SetPushNotification();
         StartCanvases();
 
         FirebaseAnalyticsManager.i.Initialize();
@@ -55,6 +55,44 @@ public class UIManager : MonoBehaviour
         }
         asyncOperation.allowSceneActivation = true;
         splashController.HideSplash();
+    }
+
+
+    void SetPushNotification()
+    {
+        if (SaveData.i.isFirstLaunch) return;
+        SaveData.i.isFirstLaunch = true;
+        SaveDataManager.i.Save();
+        // https://marumaro7.hatenablog.com/entry/localpush
+
+        //　Androidチャンネルの登録
+        //LocalPushNotification.RegisterChannel(引数1,引数２,引数３);
+        //引数１ Androidで使用するチャンネルID なんでもいい LocalPushNotification.AddSchedule()で使用する
+        //引数2　チャンネルの名前　なんでもいい　アプリ名でも入れておく
+        //引数3　通知の説明 なんでもいい　自分がわかる用に書いておくもの
+
+        // 説明を空文字にするとエラーで止まる
+        LocalPushNotification.RegisterChannel("day_1", "LocalPush", "aaa");
+        LocalPushNotification.RegisterChannel("day_3", "LocalPush", "aaa");
+        LocalPushNotification.RegisterChannel("day_5", "LocalPush", "aaa");
+        LocalPushNotification.RegisterChannel("day_7", "LocalPush", "aaa");
+
+        //通知のクリア
+        LocalPushNotification.AllClear();
+
+        // プッシュ通知の登録
+        //LocalPushNotification.AddSchedule(引数１,引数2,引数3,引数4,引数5);
+        //引数１ プッシュ通知のタイトル
+        //引数2　通知メッセージ
+        //引数3　表示するバッジの数(バッジ数はiOSのみ適用の様子 Androidで数値を入れても問題無い)
+        //引数4　何秒後に表示させるか？
+        //引数5　Androidで使用するチャンネルID　「Androidチャンネルの登録」で登録したチャンネルIDと合わせておく
+        //注意　iOSは45秒経過後からしかプッシュ通知が表示されない  
+        int day = 60 * 60 * 24;
+        LocalPushNotification.AddSchedule("Are you playing today😜?", "Play the game and build a tall tower now😂!", 1, day * 1, "day_1");
+        LocalPushNotification.AddSchedule("Are you playing today😜?", "Play the game and build a tall tower now😂!", 1, day * 3, "day_3");
+        LocalPushNotification.AddSchedule("Are you playing today😜?", "Play the game and build a tall tower now😂!", 1, day * 5, "day_5");
+        LocalPushNotification.AddSchedule("Are you playing today😜?", "Play the game and build a tall tower now😂!", 1, day * 7, "day_7");
     }
 
     void StartCanvases()
