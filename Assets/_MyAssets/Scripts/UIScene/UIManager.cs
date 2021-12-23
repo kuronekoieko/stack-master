@@ -12,7 +12,6 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] Transform canvasesParentTf;
     [SerializeField] SplashController splashController;
-    [SerializeField] StageSettingsSO stageSettingsSO;
     [SerializeField] LoadingScreenController loadingScreenController;
     BaseCanvasManager[] baseCanvasManagers;
     void Awake()
@@ -22,6 +21,7 @@ public class UIManager : MonoBehaviour
         Variables.isLaunchUIScene = true;
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
         loadingScreenController.OnAwake();
+        DontDestroyOnLoad(gameObject);
     }
 
 
@@ -40,15 +40,12 @@ public class UIManager : MonoBehaviour
             yield return 0;
         }
 
-        DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += SceneLoaded;
         CSVManager.i.ParseCSV();
         SaveDataManager.i.LoadSaveData();
         StartCanvases();
 
         FirebaseAnalyticsManager.i.Initialize();
-
-        StageSettingsSO.i = stageSettingsSO;
         StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
         AsyncOperation asyncOperation = StageTransManager.i.ReLoadStage();
 
@@ -88,5 +85,7 @@ public class UIManager : MonoBehaviour
         // 同じフレームだと、シーン生成でカクつくため
         Observable.TimerFrame(1)
             .Subscribe(_ => LoadingScreenController.i.Hide());
+
+        MaxSdkBanner.i.Show();
     }
 }

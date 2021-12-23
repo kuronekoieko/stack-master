@@ -67,7 +67,11 @@ public class Character : MonoBehaviour
             isMovingAppear = false;
             capsuleCollider.enabled = true;
             boxCollider.enabled = true;
-            if (isOnSound) SoundManager.i?.PlayOneShot(0);
+            if (isOnSound)
+            {
+                SoundManager.i?.PlayOneShot(0);
+                //   VibrateManager.Play();
+            }
         });
     }
 

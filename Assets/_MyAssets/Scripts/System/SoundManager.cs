@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
+using DG.Tweening;
 using System;
 
 public class SoundManager : MonoBehaviour
@@ -32,7 +32,7 @@ public class SoundManager : MonoBehaviour
         if (isInterval) return;
         deadAudioSource.PlayOneShot(SoundResourceSO.i.resources[2].audioClip);
         isInterval = true;
-        Observable.Timer(TimeSpan.FromSeconds(0.1f)).Subscribe(_ =>
+        DOVirtual.DelayedCall(0.1f, () =>
         {
             isInterval = false;
         });
