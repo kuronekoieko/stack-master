@@ -83,7 +83,7 @@ public class StartTowerButton : MonoBehaviour
 
     void OnClickLevelUpButton()
     {
-
+        SoundManager.i?.PlayOneShot(4);
         switch (state)
         {
             case State.Buy:
@@ -91,7 +91,6 @@ public class StartTowerButton : MonoBehaviour
                 SaveData.i.startHumanCount++;
                 SaveDataManager.i.Save();
                 FirebaseAnalyticsManager.i.LogEvent("start_tower_button", "purchased_" + SaveData.i.startHumanCount);
-                SoundManager.i?.PlayOneShot(4);
                 break;
             case State.RewardedAds:
                 Time.timeScale = 0;

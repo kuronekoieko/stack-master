@@ -83,7 +83,7 @@ public class OfflineIncomeButton : MonoBehaviour
 
     void OnClickLevelUpButton()
     {
-
+        SoundManager.i?.PlayOneShot(4);
         switch (state)
         {
             case State.Buy:
@@ -91,7 +91,6 @@ public class OfflineIncomeButton : MonoBehaviour
                 SaveData.i.offlineIncomeLevel++;
                 SaveDataManager.i.Save();
                 FirebaseAnalyticsManager.i.LogEvent("offline_income_button", "purchased");
-                SoundManager.i?.PlayOneShot(4);
                 break;
             case State.RewardedAds:
                 Time.timeScale = 0;
