@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UniRx;
+using System.Linq;
 
 public class StartCanvasManager : BaseCanvasManager
 {
@@ -10,14 +12,29 @@ public class StartCanvasManager : BaseCanvasManager
     [SerializeField] LevelProgressionManager levelProgressionManager;
     [SerializeField] MyButton skinButton;
     [SerializeField] StartTowerButton startTowerButton;
-    [SerializeField] MyButton offlineIncomeButton;
+    [SerializeField] OfflineIncomeButton offlineIncomeButton;
+    [SerializeField] NoticeImageController skinButtonNotice;
+
+    bool EnableUnlockRandom => SaveData.i.currencyCount >= Price;
+    int Price
+    {
+        get
+        {
+            SkinPrice skinPrice = CSVManager.i.CharacterSkinPrices.ClampIndex<SkinPrice>(SaveData.i.characterSkinSaveDatas.Count(_ => _.isOwn) - 1);
+            if (skinPrice == null) return 0;
+            return skinPrice.price;
+        }
+    }
 
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.Start);
         skinButton.onClick.AddListener(() => Variables.screenState = ScreenState.Skin);
-        offlineIncomeButton.onClick.AddListener(OnClickOfflineIncomeButton);
+        offlineIncomeButton.OnStart();
         startTowerButton.OnStart();
+
+        this.ObserveEveryValueChanged(_ => EnableUnlockRandom)
+            .Subscribe(_ => skinButtonNotice.gameObject.SetActive(_));
     }
 
     protected override void OnOpen()
@@ -26,6 +43,7 @@ public class StartCanvasManager : BaseCanvasManager
         tutrialController.OnOpen();
         levelProgressionManager.OnOpen();
         startTowerButton.OnOpen();
+        offlineIncomeButton.OnOpen();
     }
 
     public override void OnUpdate()
@@ -44,14 +62,6 @@ public class StartCanvasManager : BaseCanvasManager
     }
 
     public override void OnSceneLoaded()
-    {
-
-    }
-
-
-
-
-    void OnClickOfflineIncomeButton()
     {
 
     }

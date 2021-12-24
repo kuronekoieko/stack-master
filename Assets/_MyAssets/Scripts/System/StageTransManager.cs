@@ -49,11 +49,12 @@ public class StageTransManager
 
     void ShowInterstitial(Action onHidden)
     {
-        if (StageTransManager.i.CurrentDisplayStageNum % 3 != 0)
+        if (StageTransManager.i.CurrentDisplayStageNum == 1)
         {
             onHidden();
             return;
         }
+
 
         MaxSdkInterstitial.i.Show(onHidden);
     }
@@ -61,10 +62,13 @@ public class StageTransManager
     /// <summary>
     /// 現在のステージを再読み込みする
     /// </summary>
-    public void ReLoadStage()
+    public AsyncOperation ReLoadStage(bool isSplash = false)
     {
         int sceneBuildIndex = 1;
-        SceneManager.LoadScene(sceneBuildIndex);
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneBuildIndex);
+        asyncOperation.allowSceneActivation = false;
+        if (!isSplash) LoadingScreenController.i.Show(() => asyncOperation.allowSceneActivation = true);
+        return asyncOperation;
     }
 
     /// <summary>

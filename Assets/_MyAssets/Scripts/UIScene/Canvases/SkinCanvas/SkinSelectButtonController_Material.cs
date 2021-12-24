@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public class SkinSelectButtonController_Material : MonoBehaviour
+public class SkinSelectButtonController_Material : MonoBehaviour, ISkinSelectButtonController
 {
     bool IsOwn => SaveData.i.materialSkinSaveDatas[skinIndex].isOwn;
     bool IsSelected => SaveData.i.selectedMaterialIndex == skinIndex;
     int skinIndex;
     SkinSelectButtonController skinSelectButtonController;
 
-
-    void Awake()
+    public void OnInstantiate()
     {
         skinSelectButtonController = GetComponent<SkinSelectButtonController>();
         this.skinIndex = skinSelectButtonController.skinIndex;

@@ -42,9 +42,7 @@ public class MyButton : Button
         tween = DOVirtual.DelayedCall(delay, () =>
         {
             gameObject.SetActive(true);
-            Color color = image.color;
-            color.a = 0;
-            image.color = color;
+            image.SetAlpha(0);
             image.DOFade(1f, 1.5f);
         });
     }

@@ -31,11 +31,11 @@ public class CharacterManager : MonoBehaviour
         }
     }
     Vector3 bottomCharacterPos;
-    public int ActiveCount => activeCount;
-    int activeCount;
+    public int ActiveCount => pool.activelist.Count;
     float deltaX;
     public PlayerState playerState { get; set; } = PlayerState.BeforeStart;
     public ObjectPool pool;
+    public float characterHeight => characterPrefab.Height;
 
     public void OnAwake()
     {
@@ -54,12 +54,10 @@ public class CharacterManager : MonoBehaviour
             character.OnInstantiate(this);
         });
         pool.activelist[0].Appear(transform.position, transform.position, 0, false);
-        cameraController.SetOffset(pool.activelist[0].transform.position);
 
         this.ObserveEveryValueChanged(_ => pool.activelist.Count)
             .Subscribe(_ =>
             {
-                activeCount = _;
                 if (_ > 0) return;
                 if (Variables.screenState != ScreenState.Game) return;
                 if (playerState != PlayerState.Playing) return;
@@ -69,6 +67,8 @@ public class CharacterManager : MonoBehaviour
 
         this.ObserveEveryValueChanged(_ => SaveData.i.startHumanCount)
         .Subscribe(_ => OnChangedStartHumanCount(_));
+
+        cameraController.SetOffset(pool.activelist[0].transform.position);
     }
 
     void OnChangedStartHumanCount(int startHumanCount)
@@ -133,15 +133,6 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
-    public void Dance()
-    {
-        playerState = PlayerState.AfterFinishedGame;
-        for (int i = 0; i < pool.activelist.Count; i++)
-        {
-            pool.activelist[i].Dance();
-        }
-    }
-
     public void AppearToStack(int addCount, float addDelay, bool isOnSound)
     {
         Character topCharacter = pool.activelist[pool.activelist.Count - 1];
@@ -174,10 +165,10 @@ public class CharacterManager : MonoBehaviour
         }
 
         var killedCharacters = activeCharacters.Take(deadCount).ToArray();
-
+     
         for (int i = 0; i < killedCharacters.Length; i++)
         {
-            killedCharacters[i].Dead(Vector3.zero, true);
+            killedCharacters[i].Dead(killedCharacters[i].transform.position, true);
         }
     }
 }

@@ -55,6 +55,14 @@ public class SkinController : MonoBehaviour
 
     }
 
+    public void EnableMesh(bool enabled)
+    {
+        for (int i = 0; i < skinnedMeshRenderers.Length; i++)
+        {
+            skinnedMeshRenderers[i].enabled = enabled;
+        }
+    }
+
     public void ChangeLayersForAllChildren(string layerName)
     {
         ChangeLayersForChildren(transform, layerName);

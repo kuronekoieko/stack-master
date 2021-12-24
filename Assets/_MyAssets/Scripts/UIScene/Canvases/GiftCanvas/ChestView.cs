@@ -73,11 +73,14 @@ public class ChestView : MonoBehaviour
 
     int GetGemCount()
     {
+        LevelReward levelReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.CurrentDisplayStageNum - 1);
+        int baseReward = levelReward != null ? levelReward.chestsReward : 0;
+
         int randomInt = Random.Range(0, 100);
-        if (randomInt <= 10) return 100;
-        if (randomInt <= 30) return 75;
-        if (randomInt <= 60) return 50;
-        return 25;
+        if (randomInt <= 10) return baseReward * 4;
+        if (randomInt <= 30) return baseReward * 3;
+        if (randomInt <= 60) return baseReward * 2;
+        return baseReward * 1;
     }
 
     void OnChangeState()
@@ -107,11 +110,14 @@ public class ChestView : MonoBehaviour
                 button.gameObject.SetActive(false);
                 button.interactable = true;
 
-                gemCollectAnimManager.Anim(rectTransform.position, 0.5f);
+                gemCollectAnimManager.Anim(rectTransform.position, 0.5f, () =>
+                {
+                    SaveData.i.currencyCount += gemCount;
+                    SaveDataManager.i.Save();
+                });
 
                 gemCountText.text = gemCount.ToString();
-                SaveData.i.currencyCount += gemCount;
-                SaveDataManager.i.Save();
+
                 break;
             default:
                 break;

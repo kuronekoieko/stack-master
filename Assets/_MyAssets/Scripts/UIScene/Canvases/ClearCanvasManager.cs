@@ -16,8 +16,7 @@ public class ClearCanvasManager : BaseCanvasManager
     [SerializeField] SkinProgress skinProgress;
     [SerializeField] RectTransform gemImageRt;
     [SerializeField] GemCollectAnimManager gemCollectAnimManager;
-    int currencyBaseCount = 15;
-
+    int curencyCount;
 
     public override void OnStart()
     {
@@ -33,12 +32,11 @@ public class ClearCanvasManager : BaseCanvasManager
 
     public override void OnSceneLoaded()
     {
+
     }
 
     public override void OnUpdate()
     {
-
-
     }
 
     protected override void OnOpen()
@@ -53,13 +51,13 @@ public class ClearCanvasManager : BaseCanvasManager
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
         FirebaseAnalyticsManager.i.LogEvent_StageClear(StageTransManager.i.CurrentDisplayStageNum);
 
-        int curencyCount = Mathf.RoundToInt(Variables.goalRate * currencyBaseCount);
-        SaveData.i.currencyCount += curencyCount;
+        int baseClearReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.CurrentDisplayStageNum - 1).clearReward;
+        curencyCount = Mathf.RoundToInt(Variables.goalRate * baseClearReward);
         currencyCountText.text = "+" + curencyCount.ToString();
 
         SaveDataManager.i.Save();
 
-        DOVirtual.DelayedCall(1.0f, () =>
+        DOVirtual.DelayedCall(2.5f, () =>
         {
             gameObject.SetActive(true);
             transform.localScale = Vector3.zero;
@@ -70,6 +68,8 @@ public class ClearCanvasManager : BaseCanvasManager
                 gemCollectAnimManager.Anim(gemImageRt.position, 0.5f, () =>
                 {
                     OnCompleteSkinProgress(skinProgress.IsMax);
+                    SaveData.i.currencyCount += curencyCount;
+                    SaveDataManager.i.Save();
                 });
             });
 

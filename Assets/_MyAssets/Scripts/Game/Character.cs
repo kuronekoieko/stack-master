@@ -10,19 +10,15 @@ public class Character : MonoBehaviour
     [SerializeField] Rigidbody rb;
     [SerializeField] CapsuleCollider capsuleCollider;
     [SerializeField] BoxCollider boxCollider;
-    [SerializeField] ParticleSystem bloodPs;
-    [SerializeField] SpriteRenderer inkSr;
     [SerializeField] Animator animator;
+    [SerializeField] IncEffectController inkEffectController;
     [Inject] CameraController cameraController;
     float speedZ = 15f;
-    Vector3 vel;
     float currentVelocity;
     CharacterManager characterManager;
     public float Height => capsuleCollider.height;
-    Vector3 inkScale;
-    ParticleSystem[] bloodPsChildren;
     bool isMovingAppear;
-
+    SkinController skinController;
 
     /// <summary>
     /// startより先
@@ -30,15 +26,10 @@ public class Character : MonoBehaviour
     /// <param name="characterManager"></param>
     public void OnInstantiate(CharacterManager characterManager)
     {
-        bloodPsChildren = bloodPs.GetComponentsInChildren<ParticleSystem>();
+        inkEffectController.OnInstantiate();
+
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedSkinIndex)
             .Subscribe(_ => OnChangedSkin(_));
-
-        this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
-            .Subscribe(_ => OnChangedMaterial(_));
-
-        inkScale = inkSr.transform.lossyScale;
-        inkSr.gameObject.SetActive(false);
 
         this.characterManager = characterManager;
         capsuleCollider.enabled = false;
@@ -57,24 +48,11 @@ public class Character : MonoBehaviour
 
     void OnChangedSkin(int selectedSkinIndex)
     {
-        SkinController skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
+        skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
         skinController.OnInstantiate();
         Destroy(animator.gameObject);
         animator = skinController.Animator;
     }
-
-    void OnChangedMaterial(int selectedIndex)
-    {
-        inkSr.material = new Material(SkinSettingSO.i.characterMaterialDatas[selectedIndex].material);
-        for (int i = 0; i < bloodPsChildren.Length; i++)
-        {
-            ParticleSystem.MainModule main = bloodPsChildren[i].main;
-            main.startColor = inkSr.material.color;
-        }
-    }
-
-
-
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
@@ -89,28 +67,36 @@ public class Character : MonoBehaviour
             isMovingAppear = false;
             capsuleCollider.enabled = true;
             boxCollider.enabled = true;
-            if (isOnSound) SoundManager.i?.PlayOneShot(0);
+            if (isOnSound)
+            {
+                SoundManager.i?.PlayOneShot(0);
+                //   VibrateManager.Play();
+            }
         });
     }
 
     public void Move(float deltax, int index)
     {
-        vel = rb.velocity;
-        vel.z = speedZ;
-        vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX);
-        if (float.IsNaN(vel.x)) vel.x = 0;
-        rb.velocity = vel;
+        skinController.EnableMesh(index < 24);
+        // vel = rb.velocity;
+        rb.SetVelocityZ(speedZ);
+        // vel.z = speedZ;
+        rb.SetVelocityX(Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX));
+        //vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX);
+        // if (float.IsNaN(vel.x)) vel.x = 0;
+        // rb.velocity = vel;
 
         rb.mass = characterManager.pool.activelist.Count - index;
 
         if (characterManager.pool.activelist[0] == this)
         {
-            animator.SetBool("IsRun", true);
+            animator.SetTrigger("Run");
             rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
         }
         else
         {
-            animator.SetBool("IsFall", true);
+            animator.SetTrigger("Fall");
+
             PosCorrect();
 
             float distance = rb.position.y - characterManager.pool.activelist[index - 1].rb.position.y;
@@ -138,22 +124,17 @@ public class Character : MonoBehaviour
 
     public void Stair(int index)
     {
-        var vel = rb.velocity;
-        vel.x = -transform.position.x * Variables.speedX;
-        vel.z = speedZ * 2.0f;
-        vel.y = 0;
-        rb.velocity = vel;
+        skinController.EnableMesh(index < 24);
+        rb.SetVelocityX(-transform.position.x * Variables.speedX);
+        rb.SetVelocityY(0);
+        rb.SetVelocityZ(speedZ * 2.0f);
+
+        PosCorrect();
     }
 
     public void Stop()
     {
         rb.velocity = Vector3.zero;
-    }
-
-    public void Dance()
-    {
-        transform.forward = -transform.forward;
-        animator.SetBool("IsDance", true);
     }
 
     void OnTriggerEnter(Collider other)
@@ -209,49 +190,58 @@ public class Character : MonoBehaviour
     {
         var goalStair = other.gameObject.GetComponent<GoalStairController>();
         if (goalStair == null) return;
-        Leave();
+        Leave(goalStair);
     }
 
     public void Dead(Vector3 hitPos, bool isHitGate)
     {
-        if (SoundManager.i)
-        {
-            if (!SoundManager.i.IsPlaying) SoundManager.i.PlayOneShot(2);
-        }
-
+        SoundManager.i?.PlayOneShotDead();
         gameObject.SetActive(false);
         characterManager.pool.Remove(this);
 
-        bloodPs.transform.parent = null;
-        var pos = transform.position;
-        pos.y += Height / 2f;
-        bloodPs.transform.position = pos;
-        bloodPs.Play();
+        inkEffectController.PlayBloodParticle(hitPos, Height);
 
         if (isHitGate) return;
 
-        inkSr.gameObject.SetActive(true);
-        inkSr.transform.parent = null;
-        inkSr.transform.localScale = Vector3.zero;
-        hitPos.z -= 0.1f;
-        hitPos.y += Height / 2f;
-        inkSr.transform.position = hitPos;
-        inkSr.transform.DOScale(inkScale, 0.5f);
+        inkEffectController.ShowInkSprite(hitPos, Height);
     }
 
-    void Leave()
+    bool isLeft;
+    void Leave(GoalStairController goalStairController)
     {
+        // 1フレームに複数回判定するため
+        if (isLeft) return;
+        isLeft = true;
+
         // 階段で止まったときに例外的にアクティブにしたいから
         characterManager.pool.activelist.Remove(this);
         rb.isKinematic = true;
-        animator.SetBool("IsFall", false);
-        animator.SetBool("IsRun", false);
+        animator.ResetTrigger("Run");
+        animator.ResetTrigger("Fall");
+        animator.SetTrigger("Idle");
+
+        if (goalStairController.isLast)
+        {
+            GoalLastCharacter();
+            return;
+        }
+        else
+        {
+            goalStairController.Passed();
+        }
 
         if (characterManager.ActiveCount > 0) return;
-        animator.SetBool("IsDance", true);
+        GoalLastCharacter();
+    }
+
+    void GoalLastCharacter()
+    {
+
+        animator.SetTrigger("Dance");
         transform.forward = Vector3.back;
         cameraController.CameraState = CameraState.Rotate;
         Variables.screenState = ScreenState.Clear;
+        characterManager.playerState = PlayerState.AfterFinishedGame;
 
         Variables.goalRate = 1.0f;
 

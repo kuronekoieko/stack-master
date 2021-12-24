@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4051862753993376431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3692140955593436931}
+  - component: {fileID: 5104617832543641744}
+  m_Layer: 0
+  m_Name: CSVManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3692140955593436931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4051862753993376431}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5104617832543641744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4051862753993376431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8e9f93b6cb735e46868d24e3139f8e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level_reward_table: {fileID: 4900000, guid: f905d167033fe8643b6d20955829a362, type: 3}
+  character_skin_price_table: {fileID: 4900000, guid: 0656af94783a7694faf573274f3f24cd, type: 3}
+  material_skin_price_table: {fileID: 4900000, guid: 2c3698e4b3d9a5d4a82a4f0053bee033, type: 3}
+  player_level_price_table: {fileID: 4900000, guid: 0c13aaeb459fa34459b8c48585f7876f, type: 3}

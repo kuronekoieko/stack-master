@@ -12,13 +12,17 @@ public class GoalStairController : MonoBehaviour
     [SerializeField] TextMeshPro textMeshPro;
     [SerializeField] ParticleSystem confetti_L;
     [SerializeField] ParticleSystem confetti_R;
+    [SerializeField] ParticleSystem confettiDirectional_L;
+    [SerializeField] ParticleSystem confettiDirectional_R;
 
     public float StepHeight => stepMr.transform.localScale.y;
     public float StepDepth => stepMr.transform.localScale.z;
     float goalRate;
+    public bool isLast { get; private set; }
 
-    public void OnInstansiate(float rate, Vector3 pos, float height, Color stepColor)
+    public void OnInstansiate(bool isLast, float rate, Vector3 pos, float height, Color stepColor)
     {
+        this.isLast = isLast;
         transform.position = pos;
         stepMr.material.color = stepColor;
         stepBaseMr.transform.localPosition -= Vector3.up * (height + StepHeight / 2f) / 2f;
@@ -36,5 +40,11 @@ public class GoalStairController : MonoBehaviour
         textMeshPro.DOFade(0, 1f).SetEase(Ease.InOutFlash, 2).SetLoops(-1);
         confetti_L.Play();
         confetti_R.Play();
+    }
+
+    public void Passed()
+    {
+        confettiDirectional_L.Play();
+        confettiDirectional_R.Play();
     }
 }

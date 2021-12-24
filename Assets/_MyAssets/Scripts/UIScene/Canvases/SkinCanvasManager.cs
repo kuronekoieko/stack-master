@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using System.Linq;
 
 public class SkinCanvasManager : BaseCanvasManager
 {
@@ -12,6 +13,7 @@ public class SkinCanvasManager : BaseCanvasManager
     [SerializeField] TabController_Material tabController_Material;
     [SerializeField] Transform skinPreviewParent;
     SkinController previewSkin;
+ 
 
     public override void OnStart()
     {

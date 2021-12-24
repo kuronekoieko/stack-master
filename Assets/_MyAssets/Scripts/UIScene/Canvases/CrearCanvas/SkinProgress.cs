@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System;
 using System.Linq;
+using UniRx;
 
 public class SkinProgress : MonoBehaviour
 {
@@ -29,6 +30,13 @@ public class SkinProgress : MonoBehaviour
         rateMaskTf.gameObject.SetActive(true);
         skinGetButton.onClick.AddListener(OnClickSkinGetButton);
         continueButton.onClick.AddListener(OnClickContinueButton);
+        this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
+            .Subscribe(_ => OnChangedRewardedAdReady(_));
+    }
+
+    void OnChangedRewardedAdReady(bool isRewardedAdReady)
+    {
+        skinGetButton.interactable = isRewardedAdReady;
     }
 
     public void OnOpen()
@@ -66,7 +74,7 @@ public class SkinProgress : MonoBehaviour
         defaultSkin.RectTransform.anchoredPosition3D = Vector3.forward * -2f;
 
         rateMaskTf.transform.localScale = new Vector3(1, 1f - (float)SaveData.i.unlockingSkin.percentage / 100f, 1);
-        rateText.text = SaveData.i.unlockingSkin.percentage.ToString();
+        rateText.text = SaveData.i.unlockingSkin.percentage + " %";
     }
 
 
@@ -83,8 +91,8 @@ public class SkinProgress : MonoBehaviour
             return;
         }
 
-        SkinSaveData skinSaveData = notOwns[UnityEngine.Random.Range(0, notOwns.Length)];
-        SaveData.i.unlockingSkin.index = SaveData.i.characterSkinSaveDatas.IndexOf(skinSaveData);
+        notOwns.GetRandom<SkinSaveData>(out int index);
+        SaveData.i.unlockingSkin.index = index;
         SaveData.i.unlockingSkin.percentage = 0;
 
     }
@@ -110,7 +118,7 @@ public class SkinProgress : MonoBehaviour
         .Append(rateMaskTf.transform.DOScaleY(1f - (float)endVal / 100f, duration).SetEase(Ease.Linear))
         .Join(
             DOTween.To(() => nowNumber, (n) => nowNumber = n, endVal, duration)
-            .OnUpdate(() => rateText.text = nowNumber.ToString())
+            .OnUpdate(() => rateText.text = nowNumber + " %")
             .SetEase(Ease.Linear)
             );
 
@@ -125,9 +133,9 @@ public class SkinProgress : MonoBehaviour
         .Append(modelsCenter.transform.DOScale(1.5f, 0.5f).SetEase(Ease.OutBack))
         .AppendCallback(() =>
         {
-            outlineSkin.Animator.SetBool("IsDance", true);
-            maskSkin.Animator.SetBool("IsDance", true);
-            defaultSkin.Animator.SetBool("IsDance", true);
+            outlineSkin.Animator.SetTrigger("Dance");
+            maskSkin.Animator.SetTrigger("Dance");
+            defaultSkin.Animator.SetTrigger("Dance");
             skinGetButton.Show_ScaleAnim();
         })
         .AppendInterval(1.5f)
