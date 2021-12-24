@@ -91,6 +91,7 @@ public class OfflineIncomeButton : MonoBehaviour
                 SaveData.i.currencyCount -= Price;
                 SaveData.i.offlineIncomeLevel++;
                 SaveDataManager.i.Save();
+                FirebaseAnalyticsManager.i.LogEvent("offline_income_button", "purchased");
                 break;
             case State.RewardedAds:
                 Time.timeScale = 0;
@@ -103,6 +104,7 @@ public class OfflineIncomeButton : MonoBehaviour
                         SaveDataManager.i.Save();
                         isViewedRewardedAds = true;
                         state = State.Buy;
+                        FirebaseAnalyticsManager.i.LogEvent("offline_income_button", "reward_video");
                     },
                     onNotRewarded: () =>
                     {
