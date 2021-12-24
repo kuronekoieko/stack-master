@@ -31,6 +31,12 @@ public class GoalStairController : MonoBehaviour
         stepBaseMr.transform.localScale = scale;
         textMeshPro.text = "x " + rate.ToString("F1");
         goalRate = rate;
+
+        if (isLast)
+        {
+            stepMr.material.color = Color.gray;
+            textMeshPro.gameObject.SetActive(false);
+        }
     }
 
     public void Selected()

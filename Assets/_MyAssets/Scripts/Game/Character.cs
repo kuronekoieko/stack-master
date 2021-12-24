@@ -175,15 +175,20 @@ public class Character : MonoBehaviour
 
     void OnTriggerEnterGoal(Collider other)
     {
-        var goal = other.gameObject.GetComponent<GoalController>();
-        if (goal == null) return;
-        // if (Variables.screenState != ScreenState.Game) return;
+        if (GoalController.i.gameObject != other.gameObject) return;
+        if (characterManager.playerState != PlayerState.Playing) return;
         // Variables.screenState = ScreenState.Clear;
         // speedZ = 0;
         // characterManager.Dance();
         // cameraController.IsFollow = false;
         characterManager.playerState = PlayerState.GoalBonus;
         cameraController.CameraState = CameraState.ClimbingStairs;
+
+        for (int i = 0; i < characterManager.pool.activelist.Count; i++)
+        {
+            var character = characterManager.pool.activelist[i];
+            character.transform.SetPosY(GoalController.i.gameObject.transform.position.y + i * Height);
+        }
     }
 
     void OnTriggerEnterGoalStair(Collider other)
