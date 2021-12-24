@@ -163,6 +163,7 @@ public class Character : MonoBehaviour
         {
             int addCount = gate.ArithmeticOperator == ArithmeticOperator.Plus ? gate.Count : characterManager.ActiveCount * (gate.Count - 1);
             characterManager.AppearToStack(addCount, 0.05f, true);
+            AddCountTextEffect.i.Show(addCount, characterManager.BottomCharacterPos);
         }
         else
         {
