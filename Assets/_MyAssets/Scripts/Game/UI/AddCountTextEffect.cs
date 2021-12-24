@@ -6,32 +6,39 @@ using DG.Tweening;
 public class AddCountTextEffect : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI textMeshProUGUI;
-    [SerializeField] Camera uiCamera;
-    [SerializeField] RectTransform canvasRt;
     RectTransform rectTransform;
-    public static AddCountTextEffect i;
+    public Transform target;
 
-    void Awake()
+
+    public void OnInstantiate()
     {
-        i = this;
         gameObject.SetActive(false);
         rectTransform = GetComponent<RectTransform>();
     }
 
 
 
-    public void Show(int count, Vector3 worldPos)
+    public void Show(int count)
     {
         gameObject.SetActive(true);
         textMeshProUGUI.text = "+" + count;
-        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(uiCamera, worldPos);
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, screenPos, uiCamera, out Vector2 pos);
-        Vector2 offset;
-        offset.x = 0f * (float)Screen.width / 1334f;
-        offset.y = 150f * (float)Screen.height / 1334f;
-        rectTransform.anchoredPosition3D = pos + offset;
-        rectTransform.DOLocalMoveY(100f * (float)Screen.height / 1334f, 1.0f).SetRelative();
+        textMeshProUGUI.transform.localPosition = Vector3.zero;
+        textMeshProUGUI.transform.DOLocalMoveY(200f * (float)Screen.height / 1334f, 1.0f).SetRelative();
         textMeshProUGUI.SetAlpha(1f);
-        textMeshProUGUI.DOFade(0, 0.7f).SetDelay(0.3f);
+        textMeshProUGUI.DOFade(0, 0.7f).SetDelay(0.3f).OnComplete(() =>
+        {
+            gameObject.SetActive(false);
+        });
+    }
+
+    void LateUpdate()
+    {
+        if (target == null) return;
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(AddCountTextEffectManager.i.uiCamera, target.position);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(AddCountTextEffectManager.i.canvasRt, screenPos, AddCountTextEffectManager.i.uiCamera, out Vector2 pos);
+        Vector2 offset;
+        offset.x = 150f * (float)Screen.width / 1334f;
+        offset.y = 0f * (float)Screen.height / 1334f;
+        rectTransform.anchoredPosition3D = pos + offset;
     }
 }

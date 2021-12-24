@@ -67,10 +67,12 @@ public class Character : MonoBehaviour
             isMovingAppear = false;
             capsuleCollider.enabled = true;
             boxCollider.enabled = true;
+
             if (isOnSound)
             {
                 SoundManager.i?.PlayOneShot(0);
                 //   VibrateManager.Play();
+                AddCountTextEffectManager.i.Show(1, transform);
             }
         });
     }
@@ -163,7 +165,6 @@ public class Character : MonoBehaviour
         {
             int addCount = gate.ArithmeticOperator == ArithmeticOperator.Plus ? gate.Count : characterManager.ActiveCount * (gate.Count - 1);
             characterManager.AppearToStack(addCount, 0.05f, true);
-            AddCountTextEffect.i.Show(addCount, characterManager.BottomCharacterPos);
         }
         else
         {

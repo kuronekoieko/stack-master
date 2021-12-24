@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [Inject] CameraController cameraController;
     [Inject] BackgroundManager backgroundManager;
     [Inject] StageManager stageManager;
+    [Inject] AddCountTextEffectManager addCountTextEffectManager;
+
 
     void Awake()
     {
@@ -32,6 +34,7 @@ public class GameManager : MonoBehaviour
         yield return null;
         backgroundManager.OnStart();
         yield return null;
+        addCountTextEffectManager.OnStart();
     }
 
     void Update()
