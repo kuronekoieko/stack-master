@@ -12,6 +12,7 @@ public class Character : MonoBehaviour
     [SerializeField] BoxCollider boxCollider;
     [SerializeField] Animator animator;
     [SerializeField] IncEffectController inkEffectController;
+    [SerializeField] ParticleSystem appearPs;
     [Inject] CameraController cameraController;
     float speedZ = 15f;
     float currentVelocity;
@@ -73,6 +74,7 @@ public class Character : MonoBehaviour
                 SoundManager.i?.PlayOneShot(0);
                 //   VibrateManager.Play();
                 AddCountTextEffectManager.i.Show(1, transform);
+                appearPs.Play();
             }
         });
     }
