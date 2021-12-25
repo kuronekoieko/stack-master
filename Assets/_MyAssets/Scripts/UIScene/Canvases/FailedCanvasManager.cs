@@ -50,8 +50,14 @@ public class FailedCanvasManager : BaseCanvasManager
 
     void OnClickRestartButton()
     {
-        StageTransManager.i.ReLoadStage();
         SoundManager.i.PlayOneShot(0);
+
+        Time.timeScale = 0;
+        MaxSdkInterstitial.i.Show(() =>
+        {
+            StageTransManager.i.ReLoadStage();
+            Time.timeScale = 1;
+        });
     }
 
     void OnClickHomeButton()
