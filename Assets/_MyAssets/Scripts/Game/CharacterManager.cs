@@ -40,7 +40,7 @@ public class CharacterManager : MonoBehaviour
     public void OnAwake()
     {
         dummyGo.SetActive(false);
-        pool.CreateInstance(characterPrefab, 100, (character) =>
+        pool.CreateInstance(characterPrefab, 40, (character) =>
         {
             character.OnInstantiate(this);
         });
@@ -165,7 +165,7 @@ public class CharacterManager : MonoBehaviour
         }
 
         var killedCharacters = activeCharacters.Take(deadCount).ToArray();
-     
+
         for (int i = 0; i < killedCharacters.Length; i++)
         {
             killedCharacters[i].Dead(killedCharacters[i].transform.position, true);

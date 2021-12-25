@@ -174,6 +174,7 @@ public class SkinProgress : MonoBehaviour
                 SaveDataManager.i.Save();
                 skinGetButton.enabled = false;
                 continueButton.enabled = false;
+                FirebaseAnalyticsManager.i.LogEvent("skin_get_button", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
             },
             onNotRewarded: () =>
             {
@@ -193,6 +194,7 @@ public class SkinProgress : MonoBehaviour
         {
             StageTransManager.i.LoadNextStage();
         }
+        FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
     }
 
     public void OnClose()

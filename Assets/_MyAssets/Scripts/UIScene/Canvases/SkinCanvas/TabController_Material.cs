@@ -27,6 +27,7 @@ public class TabController_Material : MonoBehaviour
         {
             SaveData.i.currencyCount += Price;
             SaveDataManager.i.Save();
+            FirebaseAnalyticsManager.i.LogEvent("material_skin", "reward_video_button");
         };
         skinSelectButtonManager.OnCompleteUnlock = (randomInt) =>
         {
@@ -34,6 +35,7 @@ public class TabController_Material : MonoBehaviour
             SaveData.i.materialSkinSaveDatas[randomInt].isOwn = true;
             SaveData.i.selectedMaterialIndex = randomInt;
             SaveDataManager.i.Save();
+            FirebaseAnalyticsManager.i.LogEvent("material_skin", "unlock_random_button");
         };
 
         this.ObserveEveryValueChanged(_ => EnableUnlockRandom)

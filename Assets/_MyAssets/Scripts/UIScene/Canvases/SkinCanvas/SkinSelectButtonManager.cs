@@ -156,7 +156,7 @@ public class SkinSelectButtonManager : MonoBehaviour
 
     void OnClickUnlockButton()
     {
-        SoundManager.i.PlayOneShot(0);
+        SoundManager.i.PlayOneShot(4);
         UnlockRandom();
     }
 

@@ -35,6 +35,7 @@ public class SkinSelectButtonController_Material : MonoBehaviour, ISkinSelectBut
         if (skinSelectButtonController.SelectState != SkinSelectState.Unlock) { return; }
         SaveData.i.selectedMaterialIndex = skinIndex;
         SaveDataManager.i.Save();
+        SoundManager.i?.PlayOneShot(3);
         // ここではセーブデータの入れ替えだけにして、実際の処理はunirxで起動するようにする
     }
 
