@@ -30,7 +30,7 @@ public class StageTransManager
     public void LoadStageOnAppLaunch(int startDisplayStageNum)
     {
         CurrentDisplayStageNum = startDisplayStageNum;
-        stageLength = StageSettingsSO.i.stagePrefabs.Length;
+        stageLength = StageSettingsSO.i.stageDatas.Length;
     }
 
     /// <summary>
