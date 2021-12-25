@@ -50,6 +50,8 @@ public class MyButton : Button
     public void Hide()
     {
         gameObject.SetActive(false);
+        // do virtualのときはもともとfalseなので
+        if (tween != null) tween.Kill();
     }
 
 
