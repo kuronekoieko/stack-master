@@ -29,6 +29,7 @@ public class SaveData
     public UnlockingSkin unlockingSkin = new UnlockingSkin();
     public int startHumanCount = 1;
     public int offlineIncomeLevel = 1;
+    public bool isFirstLaunch;
 }
 
 /// <summary>

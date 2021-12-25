@@ -44,6 +44,11 @@ public class StartCanvasManager : BaseCanvasManager
         levelProgressionManager.OnOpen();
         startTowerButton.OnOpen();
         offlineIncomeButton.OnOpen();
+
+        // チュートリアル（バッジが表示されるため）
+        startTowerButton.gameObject.SetActive(StageTransManager.i.CurrentDisplayStageNum > 1);
+        offlineIncomeButton.gameObject.SetActive(StageTransManager.i.CurrentDisplayStageNum > 1);
+        skinButton.gameObject.SetActive(StageTransManager.i.CurrentDisplayStageNum > 1);
     }
 
     public override void OnUpdate()

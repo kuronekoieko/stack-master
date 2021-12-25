@@ -54,8 +54,6 @@ public class StageTransManager
             onHidden();
             return;
         }
-
-
         MaxSdkInterstitial.i.Show(onHidden);
     }
 

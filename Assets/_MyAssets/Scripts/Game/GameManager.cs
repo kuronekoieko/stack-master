@@ -9,20 +9,33 @@ public class GameManager : MonoBehaviour
     [Inject] CameraController cameraController;
     [Inject] BackgroundManager backgroundManager;
     [Inject] StageManager stageManager;
+    [Inject] AddCountTextEffectManager addCountTextEffectManager;
+
 
     void Awake()
     {
-        characterManager.OnAwake();
-        backgroundManager.OnAwake();
-        stageManager.OnAwake();
+
     }
 
     void Start()
     {
-        characterManager.OnStart();
-        backgroundManager.OnStart();
+        StartCoroutine(LoadAsync());
     }
 
+    private IEnumerator LoadAsync()
+    {
+        characterManager.OnAwake();
+        yield return null;
+        backgroundManager.OnAwake();
+        yield return null;
+        stageManager.OnAwake();
+        yield return null;
+        characterManager.OnStart();
+        yield return null;
+        backgroundManager.OnStart();
+        yield return null;
+        addCountTextEffectManager.OnStart();
+    }
 
     void Update()
     {
@@ -32,10 +45,5 @@ public class GameManager : MonoBehaviour
     void LateUpdate()
     {
         cameraController.OnLateUpdate();
-    }
-
-    void FixedUpdate()
-    {
-
     }
 }

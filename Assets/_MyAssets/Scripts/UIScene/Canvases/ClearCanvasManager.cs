@@ -49,7 +49,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
         SoundManager.i.PlayOneShot(1);
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
-        FirebaseAnalyticsManager.i.LogEvent_StageClear(StageTransManager.i.CurrentDisplayStageNum);
+        FirebaseAnalyticsManager.i.LogEvent("level_clear" ,"level_" + StageTransManager.i.CurrentDisplayStageNum);
 
         int baseClearReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.CurrentDisplayStageNum - 1).clearReward;
         curencyCount = Mathf.RoundToInt(Variables.goalRate * baseClearReward);

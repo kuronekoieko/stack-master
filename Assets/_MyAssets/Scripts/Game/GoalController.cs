@@ -8,6 +8,7 @@ public class GoalController : MonoBehaviour
     [SerializeField] GoalStairController firstGoalStair;
     [SerializeField] Color[] stepColors;
     GoalStairController[] goalStairs;
+    public static GoalController i;
 
     float stepHeight;
     float stepDepth;
@@ -15,7 +16,8 @@ public class GoalController : MonoBehaviour
 
     void Awake()
     {
-        int stepCount = 50;
+        i = this;
+        int stepCount = 51;
         goalStairs = new GoalStairController[stepCount];
         Vector3 pos = firstGoalStair.transform.position;
         stepHeight = firstGoalStair.StepHeight;

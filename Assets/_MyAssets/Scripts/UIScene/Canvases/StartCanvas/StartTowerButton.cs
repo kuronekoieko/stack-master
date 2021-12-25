@@ -83,14 +83,14 @@ public class StartTowerButton : MonoBehaviour
 
     void OnClickLevelUpButton()
     {
-        SoundManager.i.PlayOneShot(0);
-
+        SoundManager.i?.PlayOneShot(4);
         switch (state)
         {
             case State.Buy:
                 SaveData.i.currencyCount -= Price;
                 SaveData.i.startHumanCount++;
                 SaveDataManager.i.Save();
+                FirebaseAnalyticsManager.i.LogEvent("start_tower_button", "purchased_" + SaveData.i.startHumanCount);
                 break;
             case State.RewardedAds:
                 Time.timeScale = 0;
@@ -103,6 +103,7 @@ public class StartTowerButton : MonoBehaviour
                         SaveDataManager.i.Save();
                         isViewedRewardedAds = true;
                         state = State.Buy;
+                        FirebaseAnalyticsManager.i.LogEvent("start_tower_button", "reward_video_" + SaveData.i.startHumanCount);
                     },
                     onNotRewarded: () =>
                     {

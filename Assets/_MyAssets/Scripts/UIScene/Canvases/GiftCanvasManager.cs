@@ -14,7 +14,7 @@ public class GiftCanvasManager : BaseCanvasManager
 
     public bool CanClickChest => ClickedChestCount < 3;
     public int ClickedChestCount { get; set; }
-
+    int clickedRewardButtonCount;
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.Gift);
@@ -39,6 +39,7 @@ public class GiftCanvasManager : BaseCanvasManager
     {
         gameObject.SetActive(true);
         ClickedChestCount = 0;
+        clickedRewardButtonCount = 0;
         InitializeChests();
     }
 
@@ -92,6 +93,8 @@ public class GiftCanvasManager : BaseCanvasManager
             {
                 Time.timeScale = 1;
                 ClickedChestCount = 0;
+                clickedRewardButtonCount++;
+                FirebaseAnalyticsManager.i.LogEvent("chests_reward_video", "clicked_count_" + clickedRewardButtonCount);
             },
             onNotRewarded: () =>
             {
