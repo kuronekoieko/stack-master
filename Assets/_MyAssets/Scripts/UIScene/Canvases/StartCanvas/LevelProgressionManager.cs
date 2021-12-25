@@ -21,4 +21,11 @@ public class LevelProgressionManager : MonoBehaviour
                 );
         }
     }
+
+    public void Anim()
+    {
+        int currentDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
+        int currentIndex = (currentDisplayStageNum - 1) % 5;
+        levelProgressIcons[currentIndex].Anim();
+    }
 }

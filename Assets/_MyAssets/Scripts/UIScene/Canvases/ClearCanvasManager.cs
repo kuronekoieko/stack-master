@@ -72,6 +72,7 @@ public class ClearCanvasManager : BaseCanvasManager
             transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack)
             .OnComplete(() =>
             {
+                levelProgressionManager.Anim();
                 gemCollectAnimManager.Anim(gemImageRt.position, 0.5f, () =>
                 {
                     nextButton.Show_FadeTextAnim(1.5f);
