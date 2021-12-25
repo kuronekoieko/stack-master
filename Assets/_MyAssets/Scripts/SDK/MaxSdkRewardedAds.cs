@@ -14,6 +14,7 @@ public class MaxSdkRewardedAds : MonoBehaviour
     bool isCompletedInitialize;
     public bool IsRewardedAdReady => isCompletedInitialize ? MaxSdk.IsRewardedAdReady(adUnitId) : false;
 
+
     void Awake()
     {
         i = this;
@@ -46,7 +47,7 @@ public class MaxSdkRewardedAds : MonoBehaviour
         this.onRewarded = onRewarded;
         this.onNotRewarded = onNotRewarded;
 
-        if (Debug.isDebugBuild)
+        if (MaxSdkManager.i.IsDebug)
         {
             onRewarded();
             return;

@@ -47,6 +47,32 @@ public class ClearCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
+        DOVirtual.DelayedCall(1.5f, () =>
+        {
+            Time.timeScale = 0;
+            ShowInterstitial(() =>
+            {
+                Open();
+                Time.timeScale = 1;
+            });
+        });
+
+    }
+
+    void ShowInterstitial(Action onHidden)
+    {
+
+        if (StageTransManager.i.CurrentDisplayStageNum == 1)
+        {
+            onHidden();
+            return;
+        }
+        MaxSdkInterstitial.i.Show(onHidden);
+
+    }
+
+    void Open()
+    {
         skinProgress.OnOpen();
         clearGroup.SetActive(true);
         levelProgressionManager.OnOpen();
@@ -65,7 +91,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
         SaveDataManager.i.Save();
 
-        DOVirtual.DelayedCall(2.5f, () =>
+        DOVirtual.DelayedCall(0.5f, () =>
         {
             gameObject.SetActive(true);
             transform.localScale = Vector3.zero;
@@ -100,7 +126,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
     void OnClickNextButton()
     {
-        SoundManager.i.PlayOneShot(0);
+        // SoundManager.i.PlayOneShot(0);
         OpenSkinProgress();
     }
 

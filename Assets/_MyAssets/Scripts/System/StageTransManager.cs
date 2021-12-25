@@ -38,23 +38,8 @@ public class StageTransManager
     /// </summary>
     public void LoadNextStage()
     {
-        Time.timeScale = 0;
-        ShowInterstitial(() =>
-        {
-            CurrentDisplayStageNum++;
-            ReLoadStage();
-            Time.timeScale = 1;
-        });
-    }
-
-    void ShowInterstitial(Action onHidden)
-    {
-        if (StageTransManager.i.CurrentDisplayStageNum == 1)
-        {
-            onHidden();
-            return;
-        }
-        MaxSdkInterstitial.i.Show(onHidden);
+        CurrentDisplayStageNum++;
+        ReLoadStage();
     }
 
     /// <summary>
