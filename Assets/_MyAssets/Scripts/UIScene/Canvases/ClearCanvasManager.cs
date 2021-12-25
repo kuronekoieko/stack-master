@@ -47,6 +47,7 @@ public class ClearCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
+        SoundManager.i.PlayOneShot(1);
         DOVirtual.DelayedCall(1.5f, () =>
         {
             Time.timeScale = 0;
@@ -80,7 +81,7 @@ public class ClearCanvasManager : BaseCanvasManager
         rewardVideoButton.Hide();
         gems.gameObject.SetActive(true);
 
-        SoundManager.i.PlayOneShot(1);
+       
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
         FirebaseAnalyticsManager.i.LogEvent("level_clear", "level_" + StageTransManager.i.CurrentDisplayStageNum);
 
