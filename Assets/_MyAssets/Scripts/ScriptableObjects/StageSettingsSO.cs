@@ -7,7 +7,6 @@ using System;
 [CreateAssetMenu(menuName = "MyGame/Create StageSettingsSO", fileName = "StageSettingsSO")]
 public class StageSettingsSO : ScriptableObject
 {
-    public GameObject[] stagePrefabs;
     public StageData[] stageDatas;
 
     static StageSettingsSO _i;
