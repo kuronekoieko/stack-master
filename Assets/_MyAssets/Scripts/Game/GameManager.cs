@@ -19,23 +19,21 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(LoadAsync());
-    }
-
-    private IEnumerator LoadAsync()
-    {
+        // StartCoroutine(LoadAsync());
         characterManager.OnAwake();
-        yield return null;
+        // yield return null;
         backgroundManager.OnAwake();
-        yield return null;
+        // yield return null;
         stageManager.OnAwake();
-        yield return null;
+        // yield return null;
         characterManager.OnStart();
-        yield return null;
-        backgroundManager.OnStart();
-        yield return null;
+        // yield return null;
+        // backgroundManager.OnStart();
+        // yield return null;
         addCountTextEffectManager.OnStart();
     }
+
+
 
     void Update()
     {
