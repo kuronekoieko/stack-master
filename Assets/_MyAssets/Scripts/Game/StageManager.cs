@@ -7,8 +7,7 @@ public class StageManager : MonoBehaviour
     public void OnAwake()
     {
         if (!Variables.isLaunchUIScene) return;
-        int stageIndex = StageTransManager.i.CurrentStageNum - 1;
-        var stagePrefab = StageSettingsSO.i.stageDatas[stageIndex].stagePrefab;
+        var stagePrefab = StageTransManager.i.GetCurrentDisplayStageData().stagePrefab;
         Instantiate(stagePrefab);
     }
 }
