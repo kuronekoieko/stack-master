@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using Sirenix.OdinInspector;
+using Sirenix.OdinInspector;
 using System;
 
 [CreateAssetMenu(menuName = "MyGame/Create StageSettingsSO", fileName = "StageSettingsSO")]
 public class StageSettingsSO : ScriptableObject
 {
-    public GameObject[] stagePrefabs;
+    public StageData[] stageDatas;
 
     static StageSettingsSO _i;
     public static StageSettingsSO i
@@ -38,8 +38,8 @@ public class StageSettingsSO : ScriptableObject
 [Serializable]
 public class StageData
 {
-    string stageNum => "stage " + (Array.IndexOf(StageSettingsSO.i.stagePrefabs, this) + 1);
-    // [LabelText("$stageNum")] public string data = "ここはゲームの設計によって任意に変更(csvなど)";
+    string stageNum => "level " + (Array.IndexOf(StageSettingsSO.i.stageDatas, this) + 1);
+    [LabelText("$stageNum")]
     public GameObject stagePrefab;
 }
 
