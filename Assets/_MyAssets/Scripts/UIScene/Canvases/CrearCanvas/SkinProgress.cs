@@ -29,11 +29,7 @@ public class SkinProgress : MonoBehaviour
     {
         rateMaskTf.gameObject.SetActive(true);
         skinGetButton.onClick.AddListener(OnClickSkinGetButton);
-        closeButton.onClick.AddListener(() =>
-        {
-            FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
-            OnClickContinueButton();
-        });
+        closeButton.onClick.AddListener(OnClickCloseButton);
         continueButton.onClick.AddListener(OnClickContinueButton);
         this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
             .Subscribe(_ => OnChangedRewardedAdReady(_));
@@ -84,9 +80,23 @@ public class SkinProgress : MonoBehaviour
 
     void SetPercentage()
     {
+        // 初期状態 or no thanks
+        if (SaveData.i.unlockingSkin.percentage == 0)
+        {
+            SetRomdomSkin();
+            return;
+        }
 
-        if (SaveData.i.unlockingSkin.percentage > 0) return;
+        // スキンゲットボタン or スキン購入画面で取得済みの場合
+        if (SaveData.i.characterSkinSaveDatas[SaveData.i.unlockingSkin.index].isOwn)
+        {
+            SetRomdomSkin();
+            return;
+        }
+    }
 
+    void SetRomdomSkin()
+    {
         SkinSaveData[] notOwns = SaveData.i.characterSkinSaveDatas.Where(_ => !_.isOwn).ToArray();
 
         if (notOwns.Length == 0)
@@ -98,7 +108,6 @@ public class SkinProgress : MonoBehaviour
         notOwns.GetRandom<SkinSaveData>(out int index);
         SaveData.i.unlockingSkin.index = index;
         SaveData.i.unlockingSkin.percentage = 0;
-
     }
 
     public void ProgressAnim()
@@ -194,6 +203,18 @@ public class SkinProgress : MonoBehaviour
 
     void OnClickContinueButton()
     {
+        ToNext();
+    }
+
+    void OnClickCloseButton()
+    {
+        ToNext();
+        SaveData.i.unlockingSkin.percentage = 0;
+        FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
+    }
+
+    void ToNext()
+    {
         bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
         if (isNextGiftScreen)
         {
@@ -204,6 +225,7 @@ public class SkinProgress : MonoBehaviour
             StageTransManager.i.LoadNextStage();
         }
     }
+
 
     public void OnClose()
     {
