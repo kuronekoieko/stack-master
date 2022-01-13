@@ -14,6 +14,7 @@ public class MyButton : Button
             if (text == null) text = GetComponentInChildren<Text>();
             return text;
         }
+        set => text = value;
     }
 
     Tween tween;
@@ -37,19 +38,31 @@ public class MyButton : Button
         });
     }
 
-    public void Show_FadeAnim(float delay = 0)
+    public void Show_FadeAnim(float delay)
     {
         tween = DOVirtual.DelayedCall(delay, () =>
         {
             gameObject.SetActive(true);
-            image.SetAlpha(0);
+            image.SetAlpha(0f);
             image.DOFade(1f, 1.5f);
+        });
+    }
+
+    public void Show_FadeTextAnim(float delay)
+    {
+        tween = DOVirtual.DelayedCall(delay, () =>
+        {
+            gameObject.SetActive(true);
+            text.SetAlpha(0f);
+            text.DOFade(1f, 1.5f);
         });
     }
 
     public void Hide()
     {
         gameObject.SetActive(false);
+        // do virtualのときはもともとfalseなので
+        if (tween != null) tween.Kill();
     }
 
 

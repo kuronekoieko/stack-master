@@ -19,7 +19,7 @@ public class MaxSdkInterstitial : MonoBehaviour
     public void Show(Action onHidden)
     {
         this.onHidden = onHidden;
-        if (Debug.isDebugBuild)
+        if (MaxSdkManager.i.IsDebug)
         {
             onHidden();
             return;

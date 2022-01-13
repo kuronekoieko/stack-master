@@ -3,23 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
-using System;
+using System.Linq;
 
 public class StageTransManager
 {
     public static StageTransManager i => _i;
     private static StageTransManager _i = new StageTransManager();
     public int CurrentDisplayStageNum { get; private set; } = 1;
-    public int CurrentStageNum
-    {
-        get
-        {
-            int tmp = CurrentDisplayStageNum % stageLength;
-            if (tmp == 0) tmp = stageLength;
-            return tmp;
-        }
-    }
-    private int stageLength;
+    List<StageData> loopStageDatas = new List<StageData>();
 
     /// <summary>
     /// ステージ番号の初期化と、最初のロード
@@ -30,7 +21,22 @@ public class StageTransManager
     public void LoadStageOnAppLaunch(int startDisplayStageNum)
     {
         CurrentDisplayStageNum = startDisplayStageNum;
-        stageLength = StageSettingsSO.i.stageDatas.Length;
+    }
+
+    public StageData GetCurrentDisplayStageData()
+    {
+        int displaysStageNum = CurrentDisplayStageNum;
+        if (loopStageDatas.Count < StageSettingsSO.i.stageDatas.Length)
+        {
+            loopStageDatas.AddRange(StageSettingsSO.i.stageDatas);
+        }
+
+        while (loopStageDatas.IsIndexOutOfRange(displaysStageNum - 1))
+        {
+            loopStageDatas.AddRange(StageSettingsSO.i.stageDatas.Skip(1));
+        }
+
+        return loopStageDatas[displaysStageNum - 1];
     }
 
     /// <summary>
@@ -38,23 +44,8 @@ public class StageTransManager
     /// </summary>
     public void LoadNextStage()
     {
-        Time.timeScale = 0;
-        ShowInterstitial(() =>
-        {
-            CurrentDisplayStageNum++;
-            ReLoadStage();
-            Time.timeScale = 1;
-        });
-    }
-
-    void ShowInterstitial(Action onHidden)
-    {
-        if (StageTransManager.i.CurrentDisplayStageNum == 1)
-        {
-            onHidden();
-            return;
-        }
-        MaxSdkInterstitial.i.Show(onHidden);
+        CurrentDisplayStageNum++;
+        ReLoadStage();
     }
 
     /// <summary>
@@ -78,7 +69,7 @@ public class StageTransManager
         get
         {
             List<string> numStrings = new List<string>();
-            for (int i = 1; i < stageLength + 1; i++)
+            for (int i = 1; i < StageSettingsSO.i.stageDatas.Length + 1; i++)
             {
                 string name = Path.GetFileName(SceneUtility.GetScenePathByBuildIndex(i));
                 numStrings.Add((i) + "  " + name);

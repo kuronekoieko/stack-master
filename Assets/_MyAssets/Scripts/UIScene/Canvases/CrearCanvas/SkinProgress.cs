@@ -16,8 +16,8 @@ public class SkinProgress : MonoBehaviour
     [SerializeField] Transform rateMaskTf;
     [SerializeField] Text rateText;
     [SerializeField] MyButton skinGetButton;
+    [SerializeField] MyButton closeButton;
     [SerializeField] MyButton continueButton;
-    [SerializeField] Text titleText;
     [SerializeField] GameObject radial;
     SkinController outlineSkin;
     SkinController maskSkin;
@@ -29,6 +29,7 @@ public class SkinProgress : MonoBehaviour
     {
         rateMaskTf.gameObject.SetActive(true);
         skinGetButton.onClick.AddListener(OnClickSkinGetButton);
+        closeButton.onClick.AddListener(OnClickCloseButton);
         continueButton.onClick.AddListener(OnClickContinueButton);
         this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
             .Subscribe(_ => OnChangedRewardedAdReady(_));
@@ -41,14 +42,13 @@ public class SkinProgress : MonoBehaviour
 
     public void OnOpen()
     {
+        gameObject.SetActive(false);
         SetPercentage();
 
-        skinGetButton.enabled = true;
-        continueButton.enabled = true;
         rateText.gameObject.SetActive(true);
         skinGetButton.Hide();
+        closeButton.Hide();
         continueButton.Hide();
-        titleText.gameObject.SetActive(false);
         modelsCenter.transform.localScale = Vector3.one;
 
         if (isNotingSkin)
@@ -80,9 +80,23 @@ public class SkinProgress : MonoBehaviour
 
     void SetPercentage()
     {
+        // 初期状態 or no thanks
+        if (SaveData.i.unlockingSkin.percentage == 0)
+        {
+            SetRomdomSkin();
+            return;
+        }
 
-        if (SaveData.i.unlockingSkin.percentage > 0) return;
+        // スキンゲットボタン or スキン購入画面で取得済みの場合
+        if (SaveData.i.characterSkinSaveDatas[SaveData.i.unlockingSkin.index].isOwn)
+        {
+            SetRomdomSkin();
+            return;
+        }
+    }
 
+    void SetRomdomSkin()
+    {
         SkinSaveData[] notOwns = SaveData.i.characterSkinSaveDatas.Where(_ => !_.isOwn).ToArray();
 
         if (notOwns.Length == 0)
@@ -94,10 +108,9 @@ public class SkinProgress : MonoBehaviour
         notOwns.GetRandom<SkinSaveData>(out int index);
         SaveData.i.unlockingSkin.index = index;
         SaveData.i.unlockingSkin.percentage = 0;
-
     }
 
-    public void Anim()
+    public void ProgressAnim()
     {
         int randomInt = UnityEngine.Random.Range(25, 35);
         int startVal = SaveData.i.unlockingSkin.percentage;
@@ -111,7 +124,7 @@ public class SkinProgress : MonoBehaviour
             return;
         }
 
-        float duration = 2f;
+        float duration = 1.5f;
         int nowNumber = startVal;
 
         Sequence sequence = DOTween.Sequence()
@@ -120,15 +133,24 @@ public class SkinProgress : MonoBehaviour
             DOTween.To(() => nowNumber, (n) => nowNumber = n, endVal, duration)
             .OnUpdate(() => rateText.text = nowNumber + " %")
             .SetEase(Ease.Linear)
-            );
+            ).OnComplete(() =>
+            {
+                MaxAnim();
+            });
 
+    }
 
-        if (!IsMax) return;
-        sequence
+    public void MaxAnim()
+    {
+        if (!IsMax)
+        {
+            continueButton.Show_ScaleAnim();
+            return;
+        }
+        Sequence sequence = DOTween.Sequence()
         .AppendCallback(() =>
         {
             rateText.gameObject.SetActive(false);
-            titleText.gameObject.SetActive(true);
         })
         .Append(modelsCenter.transform.DOScale(1.5f, 0.5f).SetEase(Ease.OutBack))
         .AppendCallback(() =>
@@ -137,11 +159,7 @@ public class SkinProgress : MonoBehaviour
             maskSkin.Animator.SetTrigger("Dance");
             defaultSkin.Animator.SetTrigger("Dance");
             skinGetButton.Show_ScaleAnim();
-        })
-        .AppendInterval(1.5f)
-        .AppendCallback(() =>
-        {
-            continueButton.Show_FadeAnim();
+            closeButton.Show_FadeAnim(1.5f);
         });
     }
 
@@ -158,7 +176,7 @@ public class SkinProgress : MonoBehaviour
 
     void OnClickSkinGetButton()
     {
-        SoundManager.i.PlayOneShot(0);
+        // SoundManager.i.PlayOneShot(0);
         Time.timeScale = 0;
 
         MaxSdkRewardedAds.i.ShowRewardedAd(
@@ -172,8 +190,8 @@ public class SkinProgress : MonoBehaviour
                 SaveData.i.characterSkinSaveDatas[SaveData.i.unlockingSkin.index].isOwn = true;
                 SaveData.i.selectedSkinIndex = SaveData.i.unlockingSkin.index;
                 SaveDataManager.i.Save();
-                skinGetButton.enabled = false;
-                continueButton.enabled = false;
+                skinGetButton.Hide();
+                closeButton.Hide();
                 FirebaseAnalyticsManager.i.LogEvent("skin_get_button", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
             },
             onNotRewarded: () =>
@@ -185,6 +203,18 @@ public class SkinProgress : MonoBehaviour
 
     void OnClickContinueButton()
     {
+        ToNext();
+    }
+
+    void OnClickCloseButton()
+    {
+        ToNext();
+        SaveData.i.unlockingSkin.percentage = 0;
+        FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
+    }
+
+    void ToNext()
+    {
         bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
         if (isNextGiftScreen)
         {
@@ -194,8 +224,8 @@ public class SkinProgress : MonoBehaviour
         {
             StageTransManager.i.LoadNextStage();
         }
-        FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
     }
+
 
     public void OnClose()
     {

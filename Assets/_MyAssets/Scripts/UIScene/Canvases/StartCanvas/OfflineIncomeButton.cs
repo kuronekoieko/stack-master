@@ -70,7 +70,7 @@ public class OfflineIncomeButton : MonoBehaviour
             .Subscribe(_ => levelText.text = _.ToString());
         this.ObserveEveryValueChanged(_ => Price)
             .Subscribe(_ => priceText.text = _.ToString());
-        this.ObserveEveryValueChanged(_ => Interactive)
+        this.ObserveEveryValueChanged(_ => (SaveData.i.currencyCount >= Price))
             .Subscribe(_ => noticeImageController.gameObject.SetActive(_));
     }
 

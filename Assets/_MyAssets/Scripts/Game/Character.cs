@@ -14,7 +14,7 @@ public class Character : MonoBehaviour
     [SerializeField] IncEffectController inkEffectController;
     [SerializeField] ParticleSystem appearPs;
     [Inject] CameraController cameraController;
-    float speedZ = 15f;
+    float speedZ = 15f * 2f / 3f;
     float currentVelocity;
     CharacterManager characterManager;
     public float Height => capsuleCollider.height;

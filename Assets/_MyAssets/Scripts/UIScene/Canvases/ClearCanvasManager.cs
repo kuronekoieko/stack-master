@@ -9,25 +9,31 @@ using System;
 public class ClearCanvasManager : BaseCanvasManager
 {
     [SerializeField] MyButton nextButton;
-    [SerializeField] MyButton giftButton;
+    [SerializeField] MyButton rewardVideoButton;
     [SerializeField] RectTransform gems;
-    [SerializeField] Image titleImage;
     [SerializeField] Text currencyCountText;
+    [SerializeField] Text rewardVideoButtonCountText;
     [SerializeField] SkinProgress skinProgress;
     [SerializeField] RectTransform gemImageRt;
     [SerializeField] GemCollectAnimManager gemCollectAnimManager;
+    [SerializeField] LevelProgressionManager levelProgressionManager;
+    [SerializeField] GameObject clearGroup;
     int curencyCount;
 
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.Clear);
 
-        nextButton.onClick.AddListener(OnClickNextButton);
-        giftButton.onClick.AddListener(OnClickGiftButton);
+        nextButton.onClick.AddListener(() =>
+        {
+            FirebaseAnalyticsManager.i.LogEvent("clear_screen", "not_thanks_button");
+            OnClickNextButton();
+        });
+        rewardVideoButton.onClick.AddListener(OnClickRewardVideoButton);
         gameObject.SetActive(false);
         skinProgress.OnStart();
         gemCollectAnimManager.OnStart(20);
-
+        rewardVideoButton.Text = rewardVideoButtonCountText;
     }
 
     public override void OnSceneLoaded()
@@ -41,33 +47,63 @@ public class ClearCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
+        SoundManager.i.PlayOneShot(1);
+        DOVirtual.DelayedCall(1.5f, () =>
+        {
+            Time.timeScale = 0;
+            ShowInterstitial(() =>
+            {
+                Open();
+                Time.timeScale = 1;
+            });
+        });
+
+    }
+
+    void ShowInterstitial(Action onHidden)
+    {
+
+        if (StageTransManager.i.CurrentDisplayStageNum == 1)
+        {
+            onHidden();
+            return;
+        }
+        MaxSdkInterstitial.i.Show(onHidden);
+
+    }
+
+    void Open()
+    {
         skinProgress.OnOpen();
-        giftButton.Hide();
+        clearGroup.SetActive(true);
+        levelProgressionManager.OnOpen();
         nextButton.Hide();
-        titleImage.gameObject.SetActive(true);
+        rewardVideoButton.Hide();
         gems.gameObject.SetActive(true);
 
-        SoundManager.i.PlayOneShot(1);
+       
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
-        FirebaseAnalyticsManager.i.LogEvent("level_clear" ,"level_" + StageTransManager.i.CurrentDisplayStageNum);
+        FirebaseAnalyticsManager.i.LogEvent("level_clear", "level_" + StageTransManager.i.CurrentDisplayStageNum);
 
         int baseClearReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.CurrentDisplayStageNum - 1).clearReward;
         curencyCount = Mathf.RoundToInt(Variables.goalRate * baseClearReward);
         currencyCountText.text = "+" + curencyCount.ToString();
+        rewardVideoButton.Text.text = "+" + (curencyCount * 2);
 
         SaveDataManager.i.Save();
 
-        DOVirtual.DelayedCall(2.5f, () =>
+        DOVirtual.DelayedCall(0.5f, () =>
         {
             gameObject.SetActive(true);
             transform.localScale = Vector3.zero;
             transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack)
             .OnComplete(() =>
             {
-                skinProgress.Anim();
+                levelProgressionManager.Anim();
                 gemCollectAnimManager.Anim(gemImageRt.position, 0.5f, () =>
                 {
-                    OnCompleteSkinProgress(skinProgress.IsMax);
+                    nextButton.Show_FadeTextAnim(1.5f);
+                    rewardVideoButton.Show_ScaleAnim();
                     SaveData.i.currencyCount += curencyCount;
                     SaveDataManager.i.Save();
                 });
@@ -76,28 +112,11 @@ public class ClearCanvasManager : BaseCanvasManager
         });
     }
 
-
-
-    void OnCompleteSkinProgress(bool isMax)
+    void OpenSkinProgress()
     {
-        if (isMax)
-        {
-            gems.gameObject.SetActive(false);
-            titleImage.gameObject.SetActive(false);
-            return;
-        }
-
-        bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
-        // isNextGiftScreen = true; //デバッグ用
-
-        if (isNextGiftScreen)
-        {
-            giftButton.Show_ScaleAnim();
-        }
-        else
-        {
-            nextButton.Show_ScaleAnim();
-        }
+        clearGroup.SetActive(false);
+        skinProgress.gameObject.SetActive(true);
+        skinProgress.ProgressAnim();
     }
 
     protected override void OnClose()
@@ -108,21 +127,32 @@ public class ClearCanvasManager : BaseCanvasManager
 
     void OnClickNextButton()
     {
-        SoundManager.i.PlayOneShot(0);
-        StageTransManager.i.LoadNextStage();
+        // SoundManager.i.PlayOneShot(0);
+        OpenSkinProgress();
     }
 
-
-
-    void OnClickHomeButton()
+    void OnClickRewardVideoButton()
     {
-        // Variables.screenState = ScreenState.Home;
-        SoundManager.i.PlayOneShot(0);
-    }
+        Time.timeScale = 0;
 
-    void OnClickGiftButton()
-    {
-        SoundManager.i.PlayOneShot(0);
-        Variables.screenState = ScreenState.Gift;
+        MaxSdkRewardedAds.i.ShowRewardedAd(
+            onRewarded: () =>
+            {
+                Time.timeScale = 1;
+                gemCollectAnimManager.Anim(gemImageRt.position, 0.5f, () =>
+                {
+                    SaveData.i.currencyCount += curencyCount * 2;
+                    SaveDataManager.i.Save();
+                    OnClickNextButton();
+                });
+                nextButton.Hide();
+                rewardVideoButton.Hide();
+                FirebaseAnalyticsManager.i.LogEvent("clear_screen", "reward_video_button");
+            },
+            onNotRewarded: () =>
+            {
+                Time.timeScale = 1;
+            }
+        );
     }
 }
