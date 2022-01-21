@@ -81,9 +81,9 @@ public class ClearCanvasManager : BaseCanvasManager
         rewardVideoButton.Hide();
         gems.gameObject.SetActive(true);
 
-       
+
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
-        FirebaseAnalyticsManager.i.LogEvent("level_clear", "level_" + StageTransManager.i.CurrentDisplayStageNum);
+        FirebaseAnalyticsManager.i.LogEvent_level("level_cleared");
 
         int baseClearReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.CurrentDisplayStageNum - 1).clearReward;
         curencyCount = Mathf.RoundToInt(Variables.goalRate * baseClearReward);

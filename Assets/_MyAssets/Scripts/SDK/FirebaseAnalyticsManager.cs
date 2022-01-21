@@ -48,18 +48,17 @@ public class FirebaseAnalyticsManager : MonoBehaviour
 #endif
     }
 
-    public void LogTest(string title)
-    {
-        if (!isAvailable) { return; }
-        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventScreenView, "test_a", title);
-        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventScreenView, title, "test_b");
-        FirebaseAnalytics.LogEvent("test_c", title, title);
-        FirebaseAnalytics.LogEvent("test_name", "test_parameterName", "test_parameterValue");
-    }
-
     public void LogEvent(string title, string parameterName)
     {
         if (!isAvailable) { return; }
         FirebaseAnalytics.LogEvent(title, parameterName, parameterName);
+    }
+
+    public void LogEvent_level(string title)
+    {
+        if (!isAvailable) { return; }
+        string level = "level_" + StageTransManager.i.CurrentDisplayStageNum.ToString("000");
+        FirebaseAnalytics.LogEvent(title, "level", level);
+        // Debug.Log(level);
     }
 }
