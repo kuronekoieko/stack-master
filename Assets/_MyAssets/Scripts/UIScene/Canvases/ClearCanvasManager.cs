@@ -108,7 +108,6 @@ public class ClearCanvasManager : BaseCanvasManager
                     SaveDataManager.i.Save();
                 });
             });
-
         });
     }
 
