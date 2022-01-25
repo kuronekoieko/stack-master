@@ -21,12 +21,19 @@ public class CameraController : MonoBehaviour
     Vector3 camTarget;
     Vector3 startLookTargetOffset;
     public CameraState CameraState { get; set; } = CameraState.Following;
+    bool isFollowBehind = true;
 
     public void SetOffset(Vector3 startPos)
     {
         offset = transform.position - startPos;
+
+
         startLookTargetOffset = GetStartLookTarget() - characterManager.BottomCharacterPos;
         transform.position = GetFollowPos();
+        if (isFollowBehind)
+        {
+            transform.SetPosX(0);
+        }
         camTarget = GetLookTarget();
         transform.LookAt(camTarget);
     }
@@ -53,10 +60,18 @@ public class CameraController : MonoBehaviour
 
     public void OnLateUpdate()
     {
-
         switch (CameraState)
         {
-            case CameraState.Following: Follow2(); break;
+            case CameraState.Following:
+                if (isFollowBehind)
+                {
+                    FollowFromBehind();
+                }
+                else
+                {
+                    Follow2();
+                }
+                break;
             case CameraState.ClimbingStairs: ClimbingStairs(); break;
             case CameraState.Rotate: ClimbingStairs(); break;
             default: break;
@@ -143,11 +158,20 @@ public class CameraController : MonoBehaviour
         transform.LookAt(camTarget);
     }
 
+    void FollowFromBehind()
+    {
+        if (characterManager.ActiveCount == 0) return;
+        transform.position = Vector3.SmoothDamp(transform.position, GetFollowPos(), ref currentVelocity, 0.4f);
+        transform.SetPosX(0);
+        camTarget = Vector3.SmoothDamp(camTarget, GetLookTarget(), ref angleCurrentVelocity, 0.4f);
+        transform.LookAt(camTarget);
+    }
+
     Vector3 GetFollowPos()
     {
         Vector3 followOffset = offset;
 
-        float max = 15;
+        float max = 10;
         followOffset.x *= Mathf.Clamp(characterManager.ActiveCount * 0.15f, 1f, max * 0.15f);
         followOffset.y *= Mathf.Clamp(characterManager.ActiveCount * 0.3f, 1f, (max + 5) * 0.3f);
         followOffset.z *= Mathf.Clamp(characterManager.ActiveCount * 0.15f, 1f, max * 0.15f);
@@ -164,7 +188,7 @@ public class CameraController : MonoBehaviour
 
     Vector3 GetLookTarget()
     {
-        float maxCount = 10;
+        float maxCount = 15;
         float currentCount = characterManager.ActiveCount;
         float towerCenterHeight = Mathf.Clamp(currentCount, 1f, maxCount) * characterManager.characterHeight / 2f;
         var target = characterManager.BottomCharacterPos + startLookTargetOffset.normalized * towerCenterHeight;
