@@ -1,4 +1,4 @@
-﻿Shader "BodyColor/APPack"
+﻿Shader "BodyColor - APPack"
 {
 	Properties
 	{
