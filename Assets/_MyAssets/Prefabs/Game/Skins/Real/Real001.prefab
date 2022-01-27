@@ -2727,6 +2727,7 @@ GameObject:
   - component: {fileID: 6749338912636648581}
   - component: {fileID: 7660607956251444336}
   - component: {fileID: 3890469441202135798}
+  - component: {fileID: 7728200420821747271}
   m_Layer: 0
   m_Name: Real001
   m_TagString: Untagged
@@ -2829,7 +2830,7 @@ MonoBehaviour:
     skinnedMesh:
     - {fileID: 5079428423170340701}
   prefabPath: Assets/_MyAssets/Prefabs/Game/Skins/Real001.prefab
-  instanceStatus: 1
+  instanceStatus: 6
   originHip: {fileID: 579026777607677910}
   headHip: {fileID: 410842445939024776}
   clothesAnchors:
@@ -3096,6 +3097,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7728200420821747271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5376332701062339427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c35a016b38d41b14289f48bd76c82447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5383140214600230380
 GameObject:
   m_ObjectHideFlags: 0

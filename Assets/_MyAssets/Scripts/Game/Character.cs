@@ -49,7 +49,7 @@ public class Character : MonoBehaviour
 
     void OnChangedSkin(int selectedSkinIndex)
     {
-        skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
+        skinController = Instantiate(SkinSettingSO.i.CharacterSkinDatas[selectedSkinIndex].prefab, transform);
         skinController.OnInstantiate();
         Destroy(animator.gameObject);
         animator = skinController.Animator;

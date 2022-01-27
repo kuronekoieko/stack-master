@@ -13,7 +13,7 @@ public class SkinCanvasManager : BaseCanvasManager
     [SerializeField] TabController_Material tabController_Material;
     [SerializeField] Transform skinPreviewParent;
     SkinController previewSkin;
- 
+
 
     public override void OnStart()
     {
@@ -64,7 +64,7 @@ public class SkinCanvasManager : BaseCanvasManager
     void OnChangedSelected(int selectedButtonIndex)
     {
         if (previewSkin) DestroyImmediate(previewSkin.gameObject);
-        previewSkin = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedButtonIndex].prefab, skinPreviewParent);
+        previewSkin = Instantiate(SkinSettingSO.i.CharacterSkinDatas[selectedButtonIndex].prefab, skinPreviewParent);
         previewSkin.OnInstantiate();
         previewSkin.ChangeLayersForAllChildren("Skin");
     }
