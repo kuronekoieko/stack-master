@@ -27,14 +27,14 @@ public class StageTransManager
     public StageData GetCurrentDisplayStageData()
     {
         int displaysStageNum = CurrentDisplayStageNum;
-        if (loopStageDatas.Count < StageSettingsSO.i.stageDatas.Length)
+        if (loopStageDatas.Count < StageSettingsSO.i.StageDatas.Length)
         {
-            loopStageDatas.AddRange(StageSettingsSO.i.stageDatas);
+            loopStageDatas.AddRange(StageSettingsSO.i.StageDatas);
         }
 
         while (loopStageDatas.IsIndexOutOfRange(displaysStageNum - 1))
         {
-            loopStageDatas.AddRange(StageSettingsSO.i.stageDatas.Skip(1));
+            loopStageDatas.AddRange(StageSettingsSO.i.StageDatas.Skip(1));
         }
 
         return loopStageDatas[displaysStageNum - 1];
@@ -93,7 +93,7 @@ public class StageTransManager
         get
         {
             List<string> numStrings = new List<string>();
-            for (int i = 1; i < StageSettingsSO.i.stageDatas.Length + 1; i++)
+            for (int i = 1; i < StageSettingsSO.i.StageDatas.Length + 1; i++)
             {
                 string name = Path.GetFileName(SceneUtility.GetScenePathByBuildIndex(i));
                 numStrings.Add((i) + "  " + name);
