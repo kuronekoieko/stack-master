@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 using System.Linq;
+using System;
 
 public class StageTransManager
 {
@@ -44,8 +45,31 @@ public class StageTransManager
     /// </summary>
     public void LoadNextStage()
     {
-        CurrentDisplayStageNum++;
-        ReLoadStage();
+        Time.timeScale = 0;
+        ShowInterstitial(onHidden: () =>
+        {
+            CurrentDisplayStageNum++;
+            ReLoadStage();
+            Time.timeScale = 1;
+        });
+    }
+
+    void ShowInterstitial(Action onHidden)
+    {
+        // ・広告は最初3ステージは非表示。4ステージ目からは、2回プレイごとに1回でる
+        int nextLevel = CurrentDisplayStageNum;
+        if (nextLevel <= 3)
+        {
+            onHidden();
+            return;
+        }
+
+        if (nextLevel % 2 == 1)
+        {
+            onHidden();
+            return;
+        }
+        MaxSdkInterstitial.i.Show(onHidden);
     }
 
     /// <summary>

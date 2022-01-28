@@ -48,7 +48,9 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         SoundManager.i.PlayOneShot(1);
-        DOVirtual.DelayedCall(1.5f, () =>
+        Open();
+
+        /*        DOVirtual.DelayedCall(1.5f, () =>
         {
             Time.timeScale = 0;
             ShowInterstitial(() =>
@@ -56,7 +58,8 @@ public class ClearCanvasManager : BaseCanvasManager
                 Open();
                 Time.timeScale = 1;
             });
-        });
+        });*/
+
 
     }
 
