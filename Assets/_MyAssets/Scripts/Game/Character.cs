@@ -74,7 +74,7 @@ public class Character : MonoBehaviour
                 SoundManager.i?.PlayOneShot(0);
                 //   VibrateManager.Play();
                 AddCountTextEffectManager.i.Show(1, transform);
-                appearPs.Play();
+                if (!Variables.isSkinReal) appearPs.Play();
             }
         });
     }

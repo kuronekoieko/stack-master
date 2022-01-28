@@ -15,16 +15,18 @@ public class IncEffectController : MonoBehaviour
 
     public void OnInstantiate()
     {
-        bloodPsChildren = bloodPs.GetComponentsInChildren<ParticleSystem>();
-        inkScale = inkSr.transform.lossyScale;
         inkSr.gameObject.SetActive(false);
         bloodPs.gameObject.SetActive(false);
+        if (Variables.isSkinReal) return;
+        bloodPsChildren = bloodPs.GetComponentsInChildren<ParticleSystem>();
+        inkScale = inkSr.transform.lossyScale;
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
             .Subscribe(_ => OnChangedMaterial(_));
     }
 
     void OnChangedMaterial(int selectedIndex)
     {
+        if (Variables.isSkinReal) return;
         inkSr.material.color = SkinSettingSO.i.characterMaterialDatas[selectedIndex].material.color;
         for (int i = 0; i < bloodPsChildren.Length; i++)
         {
@@ -35,6 +37,7 @@ public class IncEffectController : MonoBehaviour
 
     public void PlayBloodParticle(Vector3 hitPos, float characterHeight)
     {
+        if (Variables.isSkinReal) return;
         if (bloodPsTween != null) bloodPsTween.Kill();
         bloodPs.gameObject.SetActive(true);
         transform.parent = null;
@@ -50,6 +53,7 @@ public class IncEffectController : MonoBehaviour
 
     public void ShowInkSprite(Vector3 hitPos, float characterHeight)
     {
+        if (Variables.isSkinReal) return;
         if (inkSrTween != null) inkSrTween.Kill();
 
         inkSr.gameObject.SetActive(true);
