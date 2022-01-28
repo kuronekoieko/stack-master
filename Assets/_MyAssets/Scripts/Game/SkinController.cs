@@ -67,4 +67,18 @@ public class SkinController : MonoBehaviour
             skinnedMeshRenderers[i].enabled = enabled;
         }
     }
+
+    public Vector3 MeshCenterPos
+    {
+        get
+        {
+            var pos = Vector3.zero;
+
+            for (int i = 0; i < skinnedMeshRenderers.Length; i++)
+            {
+                pos += skinnedMeshRenderers[i].bounds.center;
+            }
+            return pos / (float)skinnedMeshRenderers.Length;
+        }
+    }
 }

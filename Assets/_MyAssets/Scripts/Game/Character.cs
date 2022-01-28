@@ -56,6 +56,7 @@ public class Character : MonoBehaviour
         animator = skinController.Animator;
         ragdollController.SetRagdoll(animator);
         ragdollController.EnableRagdoll(false);
+        if (Variables.isSkinReal) animator.transform.localScale = Vector3.one * 1.2f;
     }
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)

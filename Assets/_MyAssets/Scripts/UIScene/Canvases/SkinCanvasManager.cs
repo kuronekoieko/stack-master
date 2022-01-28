@@ -67,6 +67,7 @@ public class SkinCanvasManager : BaseCanvasManager
         previewSkin = Instantiate(SkinSettingSO.i.CharacterSkinDatas[selectedButtonIndex].prefab, skinPreviewParent);
         previewSkin.OnInstantiate();
         previewSkin.transform.ChangeLayersForAllChildren("Skin");
+        if (Variables.isSkinReal) previewSkin.transform.AddPosY(-0.4f);
     }
 
 }
