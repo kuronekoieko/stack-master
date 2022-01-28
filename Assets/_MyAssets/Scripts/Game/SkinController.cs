@@ -17,6 +17,7 @@ public class SkinController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         animator.runtimeAnimatorController = SkinSettingSO.i.animatorController;
+        skinnedMeshRenderers = animator.GetComponentsInChildren<SkinnedMeshRenderer>();
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
             .Where(_ => !IsSetMaterial_Manual)
             .Subscribe(_ => ChangeMaterial(SkinSettingSO.i.characterMaterialDatas[SaveData.i.selectedMaterialIndex].material));
@@ -24,8 +25,6 @@ public class SkinController : MonoBehaviour
 
     public void ChangeMaterial(Material material, bool isAll = false)
     {
-        skinnedMeshRenderers = animator.GetComponentsInChildren<SkinnedMeshRenderer>();
-
         for (int i = 0; i < skinnedMeshRenderers.Length; i++)
         {
             var skinnedMeshRenderer = skinnedMeshRenderers[i];
@@ -39,6 +38,12 @@ public class SkinController : MonoBehaviour
                 if (isAll)
                 {
                     materials[j] = new Material(material);
+                    continue;
+                }
+
+                if (Variables.isSkinReal)
+                {
+                    materials[j] = new Material(skinnedMeshRenderer.materials[j]);
                     continue;
                 }
 

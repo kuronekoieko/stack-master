@@ -84,14 +84,12 @@ public class StartCanvasManager : BaseCanvasManager
         }
 
         int tcount = Input.touchCount;
-        if (tcount > 0)
+        if (tcount == 0) return false;
+        for (int i = 0; i < tcount; i++)
         {
-            for (int i = 0; i < tcount; i++)
+            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(i).fingerId))
             {
-                if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(i).fingerId))
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
