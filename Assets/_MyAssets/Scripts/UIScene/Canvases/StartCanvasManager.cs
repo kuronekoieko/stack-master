@@ -14,6 +14,7 @@ public class StartCanvasManager : BaseCanvasManager
     [SerializeField] StartTowerButton startTowerButton;
     [SerializeField] OfflineIncomeButton offlineIncomeButton;
     [SerializeField] NoticeImageController skinButtonNotice;
+    [SerializeField] Sprite[] buttonSprites;
 
     bool EnableUnlockRandom => SaveData.i.currencyCount >= Price;
     int Price
@@ -35,6 +36,8 @@ public class StartCanvasManager : BaseCanvasManager
 
         this.ObserveEveryValueChanged(_ => EnableUnlockRandom)
             .Subscribe(_ => skinButtonNotice.gameObject.SetActive(_));
+
+        skinButton.image.sprite = buttonSprites[Variables.isSkinReal ? 1 : 0];
     }
 
     protected override void OnOpen()

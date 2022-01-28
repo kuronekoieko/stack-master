@@ -20,6 +20,7 @@ public class StartTowerButton : MonoBehaviour
     [SerializeField] Image videoImage;
     [SerializeField] Text levelText;
     [SerializeField] NoticeImageController noticeImageController;
+    [SerializeField] Sprite[] buttonSprites;
 
     bool Interactive
     {
@@ -72,6 +73,8 @@ public class StartTowerButton : MonoBehaviour
             .Subscribe(_ => priceText.text = _.ToString());
         this.ObserveEveryValueChanged(_ => (SaveData.i.currencyCount >= Price))
             .Subscribe(_ => noticeImageController.gameObject.SetActive(_));
+
+        button.image.sprite = buttonSprites[Variables.isSkinReal ? 1 : 0];
     }
 
     public void OnOpen()

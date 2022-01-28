@@ -10960,7 +10960,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1609153080
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11005,6 +11005,9 @@ MonoBehaviour:
   startTowerButton: {fileID: 1728785182}
   offlineIncomeButton: {fileID: 734108440}
   skinButtonNotice: {fileID: 389922159}
+  buttonSprites:
+  - {fileID: 21300000, guid: 23b587aa8adba7d458730aed04efe8f2, type: 3}
+  - {fileID: 21300000, guid: dfb3356a7cc52e9449a4ec915a9d3e15, type: 3}
 --- !u!1 &1609664294
 GameObject:
   m_ObjectHideFlags: 0
@@ -11980,6 +11983,9 @@ MonoBehaviour:
   videoImage: {fileID: 1527152291}
   levelText: {fileID: 760077264}
   noticeImageController: {fileID: 344365648}
+  buttonSprites:
+  - {fileID: 21300000, guid: 472058ddc792ba148b7c1e9c2d1ef921, type: 3}
+  - {fileID: 21300000, guid: 0084c75d4f8c4044dba252c60cb4b6bc, type: 3}
 --- !u!1 &1730221166
 GameObject:
   m_ObjectHideFlags: 0
@@ -15663,7 +15669,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &2423863803430921130
 CanvasRenderer:
   m_ObjectHideFlags: 0
