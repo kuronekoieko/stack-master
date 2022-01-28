@@ -60,17 +60,17 @@ public class SkinProgress : MonoBehaviour
 
         outlineSkin = InstantiateSkin();
         outlineSkin.ChangeMaterial(outlineMaterial, true);
-        outlineSkin.ChangeLayersForAllChildren("Skin");
+        outlineSkin.transform.ChangeLayersForAllChildren("Skin");
         outlineSkin.RectTransform.anchoredPosition3D = Vector3.forward * 0f;
 
         maskSkin = InstantiateSkin();
         maskSkin.ChangeMaterial(maskMaterial, true);
-        maskSkin.ChangeLayersForAllChildren("Skin");
+        maskSkin.transform.ChangeLayersForAllChildren("Skin");
         maskSkin.RectTransform.anchoredPosition3D = Vector3.forward * -1f;
 
         defaultSkin = InstantiateSkin();
         defaultSkin.ChangeMaterial(SkinSettingSO.i.characterMaterialDatas[0].material);
-        defaultSkin.ChangeLayersForAllChildren("SkinProgress");
+        defaultSkin.transform.ChangeLayersForAllChildren("SkinProgress");
         defaultSkin.RectTransform.anchoredPosition3D = Vector3.forward * -2f;
 
         rateMaskTf.transform.localScale = new Vector3(1, 1f - (float)SaveData.i.unlockingSkin.percentage / 100f, 1);

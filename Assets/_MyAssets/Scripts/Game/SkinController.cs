@@ -67,20 +67,4 @@ public class SkinController : MonoBehaviour
             skinnedMeshRenderers[i].enabled = enabled;
         }
     }
-
-    public void ChangeLayersForAllChildren(string layerName)
-    {
-        ChangeLayersForChildren(transform, layerName);
-        gameObject.layer = LayerMask.NameToLayer(layerName);
-    }
-
-
-    void ChangeLayersForChildren(Transform transform, string layerName)
-    {
-        foreach (Transform child in transform)
-        {
-            child.gameObject.layer = LayerMask.NameToLayer(layerName);
-            ChangeLayersForChildren(child, layerName);
-        }
-    }
 }

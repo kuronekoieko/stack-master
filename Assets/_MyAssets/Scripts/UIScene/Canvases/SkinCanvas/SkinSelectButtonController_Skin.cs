@@ -27,7 +27,7 @@ public class SkinSelectButtonController_Skin : MonoBehaviour, ISkinSelectButtonC
         SkinController skinController;
         skinController = Instantiate(SkinSettingSO.i.CharacterSkinDatas[skinIndex].prefab, skinSelectButtonController.skinPreviewParent);
         skinController.OnInstantiate();
-        skinController.ChangeLayersForAllChildren("Skin");
+        skinController.transform.ChangeLayersForAllChildren("Skin");
         skinSelectButtonController.skinObj = skinController.gameObject;
         skinSelectButtonController.skinObj.SetActive(false);
     }

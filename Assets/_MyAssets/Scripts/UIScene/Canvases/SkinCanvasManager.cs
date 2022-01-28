@@ -66,7 +66,7 @@ public class SkinCanvasManager : BaseCanvasManager
         if (previewSkin) DestroyImmediate(previewSkin.gameObject);
         previewSkin = Instantiate(SkinSettingSO.i.CharacterSkinDatas[selectedButtonIndex].prefab, skinPreviewParent);
         previewSkin.OnInstantiate();
-        previewSkin.ChangeLayersForAllChildren("Skin");
+        previewSkin.transform.ChangeLayersForAllChildren("Skin");
     }
 
 }

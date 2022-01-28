@@ -49,11 +49,11 @@ public class RagdollController : MonoBehaviour
 
         if (enabled)
         {
-            ChangeLayersForAllChildren("Dead");
+            transform.ChangeLayersForAllChildren("Dead");
         }
         else
         {
-            ChangeLayersForAllChildren("Character");
+            transform.ChangeLayersForAllChildren("Character");
         }
     }
 
@@ -64,22 +64,6 @@ public class RagdollController : MonoBehaviour
         foreach (var r in rigidbodies)
         {
             r.AddForce(Vector3.down * 30f);
-        }
-    }
-
-    void ChangeLayersForAllChildren(string layerName)
-    {
-        ChangeLayersForChildren(transform, layerName);
-        gameObject.layer = LayerMask.NameToLayer(layerName);
-    }
-
-
-    void ChangeLayersForChildren(Transform transform, string layerName)
-    {
-        foreach (Transform child in transform)
-        {
-            child.gameObject.layer = LayerMask.NameToLayer(layerName);
-            ChangeLayersForChildren(child, layerName);
         }
     }
 }
