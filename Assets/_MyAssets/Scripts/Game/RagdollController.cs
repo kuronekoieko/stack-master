@@ -66,4 +66,13 @@ public class RagdollController : MonoBehaviour
             r.AddForce(Vector3.down * 30f);
         }
     }
+
+    public void Addforce(Vector3 force, ForceMode mode)
+    {
+        if (!Variables.isSkinReal) return;
+        foreach (var r in rigidbodies)
+        {
+            r.AddForce(force, mode);
+        }
+    }
 }

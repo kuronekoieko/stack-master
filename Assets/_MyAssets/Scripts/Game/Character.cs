@@ -225,6 +225,7 @@ public class Character : MonoBehaviour
         if (Variables.isSkinReal)
         {
             ragdollController.EnableRagdoll(true);
+            ragdollController.Addforce(Vector3.right * Random.Range(-1f, 1f) * 10f, ForceMode.Impulse);
             DOVirtual.DelayedCall(3f, () => gameObject.SetActive(false));
         }
         else
