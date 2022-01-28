@@ -201,11 +201,7 @@ public class Character : MonoBehaviour
         characterManager.playerState = PlayerState.GoalBonus;
         cameraController.CameraState = CameraState.ClimbingStairs;
 
-        for (int i = 0; i < characterManager.pool.activelist.Count; i++)
-        {
-            var character = characterManager.pool.activelist[i];
-            character.transform.SetPosY(GoalController.i.gameObject.transform.position.y + i * Height);
-        }
+        characterManager.Goal();
     }
 
     void OnTriggerEnterGoalStair(Collider other)
@@ -215,6 +211,11 @@ public class Character : MonoBehaviour
         Leave(goalStair);
     }
 
+    /// <summary>
+    /// 2回呼ばれてるので注意
+    /// </summary>
+    /// <param name="hitPos"></param>
+    /// <param name="isHitGate"></param>
     public void Dead(Vector3 hitPos, bool isHitGate)
     {
         SoundManager.i?.PlayOneShotDead();
@@ -245,7 +246,7 @@ public class Character : MonoBehaviour
         isLeft = true;
 
         // 階段で止まったときに例外的にアクティブにしたいから
-        characterManager.pool.activelist.Remove(this);
+        characterManager.pool.Remove(this);
         rb.isKinematic = true;
         animator.ResetTrigger("Run");
         animator.ResetTrigger("Fall");

@@ -49,7 +49,7 @@ public class CharacterManager : MonoBehaviour
 
     public void OnStart()
     {
-        pool.ActivateReserves(1, out List<Character> additionalCharacters, (character) =>
+        pool.Activate(1, out List<Character> additionalCharacters, (character) =>
         {
             character.OnInstantiate(this);
         });
@@ -137,7 +137,7 @@ public class CharacterManager : MonoBehaviour
     {
         Character topCharacter = pool.activelist[pool.activelist.Count - 1];
 
-        pool.ActivateReserves(addCount, out List<Character> additionalCharacters, (character) =>
+        pool.Activate(addCount, out List<Character> additionalCharacters, (character) =>
         {
             character.OnInstantiate(this);
         });
@@ -169,6 +169,16 @@ public class CharacterManager : MonoBehaviour
         for (int i = 0; i < killedCharacters.Length; i++)
         {
             killedCharacters[i].Dead(killedCharacters[i].transform.position, true);
+        }
+    }
+
+    public void Goal()
+    {
+        for (int i = 0; i < pool.activelist.Count; i++)
+        {
+            var character = pool.activelist[i];
+            float y = GoalController.i.gameObject.transform.position.y + i * characterPrefab.Height;
+            character.transform.SetPosY(y);
         }
     }
 }
