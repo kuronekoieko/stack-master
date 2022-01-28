@@ -55,6 +55,7 @@ public class Character : MonoBehaviour
         Destroy(animator.gameObject);
         animator = skinController.Animator;
         ragdollController.SetRagdoll(animator);
+        ragdollController.EnableRagdoll(false);
     }
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
