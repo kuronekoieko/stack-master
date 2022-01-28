@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] IncEffectController inkEffectController;
     [SerializeField] ParticleSystem appearPs;
+    [SerializeField] RagdollController ragdollController;
     [Inject] CameraController cameraController;
     float speedZ = 15f * 2f / 3f;
     float currentVelocity;
@@ -53,10 +54,12 @@ public class Character : MonoBehaviour
         skinController.OnInstantiate();
         Destroy(animator.gameObject);
         animator = skinController.Animator;
+        ragdollController.SetRagdoll(animator);
     }
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
+        ragdollController.EnableRagdoll(false);
         isMovingAppear = true;
         rb.mass = 1f;
         capsuleCollider.enabled = false;
@@ -156,6 +159,14 @@ public class Character : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter(Collision collisionInfo)
+    {
+        if (collisionInfo.gameObject.CompareTag("Obstacle"))
+        {
+            Dead(collisionInfo.contacts[0].point, false);
+        }
+    }
+
     void OnTriggerEnterGate(Collider other)
     {
         var gate = other.gameObject.GetComponent<GateController>();
@@ -205,14 +216,22 @@ public class Character : MonoBehaviour
     public void Dead(Vector3 hitPos, bool isHitGate)
     {
         SoundManager.i?.PlayOneShotDead();
-        gameObject.SetActive(false);
-        characterManager.pool.Remove(this);
 
-        inkEffectController.PlayBloodParticle(hitPos, Height);
+        characterManager.pool.Remove(this);
+        inkEffectController.PlayBloodParticle(transform.position, Height);
+
+        if (Variables.isSkinReal)
+        {
+            ragdollController.EnableRagdoll(true);
+            DOVirtual.DelayedCall(3f, () => gameObject.SetActive(false));
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
 
         if (isHitGate) return;
-
-        inkEffectController.ShowInkSprite(hitPos, Height);
+        inkEffectController.ShowInkSprite(transform.position, Height, capsuleCollider.radius);
     }
 
     bool isLeft;

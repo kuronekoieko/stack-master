@@ -1,0 +1,70 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+
+public class RagdollController : MonoBehaviour
+{
+    Rigidbody[] rigidbodies;
+    Collider[] colliders;
+    Rigidbody rb;
+    Collider[] cols;
+    Animator animator;
+    private void Awake()
+    {
+        if (!Variables.isSkinReal) return;
+
+        rb = GetComponent<Rigidbody>();
+        cols = GetComponents<Collider>();
+    }
+
+    public void SetRagdoll(Animator animator)
+    {
+        if (!Variables.isSkinReal) return;
+        this.animator = animator;
+        rigidbodies = animator.transform.GetComponentsInChildren<Rigidbody>();
+        colliders = animator.transform.GetComponentsInChildren<Collider>();
+    }
+
+    public void EnableRagdoll(bool enabled)
+    {
+        if (!Variables.isSkinReal) return;
+
+        foreach (var r in rigidbodies)
+        {
+            r.isKinematic = !enabled;
+        }
+
+        foreach (var c in colliders)
+        {
+            c.enabled = enabled;
+        }
+        animator.enabled = !enabled;
+
+        rb.isKinematic = enabled;
+        foreach (var col in cols)
+        {
+            col.enabled = !enabled;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (!Variables.isSkinReal) return;
+        if (animator.enabled) return;
+        foreach (var r in rigidbodies)
+        {
+            r.AddForce(Vector3.down * 30f);
+        }
+    }
+
+    public void Addforce(Vector3 power, ForceMode mode = ForceMode.Acceleration)
+    {
+        if (!Variables.isSkinReal) return;
+
+        foreach (var r in rigidbodies)
+        {
+            r.AddForce(power, mode);
+        }
+    }
+}

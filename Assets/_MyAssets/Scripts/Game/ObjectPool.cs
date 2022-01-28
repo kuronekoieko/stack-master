@@ -52,6 +52,6 @@ public class ObjectPool : MonoBehaviour
     {
         inActivelist.Add(item);
         _activelist.Remove(item);
-        item.gameObject.SetActive(false);
+       // item.gameObject.SetActive(false);
     }
 }
