@@ -5,6 +5,13 @@ using DG.Tweening;
 using Zenject;
 using UniRx;
 
+public enum CharacterState
+{
+    Alive,
+    Dead,
+    Goaled,
+}
+
 public class Character : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
@@ -21,6 +28,7 @@ public class Character : MonoBehaviour
     public float Height => capsuleCollider.height;
     bool isMovingAppear;
     SkinController skinController;
+    CharacterState characterState = CharacterState.Alive;
 
     /// <summary>
     /// startより先
@@ -61,6 +69,7 @@ public class Character : MonoBehaviour
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
+        characterState = CharacterState.Alive;
         ragdollController.EnableRagdoll(false);
         isMovingAppear = true;
         rb.mass = 1f;
@@ -218,6 +227,9 @@ public class Character : MonoBehaviour
     /// <param name="isHitGate"></param>
     public void Dead(Vector3 hitPos, bool isHitGate)
     {
+        // 1フレームに複数回判定するため
+        if (characterState == CharacterState.Dead) return;
+        characterState = CharacterState.Dead;
         SoundManager.i?.PlayOneShotDead();
 
         characterManager.pool.Remove(this);
@@ -227,7 +239,7 @@ public class Character : MonoBehaviour
         {
             ragdollController.EnableRagdoll(true);
             ragdollController.Addforce(Vector3.right * Random.Range(-1f, 1f) * 10f, ForceMode.Impulse);
-            DOVirtual.DelayedCall(3f, () => gameObject.SetActive(false));
+            // DOVirtual.DelayedCall(3f, () => gameObject.SetActive(false));
         }
         else
         {
@@ -238,12 +250,11 @@ public class Character : MonoBehaviour
         inkEffectController.ShowInkSprite(transform.position, Height, capsuleCollider.radius);
     }
 
-    bool isLeft;
     void Leave(GoalStairController goalStairController)
     {
         // 1フレームに複数回判定するため
-        if (isLeft) return;
-        isLeft = true;
+        if (characterState == CharacterState.Goaled) return;
+        characterState = CharacterState.Goaled;
 
         // 階段で止まったときに例外的にアクティブにしたいから
         characterManager.pool.Remove(this);

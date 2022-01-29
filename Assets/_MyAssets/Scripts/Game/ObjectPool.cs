@@ -50,7 +50,13 @@ public class ObjectPool : MonoBehaviour
 
     public void Remove(Character item)
     {
-        if (inActivelist.Contains(item)) return;
+
+        if (inActivelist.Contains(item))
+        {
+            Debug.LogError("duplicate " + item);
+            return;
+        }
+        // Debug.Log("dead " + item);
         inActivelist.Add(item);
         activelist.Remove(item);
         // item.gameObject.SetActive(false);
