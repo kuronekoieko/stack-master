@@ -179,7 +179,7 @@ public class CharacterManager : MonoBehaviour
             var character = pool.activelist[i];
             float y = GoalController.i.gameObject.transform.position.y + i * characterPrefab.Height;
             character.transform.SetPosY(y);
-            Debug.Log("Goal " + character.name);
+            // Debug.Log("Goal " + character.name);
         }
     }
 }
