@@ -41,9 +41,9 @@ public class SaveDataManager
     void AddNewArrayElements()
     {
         // TODO:あとで新しいIDを追加するように変更
-        for (int i = SaveData.i.characterSkinSaveDatas.Count; i < SkinSettingSO.i.characterSkinDatas.Length; i++)
+        for (int i = SaveData.i.characterSkinSaveDatas.Count; i < SkinSettingSO.i.CharacterSkinDatas.Length; i++)
         {
-            var characterSkinData = SkinSettingSO.i.characterSkinDatas[i];
+            var characterSkinData = SkinSettingSO.i.CharacterSkinDatas[i];
             SaveData.i.characterSkinSaveDatas.Add(new SkinSaveData(characterSkinData.id, false));
         }
 

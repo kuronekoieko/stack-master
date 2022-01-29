@@ -39,4 +39,19 @@ public static class TransformExtensions
     public static void Find(this Transform transform)
     {
     }
+
+    public static void ChangeLayersForAllChildren(this Transform transform, string layerName)
+    {
+        ChangeLayersForChildren(transform, layerName);
+        transform.gameObject.layer = LayerMask.NameToLayer(layerName);
+    }
+
+    static void ChangeLayersForChildren(Transform transform, string layerName)
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.layer = LayerMask.NameToLayer(layerName);
+            ChangeLayersForChildren(child, layerName);
+        }
+    }
 }

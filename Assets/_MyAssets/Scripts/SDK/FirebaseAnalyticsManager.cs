@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Extensions;
 using Firebase.Analytics;
+using DG.Tweening;
 
 /// <summary>
 /// Unity 用 Google アナリティクスを使ってみる
@@ -48,18 +49,23 @@ public class FirebaseAnalyticsManager : MonoBehaviour
 #endif
     }
 
-    public void LogTest(string title)
-    {
-        if (!isAvailable) { return; }
-        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventScreenView, "test_a", title);
-        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventScreenView, title, "test_b");
-        FirebaseAnalytics.LogEvent("test_c", title, title);
-        FirebaseAnalytics.LogEvent("test_name", "test_parameterName", "test_parameterValue");
-    }
-
     public void LogEvent(string title, string parameterName)
     {
-        if (!isAvailable) { return; }
-        FirebaseAnalytics.LogEvent(title, parameterName, parameterName);
+        StartCoroutine(LogEventAsync(title, parameterName, parameterName));
+    }
+
+    public void LogEvent_level(string title)
+    {
+        string level = "level_" + StageTransManager.i.CurrentDisplayStageNum.ToString("000");
+        StartCoroutine(LogEventAsync(title, "level", level));
+    }
+
+    IEnumerator LogEventAsync(string title, string parameterName, string parameterValue)
+    {
+        while (!isAvailable)
+        {
+            yield return 0;
+        }
+        FirebaseAnalytics.LogEvent(title, parameterName, parameterValue);
     }
 }

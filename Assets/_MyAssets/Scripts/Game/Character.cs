@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] IncEffectController inkEffectController;
     [SerializeField] ParticleSystem appearPs;
+    [SerializeField] RagdollController ragdollController;
     [Inject] CameraController cameraController;
     float speedZ = 15f * 2f / 3f;
     float currentVelocity;
@@ -49,14 +50,18 @@ public class Character : MonoBehaviour
 
     void OnChangedSkin(int selectedSkinIndex)
     {
-        skinController = Instantiate(SkinSettingSO.i.characterSkinDatas[selectedSkinIndex].prefab, transform);
+        skinController = Instantiate(SkinSettingSO.i.CharacterSkinDatas[selectedSkinIndex].prefab, transform);
         skinController.OnInstantiate();
         Destroy(animator.gameObject);
         animator = skinController.Animator;
+        ragdollController.SetRagdoll(animator);
+        ragdollController.EnableRagdoll(false);
+        if (Variables.isSkinReal) animator.transform.localScale = Vector3.one * 1.2f;
     }
 
     public void Appear(Vector3 bottomPos, Vector3 targetPos, float duration, bool isOnSound)
     {
+        ragdollController.EnableRagdoll(false);
         isMovingAppear = true;
         rb.mass = 1f;
         capsuleCollider.enabled = false;
@@ -74,7 +79,7 @@ public class Character : MonoBehaviour
                 SoundManager.i?.PlayOneShot(0);
                 //   VibrateManager.Play();
                 AddCountTextEffectManager.i.Show(1, transform);
-                appearPs.Play();
+                if (!Variables.isSkinReal) appearPs.Play();
             }
         });
     }
@@ -156,6 +161,14 @@ public class Character : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter(Collision collisionInfo)
+    {
+        if (collisionInfo.gameObject.CompareTag("Obstacle"))
+        {
+            Dead(collisionInfo.contacts[0].point, false);
+        }
+    }
+
     void OnTriggerEnterGate(Collider other)
     {
         var gate = other.gameObject.GetComponent<GateController>();
@@ -188,11 +201,7 @@ public class Character : MonoBehaviour
         characterManager.playerState = PlayerState.GoalBonus;
         cameraController.CameraState = CameraState.ClimbingStairs;
 
-        for (int i = 0; i < characterManager.pool.activelist.Count; i++)
-        {
-            var character = characterManager.pool.activelist[i];
-            character.transform.SetPosY(GoalController.i.gameObject.transform.position.y + i * Height);
-        }
+        characterManager.Goal();
     }
 
     void OnTriggerEnterGoalStair(Collider other)
@@ -202,17 +211,31 @@ public class Character : MonoBehaviour
         Leave(goalStair);
     }
 
+    /// <summary>
+    /// 2回呼ばれてるので注意
+    /// </summary>
+    /// <param name="hitPos"></param>
+    /// <param name="isHitGate"></param>
     public void Dead(Vector3 hitPos, bool isHitGate)
     {
         SoundManager.i?.PlayOneShotDead();
-        gameObject.SetActive(false);
-        characterManager.pool.Remove(this);
 
-        inkEffectController.PlayBloodParticle(hitPos, Height);
+        characterManager.pool.Remove(this);
+        inkEffectController.PlayBloodParticle(transform.position, Height);
+
+        if (Variables.isSkinReal)
+        {
+            ragdollController.EnableRagdoll(true);
+            ragdollController.Addforce(Vector3.right * Random.Range(-1f, 1f) * 10f, ForceMode.Impulse);
+            DOVirtual.DelayedCall(3f, () => gameObject.SetActive(false));
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
 
         if (isHitGate) return;
-
-        inkEffectController.ShowInkSprite(hitPos, Height);
+        inkEffectController.ShowInkSprite(transform.position, Height, capsuleCollider.radius);
     }
 
     bool isLeft;
@@ -223,7 +246,7 @@ public class Character : MonoBehaviour
         isLeft = true;
 
         // 階段で止まったときに例外的にアクティブにしたいから
-        characterManager.pool.activelist.Remove(this);
+        characterManager.pool.Remove(this);
         rb.isKinematic = true;
         animator.ResetTrigger("Run");
         animator.ResetTrigger("Fall");
