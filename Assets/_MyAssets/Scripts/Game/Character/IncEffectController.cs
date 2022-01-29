@@ -7,18 +7,20 @@ using UniRx;
 public class IncEffectController : MonoBehaviour
 {
     [SerializeField] ParticleSystem bloodPs;
+    [SerializeField] ParticleSystem hitPs;
     [SerializeField] SpriteRenderer inkSr;
     ParticleSystem[] bloodPsChildren;
     Vector3 inkScale;
     Tween bloodPsTween;
     Tween inkSrTween;
+    ParticleSystem DeadPs => Variables.isSkinReal ? hitPs : bloodPs;
 
     public void OnInstantiate()
     {
         inkSr.gameObject.SetActive(false);
-        bloodPs.gameObject.SetActive(false);
+        DeadPs.gameObject.SetActive(false);
         if (Variables.isSkinReal) return;
-        bloodPsChildren = bloodPs.GetComponentsInChildren<ParticleSystem>();
+        bloodPsChildren = DeadPs.GetComponentsInChildren<ParticleSystem>();
         inkScale = inkSr.transform.lossyScale;
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
             .Subscribe(_ => OnChangedMaterial(_));
@@ -37,16 +39,16 @@ public class IncEffectController : MonoBehaviour
 
     public void PlayBloodParticle(Vector3 characterPos, float characterHeight)
     {
-        if (Variables.isSkinReal) return;
+        //if (Variables.isSkinReal) return;
         if (bloodPsTween != null) bloodPsTween.Kill();
-        bloodPs.gameObject.SetActive(true);
+        DeadPs.gameObject.SetActive(true);
         transform.parent = null;
         characterPos.y += characterHeight / 2f;
-        bloodPs.transform.position = characterPos;
-        bloodPs.Play();
+        DeadPs.transform.position = characterPos;
+        DeadPs.Play();
         bloodPsTween = DOVirtual.DelayedCall(3, () =>
         {
-            bloodPs.gameObject.SetActive(false);
+            DeadPs.gameObject.SetActive(false);
         });
     }
 
