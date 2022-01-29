@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +12,6 @@ public class GameManager : MonoBehaviour
     [Inject] StageManager stageManager;
     [Inject] AddCountTextEffectManager addCountTextEffectManager;
 
-
     void Awake()
     {
 
@@ -19,6 +19,20 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(LoadAsync());
+    }
+
+    private IEnumerator LoadAsync()
+    {
+        if (!Variables.isLaunchUIScene)
+        {
+            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
+            while (!asyncOperation.isDone)
+            {
+                yield return 0;
+            } 
+        }
+
         // StartCoroutine(LoadAsync());
         characterManager.OnAwake();
         // yield return null;
@@ -32,8 +46,6 @@ public class GameManager : MonoBehaviour
         // yield return null;
         addCountTextEffectManager.OnStart();
     }
-
-
 
     void Update()
     {
