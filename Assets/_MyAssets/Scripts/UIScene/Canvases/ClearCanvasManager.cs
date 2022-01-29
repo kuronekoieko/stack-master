@@ -48,7 +48,9 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         SoundManager.i.PlayOneShot(1);
-        DOVirtual.DelayedCall(1.5f, () =>
+        Open();
+
+        /*        DOVirtual.DelayedCall(1.5f, () =>
         {
             Time.timeScale = 0;
             ShowInterstitial(() =>
@@ -56,7 +58,8 @@ public class ClearCanvasManager : BaseCanvasManager
                 Open();
                 Time.timeScale = 1;
             });
-        });
+        });*/
+
 
     }
 
@@ -81,9 +84,9 @@ public class ClearCanvasManager : BaseCanvasManager
         rewardVideoButton.Hide();
         gems.gameObject.SetActive(true);
 
-       
+
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
-        FirebaseAnalyticsManager.i.LogEvent("level_clear", "level_" + StageTransManager.i.CurrentDisplayStageNum);
+        FirebaseAnalyticsManager.i.LogEvent_level("level_cleared");
 
         int baseClearReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.CurrentDisplayStageNum - 1).clearReward;
         curencyCount = Mathf.RoundToInt(Variables.goalRate * baseClearReward);
@@ -108,7 +111,6 @@ public class ClearCanvasManager : BaseCanvasManager
                     SaveDataManager.i.Save();
                 });
             });
-
         });
     }
 

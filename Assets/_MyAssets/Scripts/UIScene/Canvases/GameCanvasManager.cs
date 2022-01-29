@@ -28,7 +28,7 @@ public class GameCanvasManager : BaseCanvasManager
 
     public override void OnSceneLoaded()
     {
-        FirebaseAnalyticsManager.i.LogEvent("level_start", "level_" + StageTransManager.i.CurrentDisplayStageNum);
+        FirebaseAnalyticsManager.i.LogEvent_level("level_start");
     }
 
     public override void OnUpdate()

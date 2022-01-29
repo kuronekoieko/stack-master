@@ -7,9 +7,11 @@ using Sirenix.OdinInspector;
 public class SkinSettingSO : ScriptableObject
 {
     public RuntimeAnimatorController animatorController;
-    public CharacterSkinData[] characterSkinDatas;
+    [SerializeField] CharacterSkinData[] characterSkinDatas;
     public CharacterMaterialData[] characterMaterialDatas;
+    [SerializeField] public CharacterSkinData[] characterSkinDatas_Real;
 
+    public CharacterSkinData[] CharacterSkinDatas => Variables.isSkinReal ? characterSkinDatas_Real : characterSkinDatas;
 
     static SkinSettingSO _i;
     public static SkinSettingSO i

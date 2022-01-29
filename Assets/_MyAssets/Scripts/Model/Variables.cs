@@ -10,4 +10,5 @@ public class Variables : MonoBehaviour
     public static float smoothTimeX = 0.01f;//0.05f
     public static float goalRate = 1.0f;
     public static bool isLaunchUIScene = false;
+    public static bool isSkinReal = true;
 }

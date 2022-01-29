@@ -28,7 +28,7 @@ public class FailedCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
-        FirebaseAnalyticsManager.i.LogEvent("stage_failed", "level_" + StageTransManager.i.CurrentDisplayStageNum);
+        FirebaseAnalyticsManager.i.LogEvent_level("level_failed");
 
         DOVirtual.DelayedCall(1.3f, () =>
         {
