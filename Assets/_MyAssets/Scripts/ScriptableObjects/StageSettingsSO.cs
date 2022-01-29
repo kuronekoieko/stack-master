@@ -14,30 +14,7 @@ public class StageSettingsSO : ScriptableObject
     public StageData[] stageDatas_ver2;
     public StageData[] StageDatas => stageDatas_ver2;
 
-
-    static StageSettingsSO _i;
-    public static StageSettingsSO i
-    {
-        get
-        {
-            if (Variables.isLaunchUIScene) return _i;
-            string PATH = "ScriptableObjects/" + nameof(StageSettingsSO);
-            //初アクセス時にロードする
-            if (_i == null)
-            {
-                _i = Resources.Load<StageSettingsSO>(PATH);
-
-                //ロード出来なかった場合はエラーログを表示
-                if (_i == null)
-                {
-                    Debug.LogError(PATH + " not found");
-                }
-            }
-
-            return _i;
-        }
-        set { _i = value; }
-    }
+    public static StageSettingsSO i;
 
 }
 

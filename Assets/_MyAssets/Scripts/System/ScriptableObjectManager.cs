@@ -8,12 +8,16 @@ public class ScriptableObjectManager : MonoBehaviour
     [SerializeField] ParameterSettingSO parameterSettingSO;
     [SerializeField] SkinSettingSO skinSettingSO;
     [SerializeField] SoundResourceSO soundResourceSO;
-    void Awake()
-    {
-        StageSettingsSO.i = stageSettingsSO;
-        ParameterSettingSO.i = parameterSettingSO;
-        SkinSettingSO.i = skinSettingSO;
-        SoundResourceSO.i = soundResourceSO;
-    }
 
+    void Start()
+    {
+        SetInstance();
+    }
+    public void SetInstance()
+    {
+        if (StageSettingsSO.i == null) StageSettingsSO.i = stageSettingsSO;
+        if (ParameterSettingSO.i == null) ParameterSettingSO.i = parameterSettingSO;
+        if (SkinSettingSO.i == null) SkinSettingSO.i = skinSettingSO;
+        if (SoundResourceSO.i == null) SoundResourceSO.i = soundResourceSO;
+    }
 }

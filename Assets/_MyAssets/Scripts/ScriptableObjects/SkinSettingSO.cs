@@ -13,30 +13,7 @@ public class SkinSettingSO : ScriptableObject
 
     public CharacterSkinData[] CharacterSkinDatas => Variables.isSkinReal ? characterSkinDatas_Real : characterSkinDatas;
 
-    static SkinSettingSO _i;
-    public static SkinSettingSO i
-    {
-        get
-        {
-            if (Variables.isLaunchUIScene) return _i;
-            string PATH = "ScriptableObjects/" + nameof(SkinSettingSO);
-            //初アクセス時にロードする
-            if (_i == null)
-            {
-                _i = Resources.Load<SkinSettingSO>(PATH);
-                Debug.Log("load");
-
-                //ロード出来なかった場合はエラーログを表示
-                if (_i == null)
-                {
-                    Debug.LogError(PATH + " not found");
-                }
-            }
-
-            return _i;
-        }
-        set { _i = value; }
-    }
+    public static SkinSettingSO i;
 }
 
 [System.Serializable]

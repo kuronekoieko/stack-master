@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Transform canvasesParentTf;
     [SerializeField] SplashController splashController;
     [SerializeField] LoadingScreenController loadingScreenController;
+    [SerializeField] CoinCountView coinCountView;
     BaseCanvasManager[] baseCanvasManagers;
     void Awake()
     {
@@ -38,16 +39,24 @@ public class UIManager : MonoBehaviour
         {
             yield return 0;
         }
-
+        Debug.Log("テスト ロード開始 ScriptableObjectManager " + Time.time);
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
+        while (!asyncOperation.isDone)
+        {
+            Debug.Log("テスト ロード中 ScriptableObjectManager " + asyncOperation.progress);
+            yield return 0;
+        }
+        Debug.Log("テスト ロード終了 ScriptableObjectManager " + Time.time);
         SceneManager.sceneLoaded += SceneLoaded;
         CSVManager.i.ParseCSV();
         SaveDataManager.i.LoadSaveData();
+        coinCountView.OnStart();
         SetPushNotification();
         StartCanvases();
 
         FirebaseAnalyticsManager.i.Initialize();
         StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
-        AsyncOperation asyncOperation = StageTransManager.i.ReLoadStage();
+        AsyncOperation asyncOperationStage = StageTransManager.i.ReLoadStage();
 
         while (!asyncOperation.isDone)
         {
