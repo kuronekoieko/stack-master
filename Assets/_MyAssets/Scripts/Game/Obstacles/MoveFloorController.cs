@@ -30,8 +30,8 @@ public class MoveFloorController : MonoBehaviour
     void FixedUpdate()
     {
         if (!existCharacter) return;
-        if (isRight) characterManager.pool.activelist[0].transform.position += new Vector3(speed, 0, 0);
-        else characterManager.pool.activelist[0].transform.position -= new Vector3(speed, 0, 0);
+        if (isRight) characterManager.pool.activelist[0].transform.position += new Vector3(speed * Time.fixedDeltaTime / 0.02f, 0, 0);
+        else characterManager.pool.activelist[0].transform.position -= new Vector3(speed * Time.fixedDeltaTime / 0.02f, 0, 0);
     }
 
     void OnValidate()

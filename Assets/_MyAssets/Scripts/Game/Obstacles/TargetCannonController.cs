@@ -101,10 +101,10 @@ public class TargetCannonController : MonoBehaviour
         if (characterManager.pool.activelist.Count <= 0) return;
 
         float lerpRatio = 0.2f;
-        Vector3 targetPos = Vector3.Lerp(transform.position + transform.forward, characterManager.pool.activelist[0].transform.position + new Vector3(0, 0, 4), lerpRatio * 0.02f / Time.fixedDeltaTime);
+        Vector3 targetPos = Vector3.Lerp(transform.position + transform.forward, characterManager.pool.activelist[0].transform.position + new Vector3(0, 0, 4), lerpRatio * Time.fixedDeltaTime / 0.02f);
         targetPos.y = transform.position.y;
         transform.LookAt(targetPos);
-        targetPos = Vector3.Lerp(transform.position + transform.forward, characterManager.pool.activelist[0].transform.position + new Vector3(0, 0, 4), lerpRatio * 0.02f / Time.fixedDeltaTime);
+        targetPos = Vector3.Lerp(transform.position + transform.forward, characterManager.pool.activelist[0].transform.position + new Vector3(0, 0, 4), lerpRatio * Time.fixedDeltaTime / 0.02f);
         cannonBody_transform.LookAt(targetPos);
         ChangeLaserLength();
     }
@@ -162,7 +162,7 @@ public class TargetCannonController : MonoBehaviour
         float distance = Vector3.Distance(rangeTrigger.position, characterManager.pool.activelist[0].transform.position);
         if (distance < range / 2) return;
         if (!istest) return;
-        
+
         isActive = false;
         laser_transform.gameObject.SetActive(false);
     }

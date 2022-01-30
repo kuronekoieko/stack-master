@@ -27,12 +27,6 @@ public class MetronomeController : MonoBehaviour
         }));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
     IEnumerator DelayMethod(float delayTime_sec, Action action) { yield return new WaitForSeconds(delayTime_sec); action(); }
 }

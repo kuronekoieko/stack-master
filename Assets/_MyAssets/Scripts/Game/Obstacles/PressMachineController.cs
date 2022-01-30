@@ -44,12 +44,6 @@ public class PressMachineController : MonoBehaviour
         }));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void OnValidate()
     {
         body_transform.localScale = new Vector3(1.75f, height * 2 + 1, 2);
