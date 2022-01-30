@@ -33,7 +33,13 @@ public class SkinController : MonoBehaviour
             for (int j = 0; j < materials.Length; j++)
             {
                 if (skinnedMeshRenderer.materials[j] == null) continue;
-                Texture texture = skinnedMeshRenderer.materials[j].GetTexture("_MainTex");
+                Texture texture = null;
+
+                // 何故かエディターではエラーが出ない
+                if (skinnedMeshRenderer.materials[j].HasProperty("_MainTex"))
+                {
+                    texture = skinnedMeshRenderer.materials[j].GetTexture("_MainTex");
+                }
 
                 if (isAll)
                 {
