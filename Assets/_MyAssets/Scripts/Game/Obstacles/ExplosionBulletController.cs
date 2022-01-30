@@ -8,12 +8,21 @@ public class ExplosionBulletController : MonoBehaviour
     [SerializeField] ParticleSystem explosion_particleSystem_original;
     [SerializeField] Collider hitTrigger;
     [SerializeField] float explosionScale = 4;
+    [SerializeField] float deleteTime_sec = 5;
     Rigidbody _rigidbody;
 
     //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
     void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+    }
+
+    void Start()
+    {
+        StartCoroutine(DelayMethod(deleteTime_sec, () =>
+        {
+            gameObject.SetActive(false);
+        }));
     }
 
     //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
