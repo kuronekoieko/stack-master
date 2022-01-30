@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [Inject] BackgroundManager backgroundManager;
     [Inject] StageManager stageManager;
     [Inject] AddCountTextEffectManager addCountTextEffectManager;
+    [SerializeField] ScriptableObjectManager scriptableObjectManager;
 
     void Awake()
     {
@@ -19,18 +20,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(LoadAsync());
-    }
-
-    private IEnumerator LoadAsync()
-    {
         if (!Variables.isLaunchUIScene)
         {
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
-            while (!asyncOperation.isDone)
-            {
-                yield return 0;
-            } 
+            scriptableObjectManager.SetInstance();
         }
 
         // StartCoroutine(LoadAsync());

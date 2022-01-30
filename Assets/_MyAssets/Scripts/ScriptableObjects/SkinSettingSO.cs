@@ -9,9 +9,8 @@ public class SkinSettingSO : ScriptableObject
     public RuntimeAnimatorController animatorController;
     [SerializeField] CharacterSkinData[] characterSkinDatas;
     public CharacterMaterialData[] characterMaterialDatas;
-    [SerializeField] public CharacterSkinData[] characterSkinDatas_Real;
 
-    public CharacterSkinData[] CharacterSkinDatas => Variables.isSkinReal ? characterSkinDatas_Real : characterSkinDatas;
+    public CharacterSkinData[] CharacterSkinDatas => characterSkinDatas;
 
     public static SkinSettingSO i;
 }

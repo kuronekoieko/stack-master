@@ -12,6 +12,7 @@ public class StageTransManager
     private static StageTransManager _i = new StageTransManager();
     public int CurrentDisplayStageNum { get; private set; } = 1;
     List<StageData> loopStageDatas = new List<StageData>();
+    public GameObject stagePrefab;
 
     /// <summary>
     /// ステージ番号の初期化と、最初のロード
