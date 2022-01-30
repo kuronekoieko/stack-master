@@ -3,19 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
-
+using System.Linq;
 [CreateAssetMenu(menuName = "MyGame/Create StageSettingsSO", fileName = "StageSettingsSO")]
-public class StageSettingsSO : ScriptableObject
+public class StageSettingsSO : SingletonScriptableObject<StageSettingsSO>
 {
     [ListDrawerSettings(ListElementLabelName = "stageNum")]
+    [OnValueChanged(nameof(SetPath_ver1), true)]
     public StageData[] stageDatas;
 
     [ListDrawerSettings(ListElementLabelName = "stageNum_ver2")]
+    [OnValueChanged(nameof(SetPath_ver2), true)]
     public StageData[] stageDatas_ver2;
-    public StageData[] StageDatas => stageDatas_ver2;
 
-    public static StageSettingsSO i;
+    void SetPath_ver1()
+    {
+        StagePrefabPathSO.Instance.stagePrefabPaths_ver1 = stageDatas
+            .Where(_ => _.stagePrefab)
+            .Select(_ => "mStageVer1/" + _.stagePrefab.name)
+            .ToArray();
+    }
 
+    void SetPath_ver2()
+    {
+        StagePrefabPathSO.Instance.stagePrefabPaths_ver2 = stageDatas_ver2
+            .Where(_ => _.stagePrefab)
+            .Select(_ => "mStageVer2/" + _.stagePrefab.name)
+            .ToArray();
+    }
 }
 
 /// <summary>
@@ -25,8 +39,8 @@ public class StageSettingsSO : ScriptableObject
 [Serializable, InlineProperty]
 public class StageData
 {
-    string stageNum => "level " + (Array.IndexOf(StageSettingsSO.i.stageDatas, this) + 1);
-    string stageNum_ver2 => "level " + (Array.IndexOf(StageSettingsSO.i.stageDatas_ver2, this) + 1);
+    string stageNum => "level " + (Array.IndexOf(StageSettingsSO.Instance.stageDatas, this) + 1);
+    string stageNum_ver2 => "level " + (Array.IndexOf(StageSettingsSO.Instance.stageDatas_ver2, this) + 1);
     [HideLabel]
     public GameObject stagePrefab;
 }

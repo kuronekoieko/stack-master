@@ -11,7 +11,7 @@ public class StageTransManager
     public static StageTransManager i => _i;
     private static StageTransManager _i = new StageTransManager();
     public int CurrentDisplayStageNum { get; private set; } = 1;
-    List<StageData> loopStageDatas = new List<StageData>();
+    List<string> loopStageDatas = new List<string>();
     public GameObject stagePrefab;
 
     /// <summary>
@@ -25,17 +25,18 @@ public class StageTransManager
         CurrentDisplayStageNum = startDisplayStageNum;
     }
 
-    public StageData GetCurrentDisplayStageData()
+    public string GetCurrentDisplayStagePath()
     {
+
         int displaysStageNum = CurrentDisplayStageNum;
-        if (loopStageDatas.Count < StageSettingsSO.i.StageDatas.Length)
+        if (loopStageDatas.Count < StagePrefabPathSO.Instance.StagePrefabPaths.Length)
         {
-            loopStageDatas.AddRange(StageSettingsSO.i.StageDatas);
+            loopStageDatas.AddRange(StagePrefabPathSO.Instance.StagePrefabPaths);
         }
 
         while (loopStageDatas.IsIndexOutOfRange(displaysStageNum - 1))
         {
-            loopStageDatas.AddRange(StageSettingsSO.i.StageDatas.Skip(1));
+            loopStageDatas.AddRange(StagePrefabPathSO.Instance.StagePrefabPaths.Skip(1));
         }
 
         return loopStageDatas[displaysStageNum - 1];
@@ -85,21 +86,23 @@ public class StageTransManager
         return asyncOperation;
     }
 
-    /// <summary>
-    /// デバッグ画面用に、ステージ名を一括取得する
-    /// </summary>
-    /// <value></value>
-    public List<string> GetStageNames
-    {
-        get
+
+    /*    /// <summary>
+        /// デバッグ画面用に、ステージ名を一括取得する
+        /// </summary>
+        /// <value></value>
+        public List<string> GetStageNames
         {
-            List<string> numStrings = new List<string>();
-            for (int i = 1; i < StageSettingsSO.i.StageDatas.Length + 1; i++)
+            get
             {
-                string name = Path.GetFileName(SceneUtility.GetScenePathByBuildIndex(i));
-                numStrings.Add((i) + "  " + name);
+                List<string> numStrings = new List<string>();
+                for (int i = 1; i < StageSettingsSO.Instance.StageDatas.Length + 1; i++)
+                {
+                    string name = Path.GetFileName(SceneUtility.GetScenePathByBuildIndex(i));
+                    numStrings.Add((i) + "  " + name);
+                }
+                return numStrings;
             }
-            return numStrings;
-        }
-    }
+        }*/
+
 }

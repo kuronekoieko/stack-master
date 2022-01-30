@@ -28,13 +28,22 @@ public class UIManager : MonoBehaviour
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
         loadingScreenController.OnAwake();
         DontDestroyOnLoad(gameObject);
+        scriptableObjectManager.SetInstance();
     }
 
 
     void Start()
     {
+        SceneManager.sceneLoaded += SceneLoaded;
+        CSVManager.i.ParseCSV();
+        SaveDataManager.i.LoadSaveData();
+        coinCountView.OnStart();
+        SetPushNotification();
+        FirebaseAnalyticsManager.i.Initialize();
+        StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
+
         // Debug.Log("テスト main start() a");
-        stageLoadingRR = Resources.LoadAsync<GameObject>("mStageVer2/m001_ver2");
+        stageLoadingRR = Resources.LoadAsync<GameObject>(StageTransManager.i.GetCurrentDisplayStagePath());
         // Debug.Log("テスト main start() b");
         stageSceneAO = StageTransManager.i.ReLoadStage(true); //重い
                                                               // Debug.Log("テスト main start() c");
@@ -54,16 +63,8 @@ public class UIManager : MonoBehaviour
 
         //  Debug.Log("テスト UIInit start");
         // yield return new WaitForSeconds(3f);
-        scriptableObjectManager.SetInstance();
-        SceneManager.sceneLoaded += SceneLoaded;
-        CSVManager.i.ParseCSV();
-        SaveDataManager.i.LoadSaveData();
-        coinCountView.OnStart();
-        SetPushNotification();
+ 
         StartCanvases();// 重い(1sくらい)
-
-        FirebaseAnalyticsManager.i.Initialize();
-        StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
         // Debug.Log("テスト UIInit end");
 
         // Debug.Log("テスト プレハブロード 開始 " + Time.time);
