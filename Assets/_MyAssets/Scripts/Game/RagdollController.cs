@@ -60,6 +60,7 @@ public class RagdollController : MonoBehaviour
     void FixedUpdate()
     {
         if (!Variables.isSkinReal) return;
+        if (animator == null) return;
         if (animator.enabled) return;
         foreach (var r in rigidbodies)
         {
