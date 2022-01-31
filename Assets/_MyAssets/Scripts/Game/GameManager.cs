@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [Inject] BackgroundManager backgroundManager;
     [Inject] StageManager stageManager;
     [Inject] AddCountTextEffectManager addCountTextEffectManager;
+    [Inject] MeshPerformanceController meshPerformanceController;
     [SerializeField] ScriptableObjectManager scriptableObjectManager;
 
     void Awake()
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         characterManager.OnUpdate();
+        meshPerformanceController.OnUpdate();
     }
 
     void LateUpdate()

@@ -176,8 +176,8 @@ public class CameraController : MonoBehaviour
         followOffset.y *= Mathf.Clamp(characterManager.ActiveCount * 0.3f, 1f, (max + 5) * 0.3f);
         followOffset.z *= Mathf.Clamp(characterManager.ActiveCount * 0.15f, 1f, max * 0.15f);
 
-        RenderSettings.fogStartDistance = Mathf.Lerp(RenderSettings.fogStartDistance, 100f + (float)characterManager.ActiveCount * 1.5f, 0.5f * Time.deltaTime);
-        RenderSettings.fogEndDistance = Mathf.Lerp(RenderSettings.fogEndDistance, 300f + RenderSettings.fogStartDistance, 0.5f * Time.deltaTime);
+        // RenderSettings.fogStartDistance = Mathf.Lerp(RenderSettings.fogStartDistance, 100f + (float)characterManager.ActiveCount * 1.5f, 0.5f * Time.deltaTime);
+        // RenderSettings.fogEndDistance = Mathf.Lerp(RenderSettings.fogEndDistance, 300f + RenderSettings.fogStartDistance, 0.5f * Time.deltaTime);
 
         Vector3 bottomPos = characterManager.BottomCharacterPos;
         bottomPos.x = 0;
