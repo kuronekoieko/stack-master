@@ -7,24 +7,32 @@ using System.Linq;
 [CreateAssetMenu(menuName = "MyGame/Create StageSettingsSO", fileName = "StageSettingsSO")]
 public class StageSettingsSO : SingletonScriptableObject<StageSettingsSO>
 {
-    [ListDrawerSettings(ListElementLabelName = "stageNum")]
     [OnValueChanged(nameof(SetPath_ver1), true)]
     public StageData[] stageDatas;
 
-    [ListDrawerSettings(ListElementLabelName = "stageNum_ver2")]
     [OnValueChanged(nameof(SetPath_ver2), true)]
     public StageData[] stageDatas_ver2;
 
-    void SetPath_ver1()
+    public void SetPath_ver1()
     {
+        for (int i = 0; i < stageDatas.Length; i++)
+        {
+            stageDatas[i].level = "level " + (i + 1);
+        }
+
         StagePrefabPathSO.Instance.stagePrefabPaths_ver1 = stageDatas
             .Where(_ => _.stagePrefab)
             .Select(_ => "mStageVer1/" + _.stagePrefab.name)
             .ToArray();
     }
 
-    void SetPath_ver2()
+    public void SetPath_ver2()
     {
+        for (int i = 0; i < stageDatas_ver2.Length; i++)
+        {
+            stageDatas_ver2[i].level = "level " + (i + 1);
+        }
+
         StagePrefabPathSO.Instance.stagePrefabPaths_ver2 = stageDatas_ver2
             .Where(_ => _.stagePrefab)
             .Select(_ => "mStageVer2/" + _.stagePrefab.name)
@@ -39,24 +47,10 @@ public class StageSettingsSO : SingletonScriptableObject<StageSettingsSO>
 [Serializable, InlineProperty]
 public class StageData
 {
-    string stageNum
-    {
-        get
-        {
-            if (Application.isEditor)
-            {
-                Debug.Log("テスト aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                return "level " + (Array.IndexOf(StageSettingsSO.Instance.stageDatas, this) + 1);
-            }
-            else
-            {
-                Debug.Log("テスト iiiiiiiiiiiiiiiiiiiiiiiiiii");
-                return "";
-            }
-        }
-    }
-    string stageNum_ver2 => !Application.isEditor ? "" : "level " + (Array.IndexOf(StageSettingsSO.Instance.stageDatas_ver2, this) + 1);
-    [HideLabel]
+    [HideInInspector]
+    public string level;
+    [LabelText("$level")]
     public GameObject stagePrefab;
+
 }
 
