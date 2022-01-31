@@ -84,6 +84,7 @@ public class ClearCanvasManager : BaseCanvasManager
         rewardVideoButton.Hide();
         gems.gameObject.SetActive(true);
 
+        StageTransManager.i.LoadStagePrefabAsync(StageTransManager.i.CurrentDisplayStageNum + 1);
 
         SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
         FirebaseAnalyticsManager.i.LogEvent_level("level_cleared");

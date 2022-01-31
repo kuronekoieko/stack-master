@@ -16,9 +16,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] CoinCountView coinCountView;
     [SerializeField] ScriptableObjectManager scriptableObjectManager;
     BaseCanvasManager[] baseCanvasManagers;
-    ResourceRequest stageLoadingRR;
-    AsyncOperation stageSceneAO;
-    bool isCompleteOnStart;
 
     void Awake()
     {
@@ -40,13 +37,12 @@ public class UIManager : MonoBehaviour
         coinCountView.OnStart();
         SetPushNotification();
         FirebaseAnalyticsManager.i.Initialize();
-        StageTransManager.i.LoadStageOnAppLaunch(startDisplayStageNum: SaveData.i.lastClearedDisplayStageNum + 1);
-
+        StageTransManager.i.SetInitialCurrentDisplayStageNum(SaveData.i.lastClearedDisplayStageNum + 1);
         // Debug.Log("テスト main start() a");
-        stageLoadingRR = Resources.LoadAsync<GameObject>(StageTransManager.i.GetCurrentDisplayStagePath());
+        StageTransManager.i.LoadStagePrefabAsync(displayStageNum: StageTransManager.i.CurrentDisplayStageNum);
         // Debug.Log("テスト main start() b");
-        stageSceneAO = StageTransManager.i.ReLoadStage(true); //重い
-                                                              // Debug.Log("テスト main start() c");
+        StageTransManager.i.LoadSceneAsync(); //重い
+                                              // Debug.Log("テスト main start() c");
         StartCoroutine(Main());
         // StartCoroutine(UIInit());
     }
@@ -55,39 +51,41 @@ public class UIManager : MonoBehaviour
     private IEnumerator Main()
     {
         splashController.ShowSplash();
-        // Debug.Log("テスト main");
+        //// Debug.Log("テスト main");
         while (!splashController.IsCompleteAnim)
         {
             yield return null;
         }
 
-        //  Debug.Log("テスト UIInit start");
+        // Debug.Log("テスト UIInit start");
         // yield return new WaitForSeconds(3f);
- 
+
         StartCanvases();// 重い(1sくらい)
-        // Debug.Log("テスト UIInit end");
+                        // Debug.Log("テスト UIInit end");
 
         // Debug.Log("テスト プレハブロード 開始 " + Time.time);
-        while (!stageLoadingRR.isDone)
+        while (!StageTransManager.i.resourceRequest.isDone)
         {
             yield return null;
         }
-        var stagePrefab = stageLoadingRR.asset as GameObject;
-        StageTransManager.i.stagePrefab = stagePrefab;
+        // var stagePrefab = StageTransManager.i.resourceRequest.asset as GameObject;
+        // StageTransManager.i.stagePrefab = stagePrefab;
         // Debug.Log("テスト プレハブロード 開始 " + Time.time);
         // yield return new WaitForSeconds(3f);
-        stageSceneAO.allowSceneActivation = true;
+        //StageTransManager.i.TranslateSameStage();
+        StageTransManager.i.asyncOperation.allowSceneActivation = true;
         // Debug.Log("テスト シーンロード 開始 " + Time.time);
-        while (!stageSceneAO.isDone)
+        while (!StageTransManager.i.asyncOperation.isDone)
         {
-            // Debug.Log("テスト シーンロード 中 " + stageSceneAO.progress);
+            // Debug.Log("テスト シーンロード 中 " + StageTransManager.i.asyncOperation.progress);
             yield return null;
         }
 
-        // Debug.Log("テスト シーンロード 終了 " + Time.time);
+        //Debug.Log("テスト シーンロード 終了 " + Time.time);
 
         yield return null;
         splashController.HideSplash();
+        StageTransManager.i.LoadSceneAsync();
     }
 
     void SetPushNotification()
@@ -146,7 +144,7 @@ public class UIManager : MonoBehaviour
 
     void SceneLoaded(Scene nextScene, LoadSceneMode mode)
     {
-        // Debug.Log(nextScene.name);
+        //// Debug.Log(nextScene.name);
         foreach (var baseCanvasManager in baseCanvasManagers)
         {
             baseCanvasManager.OnSceneLoaded();

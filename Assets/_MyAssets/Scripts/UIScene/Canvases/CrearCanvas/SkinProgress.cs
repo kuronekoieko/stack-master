@@ -222,7 +222,7 @@ public class SkinProgress : MonoBehaviour
         }
         else
         {
-            StageTransManager.i.LoadNextStage();
+            StageTransManager.i.TranslateNextStage();
         }
     }
 

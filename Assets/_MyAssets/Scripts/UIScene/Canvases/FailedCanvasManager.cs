@@ -55,7 +55,7 @@ public class FailedCanvasManager : BaseCanvasManager
         Time.timeScale = 0;
         MaxSdkInterstitial.i.Show(() =>
         {
-            StageTransManager.i.ReLoadStage();
+            StageTransManager.i.TranslateSameStage();
             Time.timeScale = 1;
         });
     }

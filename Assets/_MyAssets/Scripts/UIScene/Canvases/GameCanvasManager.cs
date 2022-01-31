@@ -52,7 +52,7 @@ public class GameCanvasManager : BaseCanvasManager
 
     void OnClickRetryButton()
     {
-        StageTransManager.i.ReLoadStage();
+        StageTransManager.i.TranslateSameStage();
         SoundManager.i.PlayOneShot(0);
     }
 }

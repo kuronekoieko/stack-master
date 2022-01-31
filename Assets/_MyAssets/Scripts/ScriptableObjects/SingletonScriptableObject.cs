@@ -15,7 +15,7 @@ public abstract class SingletonScriptableObject<T> : ScriptableObject where T : 
         get
         {
             if (m_Instance) return m_Instance;
-            Debug.Log("iiiiiiiiiiiiii");
+            // Debug.Log("テスト ロードScriptableObjects " + typeof(T).Name);
             string PATH = "ScriptableObjects/" + typeof(T).Name;
             m_Instance = Resources.Load<T>(PATH);
             //ロード出来なかった場合はエラーログを表示
@@ -31,7 +31,7 @@ public abstract class SingletonScriptableObject<T> : ScriptableObject where T : 
     public void SetInstance(T instance)
     {
         if (m_Instance) return;
-        Debug.Log("aaaaaaaaaaaa");
+        // Debug.Log("テスト aaaaaaaaaaaa");
         m_Instance = instance;
     }
 }

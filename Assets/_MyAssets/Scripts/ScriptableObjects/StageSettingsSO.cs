@@ -39,8 +39,23 @@ public class StageSettingsSO : SingletonScriptableObject<StageSettingsSO>
 [Serializable, InlineProperty]
 public class StageData
 {
-    string stageNum => "level " + (Array.IndexOf(StageSettingsSO.Instance.stageDatas, this) + 1);
-    string stageNum_ver2 => "level " + (Array.IndexOf(StageSettingsSO.Instance.stageDatas_ver2, this) + 1);
+    string stageNum
+    {
+        get
+        {
+            if (Application.isEditor)
+            {
+                Debug.Log("テスト aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                return "level " + (Array.IndexOf(StageSettingsSO.Instance.stageDatas, this) + 1);
+            }
+            else
+            {
+                Debug.Log("テスト iiiiiiiiiiiiiiiiiiiiiiiiiii");
+                return "";
+            }
+        }
+    }
+    string stageNum_ver2 => !Application.isEditor ? "" : "level " + (Array.IndexOf(StageSettingsSO.Instance.stageDatas_ver2, this) + 1);
     [HideLabel]
     public GameObject stagePrefab;
 }

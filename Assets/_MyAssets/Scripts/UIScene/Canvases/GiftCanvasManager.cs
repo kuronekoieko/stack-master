@@ -111,7 +111,7 @@ public class GiftCanvasManager : BaseCanvasManager
 
     void OnClickCloseButton()
     {
-        StageTransManager.i.LoadNextStage();
+        StageTransManager.i.TranslateNextStage();
     }
 
     void OnChangedRewardedAdReady(bool isRewardedAdReady)
