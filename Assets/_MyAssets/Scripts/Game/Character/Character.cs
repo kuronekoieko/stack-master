@@ -239,7 +239,11 @@ public class Character : MonoBehaviour
         {
             ragdollController.EnableRagdoll(true);
             ragdollController.Addforce(Vector3.right * Random.Range(-1f, 1f) * 10f, ForceMode.Impulse);
-            // DOVirtual.DelayedCall(3f, () => gameObject.SetActive(false));
+            DOVirtual.DelayedCall(1.5f, () =>
+            {
+                if (characterState != CharacterState.Dead) return;
+                gameObject.SetActive(false);
+            });
         }
         else
         {

@@ -43,25 +43,31 @@ public class SkinController : MonoBehaviour
 
                 if (isAll)
                 {
-                    materials[j] = new Material(material);
+                    // materials[j] = new Material(material);
+                    materials[j] = material;
                     continue;
                 }
 
                 if (Variables.isSkinReal)
                 {
-                    materials[j] = new Material(skinnedMeshRenderer.materials[j]);
+                    // materials[j] = new Material(skinnedMeshRenderer.materials[j]);
+                    materials[j] = skinnedMeshRenderer.materials[j];
                     continue;
                 }
 
                 if (texture)
                 {
-                    materials[j] = new Material(skinnedMeshRenderer.materials[j]);
+                    // materials[j] = new Material(skinnedMeshRenderer.materials[j]);
+                    materials[j] = skinnedMeshRenderer.materials[j];
                     continue;
                 }
 
-                materials[j] = new Material(material);
+                // materials[j] = new Material(material);
+                materials[j] = material;
             }
             skinnedMeshRenderer.materials = materials;
+            skinnedMeshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            skinnedMeshRenderer.receiveShadows = false;
         }
 
     }
