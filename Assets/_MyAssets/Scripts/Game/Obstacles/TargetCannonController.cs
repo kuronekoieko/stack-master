@@ -65,7 +65,7 @@ public class TargetCannonController : MonoBehaviour
 
     void OnTriggerExit(Collider collider)
     {
-        OnExitPlayer(collider);
+        //OnExitPlayer(collider);
     }
 
     //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -161,7 +161,6 @@ public class TargetCannonController : MonoBehaviour
         if (characterManager.playerState != PlayerState.Playing) return;
         float distance = Vector3.Distance(rangeTrigger.position, characterManager.pool.activelist[0].transform.position);
         if (distance < range / 2) return;
-        if (!istest) return;
 
         isActive = false;
         laser_transform.gameObject.SetActive(false);
