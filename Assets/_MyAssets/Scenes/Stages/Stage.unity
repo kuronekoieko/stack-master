@@ -18,8 +18,8 @@ RenderSettings:
   m_FogColor: {r: 0.5647059, g: 0.972549, b: 0.6326531, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.01
-  m_LinearFogStart: 100
-  m_LinearFogEnd: 200
+  m_LinearFogStart: 70
+  m_LinearFogEnd: 100
   m_AmbientSkyColor: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
   m_AmbientEquatorColor: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
   m_AmbientGroundColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1476,26 +1476,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 20868189, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 515792982, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
-      propertyPath: cameraController
-      value: 
-      objectReference: {fileID: 609013180670383145}
-    - target: {fileID: 650564093, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 946202039, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1634303761, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
-      propertyPath: m_RenderMode
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 609013180782000475, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
       propertyPath: m_BackGroundColor.b
       value: 0.6326531
@@ -1556,27 +1536,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5359355372155846958, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5957625052605579324, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
---- !u!114 &609013180670383145 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 609013180782000477, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
-  m_PrefabInstance: {fileID: 609013180670383144}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4952290771d97407c8118c68164b358a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &757159900155272633
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -3,42 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
-
+using System.Linq;
 [CreateAssetMenu(menuName = "MyGame/Create StageSettingsSO", fileName = "StageSettingsSO")]
-public class StageSettingsSO : ScriptableObject
+public class StageSettingsSO : SingletonScriptableObject<StageSettingsSO>
 {
-    [ListDrawerSettings(ListElementLabelName = "stageNum")]
+    [OnValueChanged(nameof(SetPath_ver1), true)]
     public StageData[] stageDatas;
 
-    [ListDrawerSettings(ListElementLabelName = "stageNum_ver2")]
+    [OnValueChanged(nameof(SetPath_ver2), true)]
     public StageData[] stageDatas_ver2;
-    public StageData[] StageDatas => stageDatas_ver2;
 
-
-    static StageSettingsSO _i;
-    public static StageSettingsSO i
+    public void SetPath_ver1()
     {
-        get
+        for (int i = 0; i < stageDatas.Length; i++)
         {
-            if (Variables.isLaunchUIScene) return _i;
-            string PATH = "ScriptableObjects/" + nameof(StageSettingsSO);
-            //初アクセス時にロードする
-            if (_i == null)
-            {
-                _i = Resources.Load<StageSettingsSO>(PATH);
-
-                //ロード出来なかった場合はエラーログを表示
-                if (_i == null)
-                {
-                    Debug.LogError(PATH + " not found");
-                }
-            }
-
-            return _i;
+            stageDatas[i].level = "level " + (i + 1);
         }
-        set { _i = value; }
+
+        StagePrefabPathSO.Instance.stagePrefabPaths_ver1 = stageDatas
+            .Where(_ => _.stagePrefab)
+            .Select(_ => "mStageVer1/" + _.stagePrefab.name)
+            .ToArray();
     }
 
+    public void SetPath_ver2()
+    {
+        for (int i = 0; i < stageDatas_ver2.Length; i++)
+        {
+            stageDatas_ver2[i].level = "level " + (i + 1);
+        }
+
+        StagePrefabPathSO.Instance.stagePrefabPaths_ver2 = stageDatas_ver2
+            .Where(_ => _.stagePrefab)
+            .Select(_ => "mStageVer2/" + _.stagePrefab.name)
+            .ToArray();
+    }
 }
 
 /// <summary>
@@ -48,9 +47,10 @@ public class StageSettingsSO : ScriptableObject
 [Serializable, InlineProperty]
 public class StageData
 {
-    string stageNum => "level " + (Array.IndexOf(StageSettingsSO.i.stageDatas, this) + 1);
-    string stageNum_ver2 => "level " + (Array.IndexOf(StageSettingsSO.i.stageDatas_ver2, this) + 1);
-    [HideLabel]
+    [HideInInspector]
+    public string level;
+    [LabelText("$level")]
     public GameObject stagePrefab;
+
 }
 

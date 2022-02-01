@@ -12,6 +12,7 @@ public class BackgroundManager : MonoBehaviour
 
     void OnValidate()
     {
+        return;
         bgControllers = GetComponentsInChildren<BackgroundController>(true);
         if (bgIndex > bgControllers.Length - 1) return;
         foreach (var bg in bgControllers)
@@ -24,6 +25,7 @@ public class BackgroundManager : MonoBehaviour
     public void OnAwake()
     {
         bgControllers = GetComponentsInChildren<BackgroundController>(true);
+        OnStart();
     }
 
     public void OnStart()

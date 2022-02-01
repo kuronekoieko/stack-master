@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class GameManager : MonoBehaviour
     [Inject] BackgroundManager backgroundManager;
     [Inject] StageManager stageManager;
     [Inject] AddCountTextEffectManager addCountTextEffectManager;
-
+    [Inject] MeshPerformanceController meshPerformanceController;
+    [SerializeField] ScriptableObjectManager scriptableObjectManager;
 
     void Awake()
     {
@@ -19,6 +21,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        if (!Variables.isLaunchUIScene)
+        {
+            scriptableObjectManager.SetInstance();
+        }
+
         // StartCoroutine(LoadAsync());
         characterManager.OnAwake();
         // yield return null;
@@ -33,11 +40,10 @@ public class GameManager : MonoBehaviour
         addCountTextEffectManager.OnStart();
     }
 
-
-
     void Update()
     {
         characterManager.OnUpdate();
+        meshPerformanceController.OnUpdate();
     }
 
     void LateUpdate()

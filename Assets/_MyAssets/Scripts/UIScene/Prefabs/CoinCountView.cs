@@ -14,7 +14,7 @@ public class CoinCountView : MonoBehaviour
     public static CoinCountView i;
 
 
-    void Awake()
+   public void OnStart()
     {
         i = this;
         this.ObserveEveryValueChanged(coinCount => SaveData.i.currencyCount)
