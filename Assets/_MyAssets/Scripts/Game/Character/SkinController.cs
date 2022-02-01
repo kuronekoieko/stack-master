@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Animator))]
 public class SkinController : MonoBehaviour
@@ -66,8 +67,11 @@ public class SkinController : MonoBehaviour
                 materials[j] = material;
             }
             skinnedMeshRenderer.materials = materials;
-            skinnedMeshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            skinnedMeshRenderer.shadowCastingMode = ShadowCastingMode.Off;
             skinnedMeshRenderer.receiveShadows = false;
+            skinnedMeshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            skinnedMeshRenderer.lightProbeUsage = LightProbeUsage.Off;
+            skinnedMeshRenderer.quality = SkinQuality.Bone1;
         }
 
     }
