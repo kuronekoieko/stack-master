@@ -15,8 +15,8 @@ public class SplashController : MonoBehaviour
 
         if (Application.isEditor)
         {
-            IsCompleteAnim = true;
-            return;
+            // IsCompleteAnim = true;
+            // return;
         }
 
         sequence = DOTween.Sequence()
@@ -38,7 +38,7 @@ public class SplashController : MonoBehaviour
     {
         if (Application.isEditor)
         {
-            return;
+            //  return;
         }
 
         sequence = DOTween.Sequence()

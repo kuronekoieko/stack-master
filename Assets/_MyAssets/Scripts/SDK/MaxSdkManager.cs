@@ -6,6 +6,7 @@ public class MaxSdkManager : MonoBehaviour
 {
     public static MaxSdkManager i;
     public bool IsDebug => Debug.isDebugBuild;
+    // public bool IsDebug => false;
     // studio zzz
     static readonly string sdkKey = "nirDFR5Ia8FAlCZc9rlX8wP_kDNEiuHc4HGKHSQ4fFDhScOd5lW-T31uZdVJ9vqy35mpZCJVS7URsASrlXu7iF";
 

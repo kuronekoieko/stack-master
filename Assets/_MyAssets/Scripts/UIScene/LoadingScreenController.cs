@@ -10,7 +10,6 @@ public class LoadingScreenController : MonoBehaviour
     [SerializeField] Image bgImage;
     [SerializeField] Image loadingImage;
     Sequence sequence;
-    public bool IsCompleteAnim { get; set; }
     public static LoadingScreenController i { get; private set; }
     float fadeDuration = 0.3f;
 
@@ -28,18 +27,15 @@ public class LoadingScreenController : MonoBehaviour
 
     public void Show(Action OnComplete)
     {
-
         sequence = DOTween.Sequence()
         .AppendCallback(() =>
         {
             gameObject.SetActive(true);
             bgImage.SetAlpha(0);
-            IsCompleteAnim = false;
         })
         .Append(DOTween.ToAlpha(() => bgImage.color, color => bgImage.color = color, 1f, fadeDuration).SetEase(Ease.InSine))
         .OnComplete(() =>
         {
-            IsCompleteAnim = true;
             OnComplete();
         });
     }
@@ -47,7 +43,6 @@ public class LoadingScreenController : MonoBehaviour
 
     public void Hide()
     {
-
         sequence = DOTween.Sequence()
         .Append(DOTween.ToAlpha(() => bgImage.color, color => bgImage.color = color, 0f, fadeDuration).SetEase(Ease.OutSine))
         .OnComplete(() =>

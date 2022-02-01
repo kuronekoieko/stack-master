@@ -11,47 +11,50 @@ public class StageTransManager
     public static StageTransManager i => _i;
     private static StageTransManager _i = new StageTransManager();
     public int CurrentDisplayStageNum { get; private set; } = 1;
-    List<StageData> loopStageDatas = new List<StageData>();
+    List<string> loopStageDatas = new List<string>();
+    public GameObject stagePrefab => resourceRequest.asset as GameObject;
+    public AsyncOperation asyncOperation;
+    public ResourceRequest resourceRequest;
 
-    /// <summary>
-    /// ステージ番号の初期化と、最初のロード
-    /// </summary>
-    /// <param name="isMultiScene"></param>
-    /// <param name="startStageNum">アプリ起動時にどのステージから始めるか</param>
-    /// <param name="lastStageNum">最後のステージ番号</param>
-    public void LoadStageOnAppLaunch(int startDisplayStageNum)
+
+    public void SetInitialCurrentDisplayStageNum(int num)
     {
-        CurrentDisplayStageNum = startDisplayStageNum;
+        CurrentDisplayStageNum = num;
     }
 
-    public StageData GetCurrentDisplayStageData()
+    string GetCurrentDisplayStagePath(int displayStageNum)
     {
-        int displaysStageNum = CurrentDisplayStageNum;
-        if (loopStageDatas.Count < StageSettingsSO.i.StageDatas.Length)
+        if (loopStageDatas.Count < StagePrefabPathSO.Instance.StagePrefabPaths.Length)
         {
-            loopStageDatas.AddRange(StageSettingsSO.i.StageDatas);
+            loopStageDatas.AddRange(StagePrefabPathSO.Instance.StagePrefabPaths);
         }
 
-        while (loopStageDatas.IsIndexOutOfRange(displaysStageNum - 1))
+        while (loopStageDatas.IsIndexOutOfRange(displayStageNum - 1))
         {
-            loopStageDatas.AddRange(StageSettingsSO.i.StageDatas.Skip(1));
+            loopStageDatas.AddRange(StagePrefabPathSO.Instance.StagePrefabPaths.Skip(1));
         }
 
-        return loopStageDatas[displaysStageNum - 1];
+        return loopStageDatas[displayStageNum - 1];
     }
+
 
     /// <summary>
     /// 次のステージに遷移する
     /// </summary>
-    public void LoadNextStage()
+    public void TranslateNextStage()
     {
         Time.timeScale = 0;
         ShowInterstitial(onHidden: () =>
         {
             CurrentDisplayStageNum++;
-            ReLoadStage();
+            ActivateLoadedStage();
             Time.timeScale = 1;
         });
+    }
+
+    public void TranslateSameStage()
+    {
+        ActivateLoadedStage();
     }
 
     void ShowInterstitial(Action onHidden)
@@ -73,32 +76,50 @@ public class StageTransManager
     }
 
     /// <summary>
-    /// 現在のステージを再読み込みする
+    /// 起動時と、シーンのアクティベート終了時にシーンをロードしておく
     /// </summary>
-    public AsyncOperation ReLoadStage(bool isSplash = false)
+    public void LoadSceneAsync()
     {
         int sceneBuildIndex = 1;
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneBuildIndex);
+        asyncOperation = SceneManager.LoadSceneAsync(sceneBuildIndex);
         asyncOperation.allowSceneActivation = false;
-        if (!isSplash) LoadingScreenController.i.Show(() => asyncOperation.allowSceneActivation = true);
-        return asyncOperation;
     }
 
     /// <summary>
-    /// デバッグ画面用に、ステージ名を一括取得する
+    /// 起動時と、ステージのクリア時にロードしておく
     /// </summary>
-    /// <value></value>
-    public List<string> GetStageNames
+    /// <param name="displayStageNum"></param>
+    public void LoadStagePrefabAsync(int displayStageNum)
     {
-        get
-        {
-            List<string> numStrings = new List<string>();
-            for (int i = 1; i < StageSettingsSO.i.StageDatas.Length + 1; i++)
-            {
-                string name = Path.GetFileName(SceneUtility.GetScenePathByBuildIndex(i));
-                numStrings.Add((i) + "  " + name);
-            }
-            return numStrings;
-        }
+        resourceRequest = Resources.LoadAsync<GameObject>(GetCurrentDisplayStagePath(displayStageNum));
     }
+
+    void ActivateLoadedStage()
+    {
+        LoadingScreenController.i.Show(() =>
+        {
+            asyncOperation.allowSceneActivation = true;
+            LoadSceneAsync();
+        });
+    }
+
+
+    /*    /// <summary>
+        /// デバッグ画面用に、ステージ名を一括取得する
+        /// </summary>
+        /// <value></value>
+        public List<string> GetStageNames
+        {
+            get
+            {
+                List<string> numStrings = new List<string>();
+                for (int i = 1; i < StageSettingsSO.Instance.StageDatas.Length + 1; i++)
+                {
+                    string name = Path.GetFileName(SceneUtility.GetScenePathByBuildIndex(i));
+                    numStrings.Add((i) + "  " + name);
+                }
+                return numStrings;
+            }
+        }*/
+
 }
