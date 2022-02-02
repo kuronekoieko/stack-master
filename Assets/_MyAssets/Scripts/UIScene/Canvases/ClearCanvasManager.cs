@@ -131,7 +131,14 @@ public class ClearCanvasManager : BaseCanvasManager
     void OnClickNextButton()
     {
         // SoundManager.i.PlayOneShot(0);
-        OpenSkinProgress();
+        if (skinProgress.isNotingSkin)
+        {
+            skinProgress.ToNext();
+        }
+        else
+        {
+            OpenSkinProgress();
+        }
     }
 
     void OnClickRewardVideoButton()

@@ -44,7 +44,7 @@ public class SkinController : MonoBehaviour
 
                 if (isAll)
                 {
-                    // materials[j] = new Material(material);
+                    //materials[j] = new Material(material);
                     materials[j] = material;
                     continue;
                 }

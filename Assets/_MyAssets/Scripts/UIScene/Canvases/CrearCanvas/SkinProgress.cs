@@ -22,7 +22,7 @@ public class SkinProgress : MonoBehaviour
     SkinController outlineSkin;
     SkinController maskSkin;
     SkinController defaultSkin;
-    bool isNotingSkin;
+    public bool isNotingSkin { get; private set; }
     public bool IsMax { get; private set; }
 
     public void OnStart()
@@ -213,7 +213,7 @@ public class SkinProgress : MonoBehaviour
         FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.CharacterSkinDatas[SaveData.i.unlockingSkin.index].id);
     }
 
-    void ToNext()
+    public void ToNext()
     {
         bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
         if (isNextGiftScreen)
