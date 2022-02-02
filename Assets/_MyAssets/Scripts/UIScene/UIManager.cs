@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] CoinCountView coinCountView;
     [SerializeField] ScriptableObjectManager scriptableObjectManager;
     BaseCanvasManager[] baseCanvasManagers;
+    // System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
 
     void Awake()
     {
@@ -32,7 +33,13 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         SceneManager.sceneLoaded += SceneLoaded;
+
+
+        // stopWatch.Start();
         CSVManager.i.ParseCSV();
+        // stopWatch.Stop();
+        // Debug.Log("テスト csvパース " + stopWatch.ElapsedMilliseconds);
+
         SaveDataManager.i.LoadSaveData();
         coinCountView.OnStart();
         SetPushNotification();
@@ -59,9 +66,11 @@ public class UIManager : MonoBehaviour
 
         // Debug.Log("テスト UIInit start");
         // yield return new WaitForSeconds(3f);
-
-        StartCanvases();// 重い(1sくらい)
-                        // Debug.Log("テスト UIInit end");
+        //stopWatch.Start();
+        StartCanvases();// 重い(168msくらい)
+        //stopWatch.Stop();
+        //Debug.Log("テスト StartCanvases " + stopWatch.ElapsedMilliseconds);
+        // Debug.Log("テスト UIInit end");
 
         // Debug.Log("テスト プレハブロード 開始 " + Time.time);
         while (!StageTransManager.i.resourceRequest.isDone)
@@ -154,7 +163,5 @@ public class UIManager : MonoBehaviour
         // 同じフレームだと、シーン生成でカクつくため
         Observable.TimerFrame(1)
             .Subscribe(_ => LoadingScreenController.i.Hide());
-
-        MaxSdkBanner.i.Show();
     }
 }
