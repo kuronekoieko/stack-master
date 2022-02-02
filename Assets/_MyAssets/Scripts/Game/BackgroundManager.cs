@@ -4,37 +4,44 @@ using UnityEngine;
 
 public class BackgroundManager : MonoBehaviour
 {
-    BackgroundController[] bgControllers;
     [SerializeField] int bgIndex;
     [SerializeField] Camera cam;
-    [SerializeField] bool isDebug;
-    int CurrentBGIndex => (StageTransManager.i.CurrentDisplayStageNum - 1) % bgControllers.Length;
+    [SerializeField] MeshRenderer planeMr;
+    [SerializeField] Transform cubesParentTf;
+    [SerializeField] BackgroundData[] backgroundDatas;
+    int CurrentBGIndex => (StageTransManager.i.CurrentDisplayStageNum - 1) % backgroundDatas.Length;
+    MeshRenderer[] cubeMrs;
 
     void OnValidate()
     {
-        return;
-        bgControllers = GetComponentsInChildren<BackgroundController>(true);
-        if (bgIndex > bgControllers.Length - 1) return;
-        foreach (var bg in bgControllers)
-        {
-            bg.gameObject.SetActive(false);
-        }
-        bgControllers[bgIndex].Activate(cam);
+        cubeMrs = cubesParentTf.GetComponentsInChildren<MeshRenderer>();
+        Activate();
     }
 
     public void OnAwake()
     {
-        bgControllers = GetComponentsInChildren<BackgroundController>(true);
-        OnStart();
+        cubeMrs = cubesParentTf.GetComponentsInChildren<MeshRenderer>();
+        Activate();
     }
 
-    public void OnStart()
+    void Activate()
     {
-        foreach (var bg in bgControllers)
+        var index = Variables.isLaunchUIScene ? CurrentBGIndex : bgIndex;
+        BackgroundData backgroundData = backgroundDatas[index];
+        cam.backgroundColor = backgroundData.FogColor;
+        RenderSettings.fogColor = backgroundData.FogColor;
+        foreach (var item in cubeMrs)
         {
-            bg.gameObject.SetActive(false);
+            item.material = backgroundData.cubeMaterial;
         }
-        var index = isDebug ? bgIndex : CurrentBGIndex;
-        bgControllers[index].Activate(cam);
+        planeMr.material = backgroundData.planeMaterial;
     }
+}
+
+[System.Serializable]
+public class BackgroundData
+{
+    public Color FogColor;
+    public Material planeMaterial;
+    public Material cubeMaterial;
 }
