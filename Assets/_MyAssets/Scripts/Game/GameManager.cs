@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-
+        
     }
 
     void Start()
@@ -44,6 +44,11 @@ public class GameManager : MonoBehaviour
     {
         characterManager.OnUpdate();
         meshPerformanceController.OnUpdate();
+    }
+
+    void FixedUpdate()
+    {
+        characterManager.OnFixedUpdate();
     }
 
     void LateUpdate()

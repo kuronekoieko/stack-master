@@ -104,6 +104,24 @@ public class CharacterManager : MonoBehaviour
 
     }
 
+    public void OnFixedUpdate()
+    {
+        switch (playerState)
+        {
+            case PlayerState.BeforeStart: break;
+            case PlayerState.Playing:
+                for (int i = 0; i < pool.activelist.Count; i++)
+                {
+                    pool.activelist[i].AddGravity(i);
+                }
+                ;
+                break;
+            case PlayerState.GoalBonus: break;
+            case PlayerState.AfterFinishedGame: break;
+            default: break;
+        }
+    }
+
     void Run()
     {
         if (!Input.GetMouseButton(0))

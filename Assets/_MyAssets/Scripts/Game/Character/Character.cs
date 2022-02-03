@@ -109,19 +109,26 @@ public class Character : MonoBehaviour
         if (characterManager.pool.activelist[0] == this)
         {
             animator.SetTrigger("Run");
-            rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
         }
         else
         {
             animator.SetTrigger("Fall");
-
             PosCorrect();
+        }
+    }
 
+    public void AddGravity(int index)
+    {
+        if (characterManager.pool.activelist[0] == this)
+        {
+            rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
+        }
+        else
+        {
             float distance = rb.position.y - characterManager.pool.activelist[index - 1].rb.position.y;
             if (distance / Height < 1.1f) return;
             rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
         }
-
     }
 
     void PosCorrect()
