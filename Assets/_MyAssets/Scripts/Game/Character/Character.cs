@@ -64,6 +64,7 @@ public class Character : MonoBehaviour
         animator = skinController.Animator;
         ragdollController.SetRagdoll(animator);
         ragdollController.EnableRagdoll(false);
+        rb.isKinematic = true;
         if (Variables.isSkinReal) animator.transform.localScale = Vector3.one * 1.2f;
     }
 
