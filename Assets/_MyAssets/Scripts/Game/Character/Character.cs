@@ -93,7 +93,8 @@ public class Character : MonoBehaviour
 
     public void Move(float deltax, int index)
     {
-        skinController.EnableMesh(index < 24);
+        //skinController.EnableMesh(index < 24);
+        gameObject.SetActive(index < 24);
 
         float velX = transform.position.x - lastFramePosX;
         float speedX = Mathf.SmoothDamp(velX, deltax * Variables.speedX * Time.deltaTime, ref currentVelocity, Variables.smoothTimeX);
@@ -101,6 +102,8 @@ public class Character : MonoBehaviour
         transform.AddPosX(speedX);
         transform.AddPosZ(speedZ * Time.deltaTime);
         PosCorrect();
+        if (transform.position.x < -3.5f) transform.SetPosX(-3.5f);
+        if (3.5f < transform.position.x) transform.SetPosX(3.5f);
         lastFramePosX = transform.position.x;
 
         float underY = 0;
@@ -169,7 +172,17 @@ public class Character : MonoBehaviour
 
     public void Stair(int index)
     {
-        skinController.EnableMesh(index < 24);
+        // skinController.EnableMesh(index < 24);
+        gameObject.SetActive(index < 24);
+
+        if (index == 0)
+        {
+            animator.SetTrigger("Run");
+        }
+        else
+        {
+            animator.SetTrigger("Fall");
+        }
 
         var addPos = Vector3.zero;
         addPos.x = -transform.position.x * Variables.speedX * Time.deltaTime;
@@ -305,6 +318,12 @@ public class Character : MonoBehaviour
         else
         {
             goalStairController.Passed();
+
+            // 処理負荷
+            if (characterManager.pool.activelist.Count > 3)
+            {
+                DOVirtual.DelayedCall(1.0f, () => gameObject.SetActive(false));
+            }
         }
 
         if (characterManager.ActiveCount > 0) return;
