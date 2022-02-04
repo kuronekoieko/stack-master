@@ -46,11 +46,6 @@ public class GameManager : MonoBehaviour
         meshPerformanceController.OnUpdate();
     }
 
-    void FixedUpdate()
-    {
-        characterManager.OnFixedUpdate();
-    }
-
     void LateUpdate()
     {
         cameraController.OnLateUpdate();

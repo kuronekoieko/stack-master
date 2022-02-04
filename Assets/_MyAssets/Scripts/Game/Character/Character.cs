@@ -16,7 +16,6 @@ public class Character : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
     [SerializeField] CapsuleCollider capsuleCollider;
-    [SerializeField] BoxCollider boxCollider;
     [SerializeField] Animator animator;
     [SerializeField] IncEffectController inkEffectController;
     [SerializeField] ParticleSystem appearPs;
@@ -29,6 +28,8 @@ public class Character : MonoBehaviour
     bool isMovingAppear;
     SkinController skinController;
     CharacterState characterState = CharacterState.Alive;
+    float lastFramePosX;
+    float fallingTime;
 
     /// <summary>
     /// startより先
@@ -43,7 +44,6 @@ public class Character : MonoBehaviour
 
         this.characterManager = characterManager;
         capsuleCollider.enabled = false;
-        boxCollider.enabled = false;
     }
 
     /// <summary>
@@ -72,16 +72,14 @@ public class Character : MonoBehaviour
         characterState = CharacterState.Alive;
         ragdollController.EnableRagdoll(false);
         isMovingAppear = true;
-        rb.mass = 1f;
+        rb.isKinematic = true;
         capsuleCollider.enabled = false;
-        boxCollider.enabled = false;
         transform.position = bottomPos;
-        rb.DOMoveY(targetPos.y, duration)
+        transform.DOMoveY(targetPos.y, duration)
         .OnComplete(() =>
         {
             isMovingAppear = false;
             capsuleCollider.enabled = true;
-            boxCollider.enabled = true;
 
             if (isOnSound)
             {
@@ -96,70 +94,94 @@ public class Character : MonoBehaviour
     public void Move(float deltax, int index)
     {
         skinController.EnableMesh(index < 24);
-        // vel = rb.velocity;
-        rb.SetVelocityZ(speedZ);
-        // vel.z = speedZ;
-        rb.SetVelocityX(Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX));
-        //vel.x = Mathf.SmoothDamp(rb.velocity.x, deltax * Variables.speedX, ref currentVelocity, Variables.smoothTimeX);
-        // if (float.IsNaN(vel.x)) vel.x = 0;
-        // rb.velocity = vel;
 
-        rb.mass = characterManager.pool.activelist.Count - index;
+        float velX = transform.position.x - lastFramePosX;
+        float speedX = Mathf.SmoothDamp(velX, deltax * Variables.speedX * Time.deltaTime, ref currentVelocity, Variables.smoothTimeX);
 
-        if (characterManager.pool.activelist[0] == this)
+        transform.AddPosX(speedX);
+        transform.AddPosZ(speedZ * Time.deltaTime);
+        PosCorrect();
+        lastFramePosX = transform.position.x;
+
+        float underY = 0;
+
+        if (index == 0)
         {
             animator.SetTrigger("Run");
+            underY = GetFloorSurfaceY();
         }
         else
         {
             animator.SetTrigger("Fall");
-            PosCorrect();
+            underY = characterManager.pool.activelist[index - 1].transform.position.y + Height;
         }
+
+        if (isMovingAppear) return;
+
+        Fall(underY);
     }
 
-    public void AddGravity(int index)
+    float GetFloorSurfaceY()
     {
-        if (characterManager.pool.activelist[0] == this)
+        float underY = 0;
+        Ray ray = new Ray(transform.position + Vector3.up * Height, Vector3.down);
+        var hits = Physics.SphereCastAll(ray.origin, capsuleCollider.radius, ray.direction, 20);
+        foreach (var hit in hits)
         {
-            rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
+            if (!hit.collider.gameObject.CompareTag("Floor")) continue;
+            underY = hit.point.y;
+            break;
+        }
+        return underY;
+    }
+
+    void Fall(float groundY)
+    {
+        float distance = transform.position.y - groundY;
+        if (distance > 0.1f)
+        {
+            float velocityY = Physics.gravity.y * fallingTime;
+            transform.AddPosY(velocityY * Time.deltaTime);
+            fallingTime += Time.deltaTime;
         }
         else
         {
-            float distance = rb.position.y - characterManager.pool.activelist[index - 1].rb.position.y;
-            if (distance / Height < 1.1f) return;
-            rb.AddForce(Vector3.down * 30f, ForceMode.Acceleration);
+            fallingTime = 0;
+            transform.SetPosY(groundY);
         }
     }
 
     void PosCorrect()
     {
         // ズレ矯正
-        var bottomXZ = characterManager.pool.activelist[0].rb.position;
+        var bottomXZ = characterManager.pool.activelist[0].transform.position;
         bottomXZ.y = 0;
-        var thisXZ = rb.position;
+        var thisXZ = transform.position;
         thisXZ.y = 0;
         float distance = Vector3.Distance(bottomXZ, thisXZ);
         if (distance > 0.1f)
         {
             thisXZ = bottomXZ;
-            thisXZ.y = rb.position.y;
-            rb.position = thisXZ;
+            thisXZ.y = transform.position.y;
+            transform.position = thisXZ;
         }
     }
 
     public void Stair(int index)
     {
         skinController.EnableMesh(index < 24);
-        rb.SetVelocityX(-transform.position.x * Variables.speedX);
-        rb.SetVelocityY(0);
-        rb.SetVelocityZ(speedZ * 2.0f);
 
-        PosCorrect();
+        var addPos = Vector3.zero;
+        addPos.x = -transform.position.x * Variables.speedX * Time.deltaTime;
+        addPos.z = speedZ * 2.0f * Time.deltaTime;
+        transform.position += addPos;
+
+        // PosCorrect();
     }
 
     public void Stop()
     {
-        rb.velocity = Vector3.zero;
+        // rb.velocity = Vector3.zero;
     }
 
     void OnTriggerEnter(Collider other)
@@ -225,6 +247,7 @@ public class Character : MonoBehaviour
         var goalStair = other.gameObject.GetComponent<GoalStairController>();
         if (goalStair == null) return;
         Leave(goalStair);
+        transform.SetPosZ(other.ClosestPoint(transform.position).z - capsuleCollider.radius);
     }
 
     /// <summary>
@@ -269,7 +292,7 @@ public class Character : MonoBehaviour
 
         // 階段で止まったときに例外的にアクティブにしたいから
         characterManager.pool.Remove(this);
-        rb.isKinematic = true;
+        // rb.isKinematic = true;
         animator.ResetTrigger("Run");
         animator.ResetTrigger("Fall");
         animator.SetTrigger("Idle");
