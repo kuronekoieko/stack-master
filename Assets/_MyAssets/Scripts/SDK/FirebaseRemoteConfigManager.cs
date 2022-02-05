@@ -5,7 +5,7 @@ using System;
 using Firebase.Extensions;
 using Firebase.RemoteConfig;
 using System.Threading.Tasks;
-
+using Firebase.Installations;
 
 public class FirebaseRemoteConfigManager : SingletonMonoBehaviour<FirebaseRemoteConfigManager>
 {
@@ -40,6 +40,7 @@ public class FirebaseRemoteConfigManager : SingletonMonoBehaviour<FirebaseRemote
         });
 
         FetchDataAsync();
+        CheckInstallationsToken();
     }
 
     ConfigValue GetConfigValue(string key)
@@ -70,5 +71,17 @@ public class FirebaseRemoteConfigManager : SingletonMonoBehaviour<FirebaseRemote
             IsFetchComplete = true;
         };
         return fetchTask.ContinueWithOnMainThread(FetchComplete);
+    }
+
+    void CheckInstallationsToken()
+    {
+        FirebaseInstallations.DefaultInstance.GetTokenAsync(true).ContinueWith(
+        task =>
+        {
+            if (!(task.IsCanceled || task.IsFaulted) && task.IsCompleted)
+            {
+                Debug.Log(System.String.Format("Installations token {0}", task.Result));
+            }
+        });
     }
 }
