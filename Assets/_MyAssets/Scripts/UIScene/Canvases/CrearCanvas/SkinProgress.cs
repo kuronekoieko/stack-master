@@ -69,7 +69,7 @@ public class SkinProgress : MonoBehaviour
         maskSkin.RectTransform.anchoredPosition3D = Vector3.forward * -1f;
 
         defaultSkin = InstantiateSkin();
-        defaultSkin.ChangeMaterial(SkinSettingSO.i.characterMaterialDatas[0].material);
+        defaultSkin.ChangeMaterial(ScriptableObjectManager.i.SkinSettingSO.characterMaterialDatas[0].material);
         defaultSkin.transform.ChangeLayersForAllChildren("SkinProgress");
         defaultSkin.RectTransform.anchoredPosition3D = Vector3.forward * -2f;
 
@@ -165,7 +165,7 @@ public class SkinProgress : MonoBehaviour
 
     SkinController InstantiateSkin()
     {
-        SkinController skin = Instantiate(SkinSettingSO.i.CharacterSkinDatas[SaveData.i.unlockingSkin.index].prefab, Vector3.zero, Quaternion.identity, models);
+        SkinController skin = Instantiate(ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas[SaveData.i.unlockingSkin.index].prefab, Vector3.zero, Quaternion.identity, models);
         skin.RectTransform = skin.gameObject.AddComponent<RectTransform>();
         skin.OnInstantiate();
         skin.Animator.applyRootMotion = false;
@@ -192,7 +192,7 @@ public class SkinProgress : MonoBehaviour
                 SaveDataManager.i.Save();
                 skinGetButton.Hide();
                 closeButton.Hide();
-                FirebaseAnalyticsManager.i.LogEvent("skin_get_button", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.CharacterSkinDatas[SaveData.i.unlockingSkin.index].id);
+                FirebaseAnalyticsManager.i.LogEvent("skin_get_button", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
             },
             onNotRewarded: () =>
             {
@@ -210,7 +210,7 @@ public class SkinProgress : MonoBehaviour
     {
         ToNext();
         SaveData.i.unlockingSkin.percentage = 0;
-        FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.CharacterSkinDatas[SaveData.i.unlockingSkin.index].id);
+        FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
     }
 
     public void ToNext()

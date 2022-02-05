@@ -22,7 +22,7 @@ public class TabController_Skin : MonoBehaviour
 
     public void OnStart()
     {
-        skinSelectButtonManager.Generator<SkinSelectButtonController_Skin>(SkinSettingSO.i.CharacterSkinDatas.Length, true);
+        skinSelectButtonManager.Generator<SkinSelectButtonController_Skin>(ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas.Length, true);
         skinSelectButtonManager.OnCompleteRewardedAds = () =>
         {
             SaveData.i.currencyCount += Price;

@@ -29,7 +29,7 @@ public class IncEffectController : MonoBehaviour
     void OnChangedMaterial(int selectedIndex)
     {
         if (Variables.isSkinReal) return;
-        inkSr.material.color = SkinSettingSO.i.characterMaterialDatas[selectedIndex].material.color;
+        inkSr.material.color = ScriptableObjectManager.i.SkinSettingSO.characterMaterialDatas[selectedIndex].material.color;
         for (int i = 0; i < bloodPsChildren.Length; i++)
         {
             ParticleSystem.MainModule main = bloodPsChildren[i].main;

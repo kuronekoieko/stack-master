@@ -21,7 +21,7 @@ public class Character : MonoBehaviour
     [SerializeField] ParticleSystem appearPs;
     [SerializeField] RagdollController ragdollController;
     [Inject] CameraController cameraController;
-    float speedZ = 15f * 2f / 3f;
+    float speedZ = Variables.isStage30Sec ? 15f * 2f / 3f : 15f;
     float currentVelocity;
     CharacterManager characterManager;
     public float Height => capsuleCollider.height;
@@ -58,7 +58,7 @@ public class Character : MonoBehaviour
 
     void OnChangedSkin(int selectedSkinIndex)
     {
-        skinController = Instantiate(SkinSettingSO.i.CharacterSkinDatas[selectedSkinIndex].prefab, transform);
+        skinController = Instantiate(ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas[selectedSkinIndex].prefab, transform);
         skinController.OnInstantiate();
         Destroy(animator.gameObject);
         animator = skinController.Animator;

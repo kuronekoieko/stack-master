@@ -17,11 +17,11 @@ public class SkinController : MonoBehaviour
     public void OnInstantiate()
     {
         animator = GetComponent<Animator>();
-        animator.runtimeAnimatorController = SkinSettingSO.i.animatorController;
+        animator.runtimeAnimatorController = ScriptableObjectManager.i.SkinSettingSO.animatorController;
         skinnedMeshRenderers = animator.GetComponentsInChildren<SkinnedMeshRenderer>();
         this.ObserveEveryValueChanged(_ => SaveData.i.selectedMaterialIndex)
             .Where(_ => !IsSetMaterial_Manual)
-            .Subscribe(_ => ChangeMaterial(SkinSettingSO.i.characterMaterialDatas[SaveData.i.selectedMaterialIndex].material));
+            .Subscribe(_ => ChangeMaterial(ScriptableObjectManager.i.SkinSettingSO.characterMaterialDatas[SaveData.i.selectedMaterialIndex].material));
     }
 
     public void ChangeMaterial(Material material, bool isAll = false)
