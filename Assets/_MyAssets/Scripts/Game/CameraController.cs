@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
     Vector3 camTarget;
     Vector3 startLookTargetOffset;
     public CameraState CameraState { get; set; } = CameraState.Following;
-    bool isFollowBehind = true;
+
 
     public void SetOffset(Vector3 startPos)
     {
@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
 
         startLookTargetOffset = GetStartLookTarget() - characterManager.BottomCharacterPos;
         transform.position = GetFollowPos();
-        if (isFollowBehind)
+        if (Variables.isZeroCameraXPos)
         {
             transform.SetPosX(0);
         }
@@ -63,7 +63,7 @@ public class CameraController : MonoBehaviour
         switch (CameraState)
         {
             case CameraState.Following:
-                if (isFollowBehind)
+                if (Variables.isZeroCameraXPos)
                 {
                     FollowFromBehind();
                 }
