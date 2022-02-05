@@ -205,7 +205,7 @@ public class Character : MonoBehaviour
         OnTriggerEnterGoalStair(other);
         if (other.CompareTag("Obstacle"))
         {
-            var hitPos = other.ClosestPoint(transform.position);
+            var hitPos = other.ClosestPointOnBounds(transform.position);
             hitPos.y += Height / 2f;
             hitPos.z -= 0.1f;
             Dead(hitPos, false);
