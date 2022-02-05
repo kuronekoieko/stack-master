@@ -36,7 +36,7 @@ public class TargetCannonController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //characterManager = TargetCannonManager.i.characterManager;
+        gameObject.AddComponent<ZenAutoInjecter>();
         latestStartCycleTime_sec = Time.fixedTime;
         laser_transform.gameObject.SetActive(false);
     }
