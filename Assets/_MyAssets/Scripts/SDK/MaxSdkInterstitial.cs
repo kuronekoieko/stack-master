@@ -10,7 +10,7 @@ public class MaxSdkInterstitial : MonoBehaviour
     int retryAttempt;
     public static MaxSdkInterstitial i;
     Action onHidden = () => { };
-    public bool IsDebug => Debug.isDebugBuild && false;
+    public bool IsDebug => Debug.isDebugBuild;
 
     void Awake()
     {
