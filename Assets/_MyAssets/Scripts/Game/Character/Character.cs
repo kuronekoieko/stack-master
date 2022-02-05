@@ -205,7 +205,10 @@ public class Character : MonoBehaviour
         OnTriggerEnterGoalStair(other);
         if (other.CompareTag("Obstacle"))
         {
-            Dead(other.ClosestPoint(transform.position), false);
+            var hitPos = other.ClosestPoint(transform.position);
+            hitPos.y += Height / 2f;
+            hitPos.z -= 0.1f;
+            Dead(hitPos, false);
         }
         if (other.CompareTag("Obstacle_noink"))
         {
@@ -217,7 +220,10 @@ public class Character : MonoBehaviour
     {
         if (collisionInfo.gameObject.CompareTag("Obstacle"))
         {
-            Dead(collisionInfo.contacts[0].point, false);
+            var hitPos = transform.position;
+            hitPos.y += Height / 2f;
+            hitPos.z += (capsuleCollider.radius - 0.1f);
+            Dead(hitPos, false);
         }
     }
 
@@ -295,7 +301,7 @@ public class Character : MonoBehaviour
         }
 
         if (isHitGate) return;
-        inkEffectController.ShowInkSprite(transform.position, Height, capsuleCollider.radius);
+        inkEffectController.ShowInkSprite(hitPos);
     }
 
     void Leave(GoalStairController goalStairController)
