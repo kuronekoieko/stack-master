@@ -5,13 +5,11 @@ using DG.Tweening;
 
 public class GoalController : MonoBehaviour
 {
-    [SerializeField] GoalStairController firstGoalStair;
+    [SerializeField] GoalStairController goalStairPrefab;
+    [SerializeField] Transform firstGoalStairTf;
     [SerializeField] Color[] stepColors;
     GoalStairController[] goalStairs;
     public static GoalController i;
-
-    float stepHeight;
-    float stepDepth;
 
 
     void Awake()
@@ -19,22 +17,20 @@ public class GoalController : MonoBehaviour
         i = this;
         int stepCount = 51;
         goalStairs = new GoalStairController[stepCount];
-        Vector3 pos = firstGoalStair.transform.position;
-        stepHeight = firstGoalStair.StepHeight;
-        stepDepth = firstGoalStair.StepDepth;
+        Vector3 pos = firstGoalStairTf.position;
+        float stepHeight = goalStairPrefab.StepHeight;
+        float stepDepth = goalStairPrefab.StepDepth;
 
         for (int i = 0; i < goalStairs.Length; i++)
         {
-            if (i == 0)
-            {
-                goalStairs[i] = firstGoalStair;
-            }
-            else
-            {
-                goalStairs[i] = Instantiate(firstGoalStair, transform);
-            }
+            goalStairs[i] = Instantiate(goalStairPrefab, transform);
             float rate = 1.1f + (float)i * 0.1f;
-            goalStairs[i].OnInstansiate(i == goalStairs.Length - 1, rate, pos, i * stepHeight, stepColors[i % stepColors.Length]);
+            goalStairs[i].OnInstansiate(
+                isLast: i == goalStairs.Length - 1,
+                rate: rate,
+                pos: pos,
+                height: i * stepHeight,
+                stepColor: stepColors[i % stepColors.Length]);
             pos.z += stepDepth;
             pos.y += stepHeight;
         }
