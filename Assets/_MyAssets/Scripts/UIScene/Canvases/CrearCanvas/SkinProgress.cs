@@ -215,7 +215,7 @@ public class SkinProgress : MonoBehaviour
 
     public void ToNext()
     {
-        bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
+        bool isNextGiftScreen = StageTransManager.i.Level % 5 == 0;
         if (isNextGiftScreen)
         {
             Variables.screenState = ScreenState.Gift;

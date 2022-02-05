@@ -9,7 +9,7 @@ public class BackgroundManager : MonoBehaviour
     [SerializeField] MeshRenderer planeMr;
     [SerializeField] Transform cubesParentTf;
     [SerializeField] BackgroundData[] backgroundDatas;
-    int CurrentBGIndex => (StageTransManager.i.CurrentDisplayStageNum - 1) % backgroundDatas.Length;
+    int CurrentBGIndex => (StageTransManager.i.Level - 1) % backgroundDatas.Length;
     MeshRenderer[] cubeMrs;
 
     void OnValidate()

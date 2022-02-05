@@ -73,7 +73,7 @@ public class ChestView : MonoBehaviour
 
     int GetGemCount()
     {
-        LevelReward levelReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.CurrentDisplayStageNum - 1);
+        LevelReward levelReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.Level - 1);
         int baseReward = levelReward != null ? levelReward.chestsReward : 0;
 
         int randomInt = Random.Range(0, 100);

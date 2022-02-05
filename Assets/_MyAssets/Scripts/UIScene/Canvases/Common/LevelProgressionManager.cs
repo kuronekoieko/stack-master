@@ -9,7 +9,7 @@ public class LevelProgressionManager : MonoBehaviour
 
     public void OnOpen()
     {
-        int currentDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
+        int currentDisplayStageNum = StageTransManager.i.Level;
         int currentIndex = (currentDisplayStageNum - 1) % 5;
         int startStageNum = currentDisplayStageNum - currentIndex;
         for (int i = 0; i < levelProgressIcons.Length; i++)
@@ -24,7 +24,7 @@ public class LevelProgressionManager : MonoBehaviour
 
     public void Anim()
     {
-        int currentDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
+        int currentDisplayStageNum = StageTransManager.i.Level;
         int currentIndex = (currentDisplayStageNum - 1) % 5;
         levelProgressIcons[currentIndex].Anim();
     }

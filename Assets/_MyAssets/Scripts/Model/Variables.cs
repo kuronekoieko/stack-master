@@ -12,5 +12,7 @@ public class Variables : MonoBehaviour
     public static bool isLaunchUIScene = false;
     public static bool isSkinReal = true;
     public static bool isStage30Sec = true;
-    public static bool isZeroCameraXPos = true;
+    public static bool isZeroCameraPosX = true;
+    public static bool isShowInterstitialOddLevel = true;
+    public static bool isShowInterstitialBeforeRestartLevel = true;
 }

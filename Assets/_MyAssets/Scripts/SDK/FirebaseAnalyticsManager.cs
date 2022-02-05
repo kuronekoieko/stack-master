@@ -56,7 +56,7 @@ public class FirebaseAnalyticsManager : MonoBehaviour
 
     public void LogEvent_level(string title)
     {
-        string level = "level_" + StageTransManager.i.CurrentDisplayStageNum.ToString("000");
+        string level = "level_" + StageTransManager.i.Level.ToString("000");
         StartCoroutine(LogEventAsync(title, "level", level));
     }
 

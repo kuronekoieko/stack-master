@@ -44,9 +44,9 @@ public class UIManager : MonoBehaviour
         coinCountView.OnStart();
         SetPushNotification();
         FirebaseAnalyticsManager.i.Initialize();
-        StageTransManager.i.SetInitialCurrentDisplayStageNum(SaveData.i.lastClearedDisplayStageNum + 1);
+        StageTransManager.i.SetInitialLevel(SaveData.i.lastClearedDisplayStageNum + 1);
         // Debug.Log("テスト main start() a");
-        StageTransManager.i.LoadStagePrefabAsync(displayStageNum: StageTransManager.i.CurrentDisplayStageNum);
+        StageTransManager.i.LoadStagePrefabAsync(displayStageNum: StageTransManager.i.Level);
         // Debug.Log("テスト main start() b");
         StageTransManager.i.LoadSceneAsync(); //重い
                                               // Debug.Log("テスト main start() c");

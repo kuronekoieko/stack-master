@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
 
         startLookTargetOffset = GetStartLookTarget() - characterManager.BottomCharacterPos;
         transform.position = GetFollowPos();
-        if (Variables.isZeroCameraXPos)
+        if (Variables.isZeroCameraPosX)
         {
             transform.SetPosX(0);
         }
@@ -63,7 +63,7 @@ public class CameraController : MonoBehaviour
         switch (CameraState)
         {
             case CameraState.Following:
-                if (Variables.isZeroCameraXPos)
+                if (Variables.isZeroCameraPosX)
                 {
                     FollowFromBehind();
                 }
