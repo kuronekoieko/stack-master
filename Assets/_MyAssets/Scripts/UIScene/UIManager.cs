@@ -26,71 +26,54 @@ public class UIManager : MonoBehaviour
         baseCanvasManagers = canvasesParentTf.GetComponentsInChildren<BaseCanvasManager>(true);
         loadingScreenController.OnAwake();
         DontDestroyOnLoad(gameObject);
-        scriptableObjectManager.SetInstance();
     }
 
 
     void Start()
     {
-        SceneManager.sceneLoaded += SceneLoaded;
-
-
-        // stopWatch.Start();
-        CSVManager.i.ParseCSV();
-        // stopWatch.Stop();
-        // Debug.Log("テスト csvパース " + stopWatch.ElapsedMilliseconds);
-
-        SaveDataManager.i.LoadSaveData();
-        coinCountView.OnStart();
-        SetPushNotification();
-        FirebaseAnalyticsManager.i.Initialize();
-        StageTransManager.i.SetInitialLevel(SaveData.i.lastClearedDisplayStageNum + 1);
-        // Debug.Log("テスト main start() a");
-        StageTransManager.i.LoadStagePrefabAsync(displayStageNum: StageTransManager.i.Level);
-        // Debug.Log("テスト main start() b");
-        StageTransManager.i.LoadSceneAsync(); //重い
-                                              // Debug.Log("テスト main start() c");
         StartCoroutine(Main());
-        // StartCoroutine(UIInit());
     }
 
 
     private IEnumerator Main()
     {
         splashController.ShowSplash();
-        //// Debug.Log("テスト main");
+
+        while (!FirebaseRemoteConfigManager.i.IsFetchComplete)
+        {
+            yield return null;
+        }
+
+        SceneManager.sceneLoaded += SceneLoaded;
+        CSVManager.i.ParseCSV();
+        scriptableObjectManager.SetInstance();
+        SaveDataManager.i.LoadSaveData();
+        coinCountView.OnStart();
+        SetPushNotification();
+        FirebaseAnalyticsManager.i.Initialize();
+        StageTransManager.i.SetInitialLevel(SaveData.i.lastClearedDisplayStageNum + 1);
+        StageTransManager.i.LoadStagePrefabAsync(displayStageNum: StageTransManager.i.Level);
+        StageTransManager.i.LoadSceneAsync();
+
         while (!splashController.IsCompleteAnim)
         {
             yield return null;
         }
 
-        // Debug.Log("テスト UIInit start");
-        // yield return new WaitForSeconds(3f);
-        //stopWatch.Start();
         StartCanvases();// 重い(168msくらい)
-        //stopWatch.Stop();
-        //Debug.Log("テスト StartCanvases " + stopWatch.ElapsedMilliseconds);
-        // Debug.Log("テスト UIInit end");
 
-        // Debug.Log("テスト プレハブロード 開始 " + Time.time);
         while (!StageTransManager.i.resourceRequest.isDone)
         {
             yield return null;
         }
-        // var stagePrefab = StageTransManager.i.resourceRequest.asset as GameObject;
-        // StageTransManager.i.stagePrefab = stagePrefab;
-        // Debug.Log("テスト プレハブロード 開始 " + Time.time);
-        // yield return new WaitForSeconds(3f);
-        //StageTransManager.i.TranslateSameStage();
+
         StageTransManager.i.asyncOperation.allowSceneActivation = true;
-        // Debug.Log("テスト シーンロード 開始 " + Time.time);
+
         while (!StageTransManager.i.asyncOperation.isDone)
         {
-            // Debug.Log("テスト シーンロード 中 " + StageTransManager.i.asyncOperation.progress);
+
             yield return null;
         }
-
-        //Debug.Log("テスト シーンロード 終了 " + Time.time);
 
         yield return null;
         splashController.HideSplash();
