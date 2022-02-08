@@ -10,10 +10,10 @@ public class SaveData
 
     SaveData()
     {
-        characterSkinSaveDatas = SkinSettingSO.i.CharacterSkinDatas.Select(h => new SkinSaveData(h.id, false)).ToList();
+        characterSkinSaveDatas = ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas.Select(h => new SkinSaveData(h.id, false)).ToList();
         characterSkinSaveDatas[0].isOwn = true;
 
-        materialSkinSaveDatas = SkinSettingSO.i.characterMaterialDatas.Select(h => new SkinSaveData(h.id, false)).ToList();
+        materialSkinSaveDatas = ScriptableObjectManager.i.SkinSettingSO.characterMaterialDatas.Select(h => new SkinSaveData(h.id, false)).ToList();
         materialSkinSaveDatas[0].isOwn = true;
     }
 

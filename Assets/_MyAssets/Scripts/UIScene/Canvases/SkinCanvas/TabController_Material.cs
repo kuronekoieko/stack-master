@@ -21,7 +21,7 @@ public class TabController_Material : MonoBehaviour
 
     public void OnStart()
     {
-        skinSelectButtonManager.Generator<SkinSelectButtonController_Material>(SkinSettingSO.i.characterMaterialDatas.Length, false);
+        skinSelectButtonManager.Generator<SkinSelectButtonController_Material>(ScriptableObjectManager.i.SkinSettingSO.characterMaterialDatas.Length, false);
 
         skinSelectButtonManager.OnCompleteRewardedAds = () =>
         {

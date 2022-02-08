@@ -10,16 +10,16 @@ public class StageTransManager
 {
     public static StageTransManager i => _i;
     private static StageTransManager _i = new StageTransManager();
-    public int CurrentDisplayStageNum { get; private set; } = 1;
+    public int Level { get; private set; } = 1;
     List<string> loopStageDatas = new List<string>();
     public GameObject stagePrefab => resourceRequest.asset as GameObject;
     public AsyncOperation asyncOperation;
     public ResourceRequest resourceRequest;
 
 
-    public void SetInitialCurrentDisplayStageNum(int num)
+    public void SetInitialLevel(int num)
     {
-        CurrentDisplayStageNum = num;
+        Level = num;
     }
 
     string GetCurrentDisplayStagePath(int displayStageNum)
@@ -43,13 +43,19 @@ public class StageTransManager
     /// </summary>
     public void TranslateNextStage()
     {
-        Time.timeScale = 0;
-        ShowInterstitial(onHidden: () =>
+        if (Variables.isShowInterstitialBeforeRestartLevel)
         {
-            CurrentDisplayStageNum++;
+            MaxSdkInterstitial.i.ShowOnClear(StageTransManager.i.Level, onHidden: () =>
+            {
+                Level++;
+                ActivateLoadedStage();
+            });
+        }
+        else
+        {
+            Level++;
             ActivateLoadedStage();
-            Time.timeScale = 1;
-        });
+        }
     }
 
     public void TranslateSameStage()
@@ -57,23 +63,6 @@ public class StageTransManager
         ActivateLoadedStage();
     }
 
-    void ShowInterstitial(Action onHidden)
-    {
-        // ・広告は最初3ステージは非表示。4ステージ目からは、2回プレイごとに1回でる
-        int nextLevel = CurrentDisplayStageNum;
-        if (nextLevel <= 3)
-        {
-            onHidden();
-            return;
-        }
-
-        if (nextLevel % 2 == 1)
-        {
-            onHidden();
-            return;
-        }
-        MaxSdkInterstitial.i.Show(onHidden);
-    }
 
     /// <summary>
     /// 起動時と、シーンのアクティベート終了時にシーンをロードしておく
