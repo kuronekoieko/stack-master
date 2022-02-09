@@ -96,7 +96,7 @@ public class ClearCanvasManager : BaseCanvasManager
                 gemCollectAnimManager.Anim(gemImageRt.position, 0.5f, () =>
                 {
                     nextButton.Show_FadeTextAnim(1.5f);
-                    rewardVideoButton.Show_ScaleAnim();
+                    if (!Variables.isHideRewardedAds) rewardVideoButton.Show_ScaleAnim();
                     SaveData.i.currencyCount += curencyCount;
                     SaveDataManager.i.Save();
                 });

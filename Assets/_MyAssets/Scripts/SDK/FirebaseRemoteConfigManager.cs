@@ -14,6 +14,7 @@ public class FirebaseRemoteConfigManager : SingletonMonoBehaviour<FirebaseRemote
     readonly string isZeroCameraPosX = "is_zero_camera_pos_x";
     readonly string isShowInterstitialOddLevel = "is_show_interstitial_odd_level";
     readonly string isShowInterstitialBeforeRestartLevel = "is_show_interstitial_before_restart_level";
+    readonly string isHideRewardedAds = "is_hide_rewarded_ads";
     public bool IsFetchComplete { get; private set; }
 
     void Awake()
@@ -68,6 +69,7 @@ public class FirebaseRemoteConfigManager : SingletonMonoBehaviour<FirebaseRemote
             Variables.isZeroCameraPosX = GetConfigValue(isZeroCameraPosX).BooleanValue;
             Variables.isShowInterstitialOddLevel = GetConfigValue(isShowInterstitialOddLevel).BooleanValue;
             Variables.isShowInterstitialBeforeRestartLevel = GetConfigValue(isShowInterstitialBeforeRestartLevel).BooleanValue;
+            Variables.isHideRewardedAds = GetConfigValue(isHideRewardedAds).BooleanValue;
             IsFetchComplete = true;
         };
         return fetchTask.ContinueWithOnMainThread(FetchComplete);
