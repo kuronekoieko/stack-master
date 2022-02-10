@@ -43,6 +43,11 @@ public class StartTowerButton : MonoBehaviour
                 return true;
             }
 
+            if (Variables.isHideRewardedAds)
+            {
+                return false;
+            }
+
             state = State.RewardedAds;
             return MaxSdkRewardedAds.i.IsRewardedAdReady;
         }
