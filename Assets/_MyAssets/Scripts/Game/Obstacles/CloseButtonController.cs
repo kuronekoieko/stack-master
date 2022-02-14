@@ -19,6 +19,8 @@ public class CloseButtonController : MonoBehaviour
     [SerializeField] Vector2 buttonPosition;
     [SerializeField] float cableWidth = 1;
 
+    bool isActive = true;
+
     //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
     void Awake()
     {
@@ -58,9 +60,17 @@ public class CloseButtonController : MonoBehaviour
     void OnTouchPlayer(Collider collider)
     {
         if (!collider.TryGetComponent(out Character character)) return;
+        if (!isActive) return;
 
         buttonTrigger_renderer.material.color = Color.black;
         buttonTrigger_transform.DOLocalMoveY(-0.15f, 0.2f);
         closeDoorController.CloseDoor();
+    }
+
+    public void DisableButton()
+    {
+        isActive = false;
+        buttonTrigger_renderer.material.color = Color.black;
+        buttonTrigger_transform.DOLocalMoveY(-0.15f, 0.2f);
     }
 }
