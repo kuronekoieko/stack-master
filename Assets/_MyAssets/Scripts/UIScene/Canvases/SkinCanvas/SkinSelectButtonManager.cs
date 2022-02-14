@@ -56,7 +56,6 @@ public class SkinSelectButtonManager : MonoBehaviour
         rewardedButton.onClick.AddListener(OnClickRewardedButton);
         this.ObserveEveryValueChanged(_ => MaxSdkRewardedAds.i.IsRewardedAdReady)
             .Subscribe(_ => OnChangedRewardedAdReady(_));
-        if (Variables.isHideRewardedAds) rewardedButton.gameObject.SetActive(false);
     }
 
     public void OnChangedPrice(int price)

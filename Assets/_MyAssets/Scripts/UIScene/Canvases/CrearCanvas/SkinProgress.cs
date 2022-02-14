@@ -158,7 +158,7 @@ public class SkinProgress : MonoBehaviour
             outlineSkin.Animator.SetTrigger("Dance");
             maskSkin.Animator.SetTrigger("Dance");
             defaultSkin.Animator.SetTrigger("Dance");
-            if (!Variables.isHideRewardedAds) skinGetButton.Show_ScaleAnim();
+            skinGetButton.Show_ScaleAnim();
             closeButton.Show_FadeAnim(1.5f);
         });
     }
