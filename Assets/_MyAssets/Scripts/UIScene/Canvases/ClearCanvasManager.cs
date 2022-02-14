@@ -95,7 +95,8 @@ public class ClearCanvasManager : BaseCanvasManager
                 levelProgressionManager.Anim();
                 gemCollectAnimManager.Anim(gemImageRt.position, 0.5f, () =>
                 {
-                    nextButton.Show_FadeTextAnim(1.5f);
+                    //nextButton.Show_FadeTextAnim(1.5f);
+                    nextButton.Show_FadeTextAnim(0f);
                     rewardVideoButton.Show_ScaleAnim();
                     SaveData.i.currencyCount += curencyCount;
                     SaveDataManager.i.Save();
