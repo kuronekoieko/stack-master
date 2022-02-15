@@ -42,12 +42,6 @@ public class OfflineIncomeButton : MonoBehaviour
                 return true;
             }
 
-            return false;
-            if (Variables.isHideRewardedAds)
-            {
-                return false;
-            }
-
             state = State.RewardedAds;
             return MaxSdkRewardedAds.i.IsRewardedAdReady;
         }
