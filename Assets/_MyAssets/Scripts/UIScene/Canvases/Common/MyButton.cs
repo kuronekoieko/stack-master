@@ -53,8 +53,8 @@ public class MyButton : Button
         tween = DOVirtual.DelayedCall(delay, () =>
         {
             gameObject.SetActive(true);
-            text.SetAlpha(0f);
-            text.DOFade(1f, 1.5f);
+            Text.SetAlpha(0f);
+            Text.DOFade(1f, 1.5f);
         });
     }
 

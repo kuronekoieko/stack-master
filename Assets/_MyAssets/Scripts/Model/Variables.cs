@@ -15,4 +15,5 @@ public class Variables : MonoBehaviour
     public static bool isZeroCameraPosX = true;
     public static bool isShowInterstitialOddLevel = true;
     public static bool isShowInterstitialBeforeRestartLevel = true;
+    public static bool isHideRewardedAds = true;
 }
