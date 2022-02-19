@@ -12,11 +12,20 @@ public class CloseDoorController : MonoBehaviour
     [SerializeField] float height = 5;
     [SerializeField] float closeCompleteTime_sec = 0.3f;
 
+    List<CloseButtonController> buttons = new List<CloseButtonController>();
+    bool wasClosed = false;
+
     //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
     // Start is called before the first frame update
     void Start()
     {
-
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).TryGetComponent(out CloseButtonController button))
+            {
+                buttons.Add(button);
+            }
+        }
     }
 
     void OnValidate()
@@ -30,5 +39,9 @@ public class CloseDoorController : MonoBehaviour
     {
         door_L_transform.DORotate(new Vector3(0, 0, 0), closeCompleteTime_sec);
         door_R_transform.DORotate(new Vector3(0, 0, 0), closeCompleteTime_sec);
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            buttons[i].DisableButton();
+        }
     }
 }
