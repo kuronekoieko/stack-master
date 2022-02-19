@@ -18,6 +18,7 @@ public class MoveFloorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameObject.AddComponent<ZenAutoInjecter>();
         belt_renderer.material.SetFloat("_ScrollX", speed * 5);
     }
 

@@ -36,7 +36,7 @@ public class TargetCannonController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //characterManager = TargetCannonManager.i.characterManager;
+        gameObject.AddComponent<ZenAutoInjecter>();
         latestStartCycleTime_sec = Time.fixedTime;
         laser_transform.gameObject.SetActive(false);
     }
@@ -65,7 +65,7 @@ public class TargetCannonController : MonoBehaviour
 
     void OnTriggerExit(Collider collider)
     {
-        OnExitPlayer(collider);
+        //OnExitPlayer(collider);
     }
 
     //ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -161,7 +161,6 @@ public class TargetCannonController : MonoBehaviour
         if (characterManager.playerState != PlayerState.Playing) return;
         float distance = Vector3.Distance(rangeTrigger.position, characterManager.pool.activelist[0].transform.position);
         if (distance < range / 2) return;
-        if (!istest) return;
 
         isActive = false;
         laser_transform.gameObject.SetActive(false);

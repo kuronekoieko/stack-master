@@ -15,11 +15,11 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.5647059, g: 0.972549, b: 0.6326531, a: 1}
+  m_FogColor: {r: 0.7109769, g: 0.56376827, b: 0.9716981, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.01
-  m_LinearFogStart: 70
-  m_LinearFogEnd: 100
+  m_LinearFogStart: 100
+  m_LinearFogEnd: 200
   m_AmbientSkyColor: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
   m_AmbientEquatorColor: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
   m_AmbientGroundColor: {r: 1, g: 1, b: 1, a: 1}
@@ -956,6 +956,36 @@ Transform:
   m_Father: {fileID: 2731656063444881365}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1392949168
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1392949169}
+  m_Layer: 0
+  m_Name: Toe_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1392949169
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392949168}
+  m_LocalRotation: {x: 0.32518518, y: 0.5404678, z: 0.52214473, w: 0.5740331}
+  m_LocalPosition: {x: -0.000000008651114, y: 0.13994539, z: 0.0000000100408215}
+  m_LocalScale: {x: 1.0000005, y: 1.0000005, z: 1.0000007}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1400321789 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5731469849821600435, guid: 74e7baab4b5c9264c97c31b4301ae79a, type: 3}
@@ -1476,17 +1506,37 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 20868189, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 515792982, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
+      propertyPath: cameraController
+      value: 
+      objectReference: {fileID: 609013180670383145}
+    - target: {fileID: 650564093, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 946202039, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634303761, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 609013180782000475, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
       propertyPath: m_BackGroundColor.b
-      value: 0.6326531
+      value: 0.48584908
       objectReference: {fileID: 0}
     - target: {fileID: 609013180782000475, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
       propertyPath: m_BackGroundColor.g
-      value: 0.972549
+      value: 0.78169155
       objectReference: {fileID: 0}
     - target: {fileID: 609013180782000475, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
       propertyPath: m_BackGroundColor.r
-      value: 0.5647059
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4679846891157608352, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
       propertyPath: m_Name
@@ -1536,8 +1586,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5359355372155846958, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5957625052605579324, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
+--- !u!114 &609013180670383145 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 609013180782000477, guid: 391f87d164e86e14f8e03a045d66b0e0, type: 3}
+  m_PrefabInstance: {fileID: 609013180670383144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4952290771d97407c8118c68164b358a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &757159900155272633
 PrefabInstance:
   m_ObjectHideFlags: 0
