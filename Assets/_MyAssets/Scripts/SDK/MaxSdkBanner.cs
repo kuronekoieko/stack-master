@@ -8,6 +8,8 @@ public class MaxSdkBanner : MonoBehaviour
     string bannerAdUnitId = "643474e10e4d8d8c"; // Retrieve the ID from your account
 
     public static MaxSdkBanner i;
+    public bool IsDebug => Debug.isDebugBuild;
+    // public bool IsDebug => false;
 
     void Awake()
     {
@@ -16,7 +18,7 @@ public class MaxSdkBanner : MonoBehaviour
 
     public void InitializeBannerAds()
     {
-        if (MaxSdkManager.i.IsDebug) return;
+        if (IsDebug) return;
         // Banners are automatically sized to 320×50 on phones and 728×90 on tablets
         // You may call the utility method MaxSdkUtils.isTablet() to help with view sizing adjustments
         MaxSdk.CreateBanner(bannerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter);
@@ -27,13 +29,13 @@ public class MaxSdkBanner : MonoBehaviour
 
     public void Show()
     {
-        if (MaxSdkManager.i.IsDebug) return;
+        if (IsDebug) return;
         MaxSdk.ShowBanner(bannerAdUnitId);
     }
 
     public void Hide()
     {
-        if (MaxSdkManager.i.IsDebug) return;
+        if (IsDebug) return;
         MaxSdk.HideBanner(bannerAdUnitId);
     }
 }

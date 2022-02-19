@@ -11,4 +11,9 @@ public class Variables : MonoBehaviour
     public static float goalRate = 1.0f;
     public static bool isLaunchUIScene = false;
     public static bool isSkinReal = true;
+    public static bool isStage30Sec = true;
+    public static bool isZeroCameraPosX = true;
+    public static bool isShowInterstitialOddLevel = true;
+    public static bool isShowInterstitialBeforeRestartLevel = true;
+    public static bool isHideRewardedAds = true;
 }

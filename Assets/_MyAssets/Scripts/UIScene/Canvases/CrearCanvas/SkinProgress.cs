@@ -22,7 +22,7 @@ public class SkinProgress : MonoBehaviour
     SkinController outlineSkin;
     SkinController maskSkin;
     SkinController defaultSkin;
-    bool isNotingSkin;
+    public bool isNotingSkin { get; private set; }
     public bool IsMax { get; private set; }
 
     public void OnStart()
@@ -69,7 +69,7 @@ public class SkinProgress : MonoBehaviour
         maskSkin.RectTransform.anchoredPosition3D = Vector3.forward * -1f;
 
         defaultSkin = InstantiateSkin();
-        defaultSkin.ChangeMaterial(SkinSettingSO.i.characterMaterialDatas[0].material);
+        defaultSkin.ChangeMaterial(ScriptableObjectManager.i.SkinSettingSO.characterMaterialDatas[0].material);
         defaultSkin.transform.ChangeLayersForAllChildren("SkinProgress");
         defaultSkin.RectTransform.anchoredPosition3D = Vector3.forward * -2f;
 
@@ -160,12 +160,13 @@ public class SkinProgress : MonoBehaviour
             defaultSkin.Animator.SetTrigger("Dance");
             skinGetButton.Show_ScaleAnim();
             closeButton.Show_FadeAnim(1.5f);
+            //closeButton.Show_FadeAnim(0f);
         });
     }
 
     SkinController InstantiateSkin()
     {
-        SkinController skin = Instantiate(SkinSettingSO.i.CharacterSkinDatas[SaveData.i.unlockingSkin.index].prefab, Vector3.zero, Quaternion.identity, models);
+        SkinController skin = Instantiate(ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas[SaveData.i.unlockingSkin.index].prefab, Vector3.zero, Quaternion.identity, models);
         skin.RectTransform = skin.gameObject.AddComponent<RectTransform>();
         skin.OnInstantiate();
         skin.Animator.applyRootMotion = false;
@@ -192,7 +193,7 @@ public class SkinProgress : MonoBehaviour
                 SaveDataManager.i.Save();
                 skinGetButton.Hide();
                 closeButton.Hide();
-                FirebaseAnalyticsManager.i.LogEvent("skin_get_button", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.CharacterSkinDatas[SaveData.i.unlockingSkin.index].id);
+                FirebaseAnalyticsManager.i.LogEvent("skin_get_button", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
             },
             onNotRewarded: () =>
             {
@@ -210,12 +211,12 @@ public class SkinProgress : MonoBehaviour
     {
         ToNext();
         SaveData.i.unlockingSkin.percentage = 0;
-        FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + SkinSettingSO.i.CharacterSkinDatas[SaveData.i.unlockingSkin.index].id);
+        FirebaseAnalyticsManager.i.LogEvent("skin_get_button_no_thanks", "skin_index_" + SaveData.i.unlockingSkin.index + "_skin_id_" + ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas[SaveData.i.unlockingSkin.index].id);
     }
 
-    void ToNext()
+    public void ToNext()
     {
-        bool isNextGiftScreen = StageTransManager.i.CurrentDisplayStageNum % 5 == 0;
+        bool isNextGiftScreen = StageTransManager.i.Level % 5 == 0;
         if (isNextGiftScreen)
         {
             Variables.screenState = ScreenState.Gift;

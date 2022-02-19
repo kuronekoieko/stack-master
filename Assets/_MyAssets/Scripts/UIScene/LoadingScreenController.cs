@@ -48,6 +48,7 @@ public class LoadingScreenController : MonoBehaviour
         .OnComplete(() =>
         {
             gameObject.SetActive(false);
+            MaxSdkBanner.i.Show();
         });
     }
 }

@@ -12,5 +12,5 @@ public class StagePrefabPathSO : SingletonScriptableObject<StagePrefabPathSO>
     [ReadOnly]
     public string[] stagePrefabPaths_ver2;
 
-    public string[] StagePrefabPaths => stagePrefabPaths_ver2;
+    public string[] StagePrefabPaths => Variables.isStage30Sec ? stagePrefabPaths_ver2 : stagePrefabPaths_ver1;
 }

@@ -107,6 +107,7 @@ public class GiftCanvasManager : BaseCanvasManager
     {
         rewardedVideoButton.Show_ScaleAnim();
         closeButton.Show_FadeAnim(1.5f);
+        //closeButton.Show_FadeAnim(0f);
     }
 
     void OnClickCloseButton()

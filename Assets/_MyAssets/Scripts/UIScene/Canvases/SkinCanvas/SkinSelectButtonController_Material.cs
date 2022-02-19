@@ -26,7 +26,7 @@ public class SkinSelectButtonController_Material : MonoBehaviour, ISkinSelectBut
         MeshRenderer sphereMr = Instantiate(skinSelectButtonController.sphereMrPrefab, skinSelectButtonController.skinPreviewParent);
         skinSelectButtonController.skinObj = sphereMr.gameObject;
         skinSelectButtonController.skinObj.layer = LayerMask.NameToLayer("Skin");
-        sphereMr.material = new Material(SkinSettingSO.i.characterMaterialDatas[skinIndex].material);
+        sphereMr.material = new Material(ScriptableObjectManager.i.SkinSettingSO.characterMaterialDatas[skinIndex].material);
         skinSelectButtonController.skinObj.SetActive(false);
     }
 

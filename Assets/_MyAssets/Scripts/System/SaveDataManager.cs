@@ -41,15 +41,15 @@ public class SaveDataManager
     void AddNewArrayElements()
     {
         // TODO:あとで新しいIDを追加するように変更
-        for (int i = SaveData.i.characterSkinSaveDatas.Count; i < SkinSettingSO.i.CharacterSkinDatas.Length; i++)
+        for (int i = SaveData.i.characterSkinSaveDatas.Count; i < ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas.Length; i++)
         {
-            var characterSkinData = SkinSettingSO.i.CharacterSkinDatas[i];
+            var characterSkinData = ScriptableObjectManager.i.SkinSettingSO.characterSkinDatas[i];
             SaveData.i.characterSkinSaveDatas.Add(new SkinSaveData(characterSkinData.id, false));
         }
 
-        for (int i = SaveData.i.materialSkinSaveDatas.Count; i < SkinSettingSO.i.characterMaterialDatas.Length; i++)
+        for (int i = SaveData.i.materialSkinSaveDatas.Count; i < ScriptableObjectManager.i.SkinSettingSO.characterMaterialDatas.Length; i++)
         {
-            var characterSkinData = SkinSettingSO.i.characterMaterialDatas[i];
+            var characterSkinData = ScriptableObjectManager.i.SkinSettingSO.characterMaterialDatas[i];
             SaveData.i.materialSkinSaveDatas.Add(new SkinSaveData(characterSkinData.id, false));
         }
     }

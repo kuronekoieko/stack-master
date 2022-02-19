@@ -25,7 +25,8 @@ public class GoalStairController : MonoBehaviour
         this.isLast = isLast;
         transform.position = pos;
         stepMr.material.color = stepColor;
-        stepBaseMr.transform.localPosition -= Vector3.up * (height + StepHeight / 2f) / 2f;
+        float stepBaseY = height / 2f + StepHeight / 2f;
+        stepBaseMr.transform.localPosition -= Vector3.up * stepBaseY;
         Vector3 scale = stepBaseMr.transform.localScale;
         scale.y = height;
         stepBaseMr.transform.localScale = scale;

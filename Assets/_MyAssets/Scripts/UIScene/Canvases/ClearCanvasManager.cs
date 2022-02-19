@@ -48,31 +48,20 @@ public class ClearCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         SoundManager.i.PlayOneShot(1);
-        Open();
 
-        /*        DOVirtual.DelayedCall(1.5f, () =>
+        if (Variables.isShowInterstitialBeforeRestartLevel)
         {
-            Time.timeScale = 0;
-            ShowInterstitial(() =>
-            {
-                Open();
-                Time.timeScale = 1;
-            });
-        });*/
-
-
-    }
-
-    void ShowInterstitial(Action onHidden)
-    {
-
-        if (StageTransManager.i.CurrentDisplayStageNum == 1)
-        {
-            onHidden();
+            Open();
             return;
         }
-        MaxSdkInterstitial.i.Show(onHidden);
 
+        DOVirtual.DelayedCall(1.5f, () =>
+        {
+            MaxSdkInterstitial.i.ShowOnClear(StageTransManager.i.Level, onHidden: () =>
+            {
+                Open();
+            });
+        });
     }
 
     void Open()
@@ -84,12 +73,12 @@ public class ClearCanvasManager : BaseCanvasManager
         rewardVideoButton.Hide();
         gems.gameObject.SetActive(true);
 
-        StageTransManager.i.LoadStagePrefabAsync(StageTransManager.i.CurrentDisplayStageNum + 1);
+        StageTransManager.i.LoadStagePrefabAsync(StageTransManager.i.Level + 1);
 
-        SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.CurrentDisplayStageNum;
+        SaveData.i.lastClearedDisplayStageNum = StageTransManager.i.Level;
         FirebaseAnalyticsManager.i.LogEvent_level("level_cleared");
 
-        int baseClearReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.CurrentDisplayStageNum - 1).clearReward;
+        int baseClearReward = CSVManager.i.LevelRewardTable.ClampIndex(StageTransManager.i.Level - 1).clearReward;
         curencyCount = Mathf.RoundToInt(Variables.goalRate * baseClearReward);
         currencyCountText.text = "+" + curencyCount.ToString();
         rewardVideoButton.Text.text = "+" + (curencyCount * 2);
@@ -107,6 +96,7 @@ public class ClearCanvasManager : BaseCanvasManager
                 gemCollectAnimManager.Anim(gemImageRt.position, 0.5f, () =>
                 {
                     nextButton.Show_FadeTextAnim(1.5f);
+                    //nextButton.Show_FadeTextAnim(0f);
                     rewardVideoButton.Show_ScaleAnim();
                     SaveData.i.currencyCount += curencyCount;
                     SaveDataManager.i.Save();
@@ -131,7 +121,14 @@ public class ClearCanvasManager : BaseCanvasManager
     void OnClickNextButton()
     {
         // SoundManager.i.PlayOneShot(0);
-        OpenSkinProgress();
+        if (skinProgress.isNotingSkin)
+        {
+            skinProgress.ToNext();
+        }
+        else
+        {
+            OpenSkinProgress();
+        }
     }
 
     void OnClickRewardVideoButton()

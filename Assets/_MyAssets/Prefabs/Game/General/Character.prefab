@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 793040985480188577}
   - component: {fileID: 793040985480188578}
   - component: {fileID: 793040985480188579}
-  - component: {fileID: 2004514835800616214}
   - component: {fileID: 464215293596251436}
   m_Layer: 9
   m_Name: Character
@@ -52,7 +51,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 793040985480188579}
   capsuleCollider: {fileID: 793040985480188578}
-  boxCollider: {fileID: 2004514835800616214}
   animator: {fileID: 5191878760188104103}
   inkEffectController: {fileID: 775019518952587382}
   appearPs: {fileID: 6061153854938161336}
@@ -87,19 +85,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!65 &2004514835800616214
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793040985480188583}
-  m_Material: {fileID: 13400000, guid: 5f92916aa56666a4db765cafa5ac680e, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.66056, z: 1}
-  m_Center: {x: 0, y: 1.3591573, z: 0}
 --- !u!114 &464215293596251436
 MonoBehaviour:
   m_ObjectHideFlags: 0

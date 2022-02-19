@@ -10,6 +10,7 @@ public class MaxSdkInterstitial : MonoBehaviour
     int retryAttempt;
     public static MaxSdkInterstitial i;
     Action onHidden = () => { };
+    public bool IsDebug => Debug.isDebugBuild;
 
     void Awake()
     {
@@ -19,7 +20,7 @@ public class MaxSdkInterstitial : MonoBehaviour
     public void Show(Action onHidden)
     {
         this.onHidden = onHidden;
-        if (MaxSdkManager.i.IsDebug)
+        if (IsDebug)
         {
             onHidden();
             return;
@@ -31,7 +32,37 @@ public class MaxSdkInterstitial : MonoBehaviour
             return;
         }
 
+        Time.timeScale = 0;
         MaxSdk.ShowInterstitial(adUnitId);
+    }
+
+    public void ShowOnClear(int level, Action onHidden)
+    {
+        if (IsShowAdLevel(level))
+        {
+            Show(onHidden);
+        }
+        else
+        {
+            onHidden();
+        }
+    }
+
+    bool IsShowAdLevel(int level)
+    {
+        if (Variables.isShowInterstitialOddLevel)
+        {
+            // ・広告は最初3ステージは非表示。4ステージ目からは、2回プレイごとに1回でる
+            if (level <= 3) return false;
+            if (level % 2 == 1) return false;
+            return true;
+        }
+        else
+        {
+            // 1以外全部
+            if (level == 1) return false;
+            return true;
+        }
     }
 
     public void InitializeInterstitialAds()
@@ -77,6 +108,7 @@ public class MaxSdkInterstitial : MonoBehaviour
     private void OnInterstitialAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
     {
         onHidden();
+        Time.timeScale = 1;
         // Interstitial ad failed to display. AppLovin recommends that you load the next ad.
         LoadInterstitial();
     }
@@ -86,6 +118,7 @@ public class MaxSdkInterstitial : MonoBehaviour
     private void OnInterstitialHiddenEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
         onHidden();
+        Time.timeScale = 1;
         // Interstitial ad is hidden. Pre-load the next ad.
         LoadInterstitial();
     }

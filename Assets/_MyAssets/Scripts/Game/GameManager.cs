@@ -12,18 +12,17 @@ public class GameManager : MonoBehaviour
     [Inject] StageManager stageManager;
     [Inject] AddCountTextEffectManager addCountTextEffectManager;
     [Inject] MeshPerformanceController meshPerformanceController;
-    [SerializeField] ScriptableObjectManager scriptableObjectManager;
 
     void Awake()
     {
-
+        
     }
 
     void Start()
     {
         if (!Variables.isLaunchUIScene)
         {
-            scriptableObjectManager.SetInstance();
+            ScriptableObjectManager.i.SetInstance();
         }
 
         // StartCoroutine(LoadAsync());
