@@ -160,6 +160,7 @@ public class SkinProgress : MonoBehaviour
             defaultSkin.Animator.SetTrigger("Dance");
             skinGetButton.Show_ScaleAnim();
             closeButton.Show_FadeAnim(1.5f);
+            //closeButton.Show_FadeAnim(0f);
         });
     }
 
